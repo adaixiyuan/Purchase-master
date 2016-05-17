@@ -1,0 +1,17 @@
+//
+//  Purchase-PrefixHeader.pch
+//  Purchase
+//
+//  Created by luoheng on 16/5/2.
+//  Copyright © 2016年 luoheng. All rights reserved.
+//
+
+#ifndef Purchase_PrefixHeader_pch
+#define Purchase_PrefixHeader_pch
+
+// Include any system framework and library headers here that should be included in all compilation units.
+// You will also need to set the Prefix Header build setting of one or more of your targets to reference this file.
+
+#endif /* Purchase_PrefixHeader_pch */
+
+#import "StoreMacro.h"
