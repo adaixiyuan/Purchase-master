@@ -51,6 +51,10 @@ extern NSString *const kBuyRecordRequest;
  */
 extern NSString *const kProductRequest;
 /**
+ *   实拍商品添加
+ */
+extern NSString *const kAddProductRequest;
+/**
  *   商品品牌列表
  */
 extern NSString *const kBrandListRequest;

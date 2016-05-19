@@ -21,9 +21,11 @@ static const NSInteger TitleTag = 100;
 
 @interface GoodsPublishViewController ()<UITableViewDelegate,UITableViewDataSource,UITextViewDelegate,PhotoViewDelegate>
 
-@property (nonatomic, strong) AutoTableView *theTableView;
-@property (nonatomic, strong) PhotoShowView *myPhotoView;
-@property (nonatomic, strong) UITextView    *textView;
+@property (nonatomic, strong) AutoTableView    *theTableView;
+@property (nonatomic, strong) PhotoShowView    *myPhotoView;
+@property (nonatomic, strong) NSArray          *imageList;
+@property (nonatomic, strong) UITextView       *textView;
+@property (nonatomic, strong) UIButton         *publishBtn;
 @property (nonatomic, strong) PublishInfoModel *publishModel;
 
 @end
@@ -48,7 +50,35 @@ static const NSInteger TitleTag = 100;
 #pragma mark - Event
 - (void)publishAction:(UIButton *)btn
 {
+    [MYMBProgressHUD showHudWithMessage:NSLocalizedString(@"请稍等···", @"请稍等···") InView:self.view];
+    NSMutableDictionary *publishDic = [[NSMutableDictionary alloc]init];
+    [publishDic setObject:@"add" forKey:@"action"];
+    [publishDic setObject:@([UserInfoModel shareInstance].user_sid) forKey:@"user_sid"];
+    [publishDic setObject:SAFE_STRING(self.publishModel.brand_name) forKey:@"brand_name"];
+    [publishDic setObject:SAFE_STRING(self.publishModel.des) forKey:@"des"];
+    [publishDic setObject:SAFE_STRING(self.publishModel.goods_no) forKey:@"goods_no"];
+    [publishDic setObject:SAFE_STRING(self.publishModel.price) forKey:@"price"];
+    [publishDic setObject:SAFE_STRING(self.publishModel.need_qty) forKey:@"need_qty"];
+    [publishDic setObject:SAFE_STRING(self.publishModel.discountInfo) forKey:@"remark"];
     
+    NSMutableArray *dataArray = [[NSMutableArray alloc]init];
+    NSMutableArray *namesArray = [[NSMutableArray alloc]init];
+    NSMutableArray *filesArray = [[NSMutableArray alloc]init];
+    NSMutableArray *mimeTypeArray = [[NSMutableArray alloc]init];
+    for (int i = 0 ; i < self.imageList.count ; i++) {
+        UIImage *theImage = (UIImage *)self.imageList[i];
+        NSData *data = UIImageJPEGRepresentation(theImage, 0.3);
+        [dataArray addObject:data];
+        [namesArray addObject:[NSString stringWithFormat:@"img%d",i]];
+        [filesArray addObject:[NSString stringWithFormat:@"img%d.png",i]];
+        [mimeTypeArray addObject:@"image/png"];
+    }
+    [[NetworkManager sharedInstance] uploadRequestWithURL:kAddProductRequest method:RequestPost parameters:publishDic datas:dataArray names:namesArray fileNames:filesArray mimeTypes:mimeTypeArray result:^(AFHTTPRequestOperation *operation, id responseObject) {
+        [MYMBProgressHUD hideHudFromView:self.view];
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        [MYMBProgressHUD hideHudFromView:self.view];
+        [MYMBProgressHUD showMessage:error.userInfo[@"NSLocalizedDescription"]];
+    }];
 }
 #pragma mark - PhotoViewDelegate
 - (void)addPicker:(UIImagePickerController *)picker
@@ -71,7 +101,7 @@ static const NSInteger TitleTag = 100;
 }
 - (void)showPhotos:(NSMutableArray *)photos
 {
-//    self.imageList = [[NSMutableArray alloc]initWithArray:photos];
+    self.imageList = [[NSMutableArray alloc]initWithArray:photos];
 }
 #pragma mark - UITableViewDelegate,UITableViewDataSource
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
@@ -125,21 +155,27 @@ static const NSInteger TitleTag = 100;
             footView = [[UITableViewHeaderFooterView alloc]initWithReuseIdentifier:sectionFootIdentifier];
             footView.contentView.backgroundColor = [UIColor clearColor];
             
-            UIButton *publishBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-            publishBtn.backgroundColor = [UIColor clearColor];
-            [publishBtn setBackgroundImage:[UIImage imageNamed:@"button_inEffect"] forState:UIControlStateNormal];
-            [publishBtn setTitle:NSLocalizedString(@"发布", @"发布") forState:UIControlStateNormal];
-            [publishBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-            publishBtn.titleLabel.font = [UIFont customFontOfSize:15];
-            [publishBtn addTarget:self action:@selector(publishAction:) forControlEvents:UIControlEventTouchUpInside];
-            [footView addSubview:publishBtn];
+            self.publishBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+            self.publishBtn.backgroundColor = [UIColor clearColor];
+            [self.publishBtn setBackgroundImage:[UIImage imageNamed:@"button_inEffect"] forState:UIControlStateNormal];
+            [self.publishBtn setBackgroundImage:[UIImage imageNamed:@"button_invalid"] forState:UIControlStateDisabled];
+            [self.publishBtn setTitle:NSLocalizedString(@"发布", @"发布") forState:UIControlStateNormal];
+            [self.publishBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+            self.publishBtn.titleLabel.font = [UIFont customFontOfSize:15];
+            [self.publishBtn addTarget:self action:@selector(publishAction:) forControlEvents:UIControlEventTouchUpInside];
+            [footView addSubview:self.publishBtn];
             
-            [publishBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+            [self.publishBtn mas_makeConstraints:^(MASConstraintMaker *make) {
                 make.center.equalTo(footView).with.offset(0);
                 make.left.equalTo(footView).with.offset(15);
                 make.right.equalTo(footView).with.offset(-15);
-                make.height.equalTo(@(45*SizeScaleHeight));
+                make.height.equalTo(@(40*SizeScaleHeight));
             }];
+        }
+        if (self.publishModel.des.length > 0 && self.publishModel.brand_name.length > 0) {
+            self.publishBtn.enabled = YES;
+        }else{
+            self.publishBtn.enabled = NO;
         }
         return footView;
     }
@@ -225,6 +261,10 @@ static const NSInteger TitleTag = 100;
             case 4:{
                 CodeScanViewController *codeScanVC = [[CodeScanViewController alloc]init];
                 [self.navigationController pushViewController:codeScanVC animated:YES];
+                codeScanVC.sendTheCode = ^(NSString *goods_no){
+                    weakSelf.publishModel.goods_no = SAFE_STRING(goods_no);
+                    [weakSelf.theTableView reloadData];
+                };
             }
                 break;
             default:
@@ -240,6 +280,12 @@ static const NSInteger TitleTag = 100;
         return NO;
     }
     return YES;
+}
+- (void)textViewDidEndEditing:(UITextView *)textView
+{
+    if (textView.text > 0) {
+        self.publishModel.des = SAFE_STRING(textView.text);
+    }
 }
 #pragma mark - 监听键盘
 - (void)keyboardShow:(NSNotification *)notification

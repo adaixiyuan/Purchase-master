@@ -74,7 +74,10 @@
      */
     NSString *des;
     NSString *imgUrl;
-    if (vcType == 1){
+    if (vcType == 0) {
+        des = [NSString stringWithFormat:@"%@\n%@",SAFE_STRING([infoDic objectForKey:@"title"]),SAFE_STRING([infoDic objectForKey:@"content"])];
+        imgUrl = SAFE_STRING([infoDic objectForKey:@"img_urls"]);
+    }else if (vcType == 1){
         des = [NSString stringWithFormat:@"%@  %@",SAFE_STRING([infoDic objectForKey:@"brand_name"]),SAFE_STRING([infoDic objectForKey:@"des"])];
         imgUrl = SAFE_STRING([infoDic objectForKey:@"img_url"]);
     }else if (vcType == 3) {

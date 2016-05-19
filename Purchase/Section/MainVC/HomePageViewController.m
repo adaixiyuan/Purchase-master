@@ -11,6 +11,7 @@
 #import "GoodsShowViewController.h"
 
 static const float RowHeight = 100;
+static const NSInteger CellTag = 1000;
 
 @interface HomePageViewController ()<UITableViewDelegate,UITableViewDataSource>
 
@@ -104,7 +105,7 @@ static const float RowHeight = 100;
 }
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return 10;
+    return self.keyNoteList.count;
 }
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
@@ -117,12 +118,32 @@ static const float RowHeight = 100;
     if (!cell) {
         cell = [[HomePageCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:identifier];
     }
+    cell.theDelegate = self;
+    cell.tag = CellTag + indexPath.row;
+    NSDictionary *dic = [[NSDictionary alloc]initWithDictionary:self.keyNoteList[indexPath.row]];
+    [cell setCellContentWithDic:dic];
     return cell;
 }
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
+
+}
+#pragma mark - CellDelegate
+- (void)imageTapAction:(id)sender
+{
+    HomePageCell *cell = (HomePageCell *)sender;
+    
     GoodsShowViewController *goodsShowVC = [[GoodsShowViewController alloc]init];
+    goodsShowVC.vcType = HomePageVC;
+    goodsShowVC.dataList = self.keyNoteList;
+    goodsShowVC.index = cell.tag - CellTag;
     [self.navigationController pushViewController:goodsShowVC animated:YES];
+    
+    __weak typeof(self) weakSelf = self;
+    goodsShowVC.selectGoodsIndex = ^(NSInteger index){
+        NSIndexPath *indexPath = [NSIndexPath indexPathForRow:index inSection:0];
+        [weakSelf.theTableView scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionMiddle animated:YES];
+    };
 }
 #pragma mark - Set && Get
 - (UITableView *)theTableView

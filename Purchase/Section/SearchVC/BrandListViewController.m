@@ -17,6 +17,7 @@ static const float BarHeight = 44;
 @property (nonatomic, strong) UISearchBar    *searchBar;
 @property (nonatomic, strong) NSMutableArray *brandList;
 @property (nonatomic, strong) NSMutableArray *searchList;
+
 @end
 
 @implementation BrandListViewController
@@ -103,7 +104,6 @@ static const float BarHeight = 44;
     [self.searchBar resignFirstResponder];
     self.searchList = [[NSMutableArray alloc]initWithArray:self.brandList];
     [self.theTableView reloadData];
-    
 }
 -(void) searchBarSearchButtonClicked:(UISearchBar *)searchBar
 {
@@ -115,7 +115,6 @@ static const float BarHeight = 44;
     if (self.searchList != nil) {
         [self.searchList removeAllObjects];
     }
-    
     for (NSDictionary *brandDic in self.brandList) {
         if ([[brandDic objectForKey:@"brand_name"] rangeOfString:searchText].location != NSNotFound) {
             [self.searchList addObject:brandDic];
@@ -127,7 +126,7 @@ static const float BarHeight = 44;
 - (UITableView *)theTableView
 {
     if (_theTableView == nil) {
-        _theTableView = [[AutoTableView alloc]initWithFrame:CGRectMake(0, 0, ScreenWidth, ScreenHeight-64) style:UITableViewStylePlain];
+        _theTableView = [[UITableView alloc]initWithFrame:CGRectMake(0, 0, ScreenWidth, ScreenHeight-64) style:UITableViewStylePlain];
         _theTableView.backgroundColor = [UIColor clearColor];
         _theTableView.delegate = self;
         _theTableView.dataSource = self;

@@ -34,6 +34,8 @@ NSString * const kBuyRecordRequest = @"BuyRecord.ashx";
 
 NSString * const kProductRequest = @"Product.ashx";
 
+NSString * const kAddProductRequest = @"Product.ashx";
+
 NSString * const kBrandListRequest = @"Brand.ashx";
 
 NSString * const kLocactionRequest = @"Location.ashx";

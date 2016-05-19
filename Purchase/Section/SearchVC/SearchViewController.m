@@ -112,7 +112,12 @@ static const float FootHeight = 80;
     }
     cell.textLabel.text = self.baseArray[indexPath.row];
     
-    NSArray *detailsStrs = @[SAFE_STRING([SearchInfoModel shareInstance].keyStr),SAFE_STRING([SearchInfoModel shareInstance].brandName),SAFE_STRING([SearchInfoModel shareInstance].typeName),SAFE_STRING([SearchInfoModel shareInstance].dateStr),SAFE_STRING([SearchInfoModel shareInstance].locationStr)];
+    NSArray *detailsStrs;
+    if([SearchInfoModel shareInstance].fromType != FromPurchaseVC){
+        detailsStrs = @[SAFE_STRING([SearchInfoModel shareInstance].keyStr),SAFE_STRING([SearchInfoModel shareInstance].brandName),SAFE_STRING([SearchInfoModel shareInstance].typeName),SAFE_STRING([SearchInfoModel shareInstance].dateStr)];
+    }else{
+        detailsStrs = @[SAFE_STRING([SearchInfoModel shareInstance].keyStr),SAFE_STRING([SearchInfoModel shareInstance].brandName),SAFE_STRING([SearchInfoModel shareInstance].typeName),SAFE_STRING([SearchInfoModel shareInstance].locationStr)];
+    }
     cell.detailTextLabel.text = detailsStrs[indexPath.row];
     
     return cell;

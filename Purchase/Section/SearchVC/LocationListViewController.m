@@ -10,11 +10,14 @@
 #import "SearchInfoModel.h"
 
 static const float RowHeight = 48;
+static const float BarHeight = 44;
 
 @interface LocationListViewController ()<UITableViewDelegate,UITableViewDataSource>
 
-@property (nonatomic, strong) UITableView *theTableView;
-@property (nonatomic, strong) NSArray     *locationList;
+@property (nonatomic, strong) UITableView    *theTableView;
+@property (nonatomic, strong) UISearchBar    *searchBar;
+@property (nonatomic, strong) NSArray        *locationList;
+@property (nonatomic, strong) NSMutableArray *searchList;
 
 @end
 
@@ -25,6 +28,7 @@ static const float RowHeight = 48;
     // Do any additional setup after loading the view.
     self.navigationItem.title = NSLocalizedString(@"地址", @"地址");
     [self.view addSubview:self.theTableView];
+    self.theTableView.tableHeaderView = self.searchBar;
     
     // 获取地点列表
     [MYMBProgressHUD showHudWithMessage:NSLocalizedString(@"请稍等···", @"请稍等···") InView:self.view];
@@ -36,6 +40,7 @@ static const float RowHeight = 48;
     [[NetworkManager sharedInstance] startRequestWithURL:kLocactionRequest method:RequestPost parameters:nil result:^(AFHTTPRequestOperation *operation, id responseObject) {
         [MYMBProgressHUD hideHudFromView:self.view];
         self.locationList = [[NSArray alloc]initWithArray:[responseObject objectForKey:@"data"]];
+        self.searchList = [[NSMutableArray alloc]initWithArray:self.locationList];
         [self.theTableView reloadData];
         
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
@@ -46,7 +51,7 @@ static const float RowHeight = 48;
 #pragma mark - UITableViewDelegate && UITableViewDataSource
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return self.locationList.count;
+    return self.searchList.count;
 }
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
@@ -70,12 +75,11 @@ static const float RowHeight = 48;
         cell.detailTextLabel.font = [UIFont customFontOfSize:14];
         cell.detailTextLabel.textColor = SHALLOWBLACK;
     }
-    NSDictionary *locationDic = [[NSDictionary alloc]initWithDictionary:self.locationList[indexPath.row]];
+    NSDictionary *locationDic = [[NSDictionary alloc]initWithDictionary:self.searchList[indexPath.row]];
     cell.textLabel.text = [NSString stringWithFormat:@"地点：%@",SAFE_STRING([locationDic objectForKey:@"loc_name"])];
     cell.detailTextLabel.text = [NSString stringWithFormat:@"待采购总数:%@",SAFE_NUMBER([locationDic objectForKey:@"wait_to_buy"])];
     
-    NSMutableArray *locationList = [[NSMutableArray alloc]initWithArray:[[SearchInfoModel shareInstance].locationStr componentsSeparatedByString:@","]];
-    if ([locationList containsObject:SAFE_STRING(cell.textLabel.text)]) {
+    if ([[SearchInfoModel shareInstance].locationStr isEqualToString:SAFE_STRING(cell.textLabel.text)]) {
         cell.textLabel.textColor = NAVBARCOLOR;
         cell.detailTextLabel.textColor = NAVBARCOLOR;
     }else{
@@ -88,25 +92,43 @@ static const float RowHeight = 48;
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
-    UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
-    NSMutableArray *locationList = [[NSMutableArray alloc]initWithArray:[[SearchInfoModel shareInstance].locationStr componentsSeparatedByString:@","]];
-    if ([locationList containsObject:SAFE_STRING(cell.textLabel.text)]) {
-        [locationList removeObject:SAFE_STRING(cell.textLabel.text)];
-    }else{
-        [locationList addObject:SAFE_STRING(cell.textLabel.text)];
-    }
-
-    NSString *locationName = [locationList componentsJoinedByString:@","];
+     NSDictionary *locationDic = [[NSDictionary alloc]initWithDictionary:self.searchList[indexPath.row]];
     if (self.saveTheAddress) {
-        self.saveTheAddress(locationName);
+        self.saveTheAddress(SAFE_STRING([locationDic objectForKey:@"loc_name"]));
     }
-    [tableView reloadData];
+    [self.navigationController popViewControllerAnimated:YES];
+}
+#pragma mark - UISearchBarDelegate
+- (void)searchBarCancelButtonClicked:(UISearchBar *) searchBar
+{
+    self.searchBar.text = nil;
+    [self.searchBar resignFirstResponder];
+    self.searchList = [[NSMutableArray alloc]initWithArray:self.locationList];
+    [self.theTableView reloadData];
+}
+-(void) searchBarSearchButtonClicked:(UISearchBar *)searchBar
+{
+    [self searchBar:self.searchBar textDidChange:self.searchBar.text];
+    [self.searchBar resignFirstResponder];
+}
+- (void)searchBar:(UISearchBar *)searchBar textDidChange:(NSString *)searchText
+{
+    if (self.searchList != nil) {
+        [self.searchList removeAllObjects];
+    }
+    
+    for (NSDictionary *locationDic in self.locationList) {
+        if ([[locationDic objectForKey:@"loc_name"] rangeOfString:searchText].location != NSNotFound) {
+            [self.searchList addObject:locationDic];
+        }
+    }
+    [self.theTableView reloadData];
 }
 #pragma mark - Set && Get
 - (UITableView *)theTableView
 {
     if (_theTableView == nil) {
-        _theTableView = [[AutoTableView alloc]initWithFrame:CGRectMake(0, 0, ScreenWidth, ScreenHeight-64) style:UITableViewStylePlain];
+        _theTableView = [[UITableView alloc]initWithFrame:CGRectMake(0, 0, ScreenWidth, ScreenHeight-64) style:UITableViewStylePlain];
         _theTableView.backgroundColor = [UIColor clearColor];
         _theTableView.delegate = self;
         _theTableView.dataSource = self;
@@ -120,6 +142,17 @@ static const float RowHeight = 48;
         }
     }
     return _theTableView;
+}
+- (UISearchBar *)searchBar
+{
+    if (_searchBar == nil) {
+        _searchBar = [[UISearchBar alloc]initWithFrame:CGRectMake(0, 0, ScreenWidth, BarHeight)];
+        _searchBar.showsCancelButton = YES;
+        _searchBar.placeholder = NSLocalizedString(@"请输入搜索的内容", @"请输入搜索的内容");
+        _searchBar.delegate = self;
+        _searchBar.backgroundColor = [UIColor whiteColor];
+    }
+    return _searchBar;
 }
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];

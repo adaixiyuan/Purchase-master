@@ -53,6 +53,7 @@
 		E9F270BB1CD75D7100AEF91E /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = E9F270BA1CD75D7100AEF91E /* main.m */; };
 		E9F270C61CD75D7100AEF91E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E9F270C51CD75D7100AEF91E /* Assets.xcassets */; };
 		E9F270D61CD75DE400AEF91E /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = E9F270D51CD75DE400AEF91E /* AppDelegate.m */; };
+		E9F5CCD01CECA7F90000206F /* KeyNoteModel.m in Sources */ = {isa = PBXBuildFile; fileRef = E9F5CCCF1CECA7F90000206F /* KeyNoteModel.m */; };
 		E9F7070B1CDDC52B009DD292 /* HomePageCell.m in Sources */ = {isa = PBXBuildFile; fileRef = E9F7070A1CDDC52B009DD292 /* HomePageCell.m */; };
 		E9F7070E1CDDC9D4009DD292 /* GoodsInfoCell.m in Sources */ = {isa = PBXBuildFile; fileRef = E9F7070D1CDDC9D4009DD292 /* GoodsInfoCell.m */; };
 		E9F707121CDDD0C8009DD292 /* SearchViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E9F707111CDDD0C8009DD292 /* SearchViewController.m */; };
@@ -153,6 +154,8 @@
 		E9F270CA1CD75D7100AEF91E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		E9F270D41CD75DE400AEF91E /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		E9F270D51CD75DE400AEF91E /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
+		E9F5CCCE1CECA7F90000206F /* KeyNoteModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KeyNoteModel.h; sourceTree = "<group>"; };
+		E9F5CCCF1CECA7F90000206F /* KeyNoteModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KeyNoteModel.m; sourceTree = "<group>"; };
 		E9F707091CDDC52B009DD292 /* HomePageCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HomePageCell.h; sourceTree = "<group>"; };
 		E9F7070A1CDDC52B009DD292 /* HomePageCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HomePageCell.m; sourceTree = "<group>"; };
 		E9F7070C1CDDC9D4009DD292 /* GoodsInfoCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GoodsInfoCell.h; sourceTree = "<group>"; };
@@ -228,6 +231,8 @@
 				E95CFA841CE4A6B40057B649 /* UserInfoModel.m */,
 				E9D8E6A21CE81AA100FDC3AB /* SearchInfoModel.h */,
 				E9D8E6A31CE81AA100FDC3AB /* SearchInfoModel.m */,
+				E9F5CCCE1CECA7F90000206F /* KeyNoteModel.h */,
+				E9F5CCCF1CECA7F90000206F /* KeyNoteModel.m */,
 				E9429A911CEB459B007E6893 /* PurchaseInfoModel.h */,
 				E9429A921CEB45C4007E6893 /* PurchaseInfoModel.m */,
 				E91CC9AD1CE4C76B009F4D50 /* GoodsInfoModel.h */,
@@ -664,6 +669,7 @@
 				E9429A891CEB43D5007E6893 /* PurchaseOrderCell.m in Sources */,
 				E9BBCDA61CD8CC2200962298 /* AutoScrollView.m in Sources */,
 				E98EAB481CDA54D9000E5244 /* PhotoShowView.m in Sources */,
+				E9F5CCD01CECA7F90000206F /* KeyNoteModel.m in Sources */,
 				E94B164F1CD77E2A0034D164 /* UIFont+Addition.m in Sources */,
 				E9429A881CEB43D5007E6893 /* PurchaseOrderViewController.m in Sources */,
 				E94B16571CD783D90034D164 /* MYMBProgressHUD.m in Sources */,
