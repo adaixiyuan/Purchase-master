@@ -111,7 +111,6 @@ static const NSInteger CellTag = 1000;
     [UIView animateWithDuration:animateTime*3 animations:^{
         [UIView setAnimationCurve:UIViewAnimationCurveEaseInOut];
         [UIView setAnimationTransition:UIViewAnimationTransitionFlipFromRight forView:self.theTableView cache:YES];
-        
         if (self.isEdit == NO) {
             [self.editButton setTitle:NSLocalizedString(@"批量", @"批量") forState:UIControlStateNormal];
             [UIView animateWithDuration:animateTime/2 animations:^{
@@ -135,13 +134,76 @@ static const NSInteger CellTag = 1000;
         }
     }];
 }
-- (void)goodsAction:(UIButton *)btn
+- (void)goodsAction:(UIButton *)btn event:(id)event
 {
-    
+    NSSet *touches = [event allTouches];
+    UITouch *touch = [touches anyObject];
+    CGPoint currentTouchPosition = [touch locationInView:self.theTableView];
+    NSIndexPath *indexPath = [self.theTableView indexPathForRowAtPoint:currentTouchPosition];
+    PurchaseOrderCell *cell = (PurchaseOrderCell *)[self.theTableView cellForRowAtIndexPath:indexPath];
+    NSDictionary *purchaseDic = [[NSDictionary alloc]initWithDictionary:[self.purchaseList objectAtIndex:indexPath.section]];
+    NSString *sidStr = [NSString stringWithFormat:@"%d",(int)[purchaseDic objectForKey:@"sid"]];
+    NSString *qtyStr = cell.numText.text;
+    if ([btn.titleLabel.text isEqualToString:NSLocalizedString(@"采购", @"采购")]) {
+        if (qtyStr.length == 0) {
+            [MYMBProgressHUD showMessage:@"请输入采购数量！"];
+            return;
+        }
+        [self purchaseOrderWithSid:sidStr withQty:qtyStr withAction:@"purchase"];
+    }else if ([btn.titleLabel.text isEqualToString:NSLocalizedString(@"订购", @"订购")]){
+        if (qtyStr.length == 0) {
+            [MYMBProgressHUD showMessage:@"请输入订购数量！"];
+            return;
+        }
+        [self purchaseOrderWithSid:sidStr withQty:qtyStr withAction:@"reserve"];
+    }else{
+        [self purchaseOrderWithSid:sidStr withQty:nil withAction:@"out_of_stock"];
+    }
 }
 - (void)goodsBatchAction:(UIButton *)btn
 {
+    if (self.selectList.count == 0) {
+        [MYMBProgressHUD showMessage:NSLocalizedString(@"请选择批量操作的商品！", @"请选择批量操作的商品！")];
+        return;
+    }
+    NSMutableArray *sid_list = [[NSMutableArray alloc]init];
+    NSMutableArray *qty_list = [[NSMutableArray alloc]init];
+    for (int i = 0; i < self.selectList.count; i++) {
+        NSDictionary *purchaseDic = [[NSDictionary alloc]initWithDictionary:[self.purchaseList objectAtIndex:[self.selectList[i] integerValue]]];
+        [sid_list addObject:[NSString stringWithFormat:@"%d",(int)[purchaseDic objectForKey:@"sid"]]];
+        NSIndexPath *indexPath =  [NSIndexPath indexPathForRow:0 inSection:[self.selectList[i] integerValue]];
+        PurchaseOrderCell *cell = (PurchaseOrderCell *)[self.theTableView cellForRowAtIndexPath:indexPath];
+         [qty_list addObject:SAFE_STRING(cell.numText.text)];
+    }
+    NSString *sidStr = [sid_list componentsJoinedByString:@","];
+    NSString *qtyStr = [qty_list componentsJoinedByString:@","];
+    if ([btn.titleLabel.text isEqualToString:NSLocalizedString(@"批量采购", @"批量采购")]) {
+        [self purchaseOrderWithSid:sidStr withQty:qtyStr withAction:@"purchase"];
+    }else if ([btn.titleLabel.text isEqualToString:NSLocalizedString(@"批量订购", @"批量订购")]){
+        [self purchaseOrderWithSid:sidStr withQty:qtyStr withAction:@"reserve"];
+    }else{
+        [self purchaseOrderWithSid:sidStr withQty:nil withAction:@"out_of_stock"];
+    }
+}
+// 采购操作
+- (void)purchaseOrderWithSid:(NSString *)sid withQty:(NSString *)qty withAction:(NSString *)action
+{
+    [MYMBProgressHUD showHudWithMessage:NSLocalizedString(@"请稍等···", @"请稍等···") InView:self.view];
+    NSMutableDictionary *parametersDic = [[NSMutableDictionary alloc]init];
+    [parametersDic setObject:action forKey:@"action"];
+    [parametersDic setObject:@([UserInfoModel shareInstance].user_sid) forKey:@"user_sid"];
+    [parametersDic setObject:SAFE_STRING(sid) forKey:@"sid"];
+    [parametersDic setObject:SAFE_STRING(qty) forKey:@"qty"];
     
+    [[NetworkManager sharedInstance] startRequestWithURL:kOrderRequest method:RequestPost parameters:parametersDic result:^(AFHTTPRequestOperation *operation, id responseObject) {
+        self.pageNum = 1;
+        [self getPurchaseRequest];
+        [MYMBProgressHUD hideHudFromView:self.view];
+        [MYMBProgressHUD showMessage:SAFE_STRING([responseObject objectForKey:@"msg"])];
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        [MYMBProgressHUD hideHudFromView:self.view];
+        [MYMBProgressHUD showMessage:error.userInfo[@"NSLocalizedDescription"]];
+    }];
 }
 #pragma mark - Request
 - (void)getPurchaseRequest
@@ -176,7 +238,6 @@ static const NSInteger CellTag = 1000;
         [MYMBProgressHUD hideHudFromView:self.view];
         [MYMBProgressHUD showMessage:error.userInfo[@"NSLocalizedDescription"]];
     }];
-
 }
 #pragma mark - UITableViewDelegate && UITableViewDataSource
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
@@ -212,7 +273,7 @@ static const NSInteger CellTag = 1000;
             [actionButton setTitleColor:SHALLOWGRAY forState:UIControlStateNormal];
             [actionButton setTitleColor:NAVBARCOLOR forState:UIControlStateHighlighted];
             actionButton.titleLabel.font = [UIFont customFontOfSize:14];
-            [actionButton addTarget:self action:@selector(goodsAction:) forControlEvents:UIControlEventTouchUpInside];
+            [actionButton addTarget:self action:@selector(goodsAction:event:) forControlEvents:UIControlEventTouchUpInside];
             [footView addSubview:actionButton];
             
             if (i > 0) {
@@ -261,7 +322,6 @@ static const NSInteger CellTag = 1000;
 - (void)imageTapAction:(id)sender
 {
     PurchaseOrderCell *cell = (PurchaseOrderCell *)sender;
-    
     GoodsShowViewController *goodsShowVC = [[GoodsShowViewController alloc]init];
     goodsShowVC.vcType = PurchaseVC;
     goodsShowVC.dataList = self.purchaseList;
@@ -274,10 +334,28 @@ static const NSInteger CellTag = 1000;
         [weakSelf.theTableView scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionMiddle animated:YES];
     };
 }
+- (void)goodsCountAdd:(id)sender
+{
+    PurchaseOrderCell *cell = (PurchaseOrderCell *)sender;
+    NSInteger num = [cell.numText.text integerValue];
+    if (num < 9999) {
+        num = num+1;
+    }
+    cell.numText.text = [NSString stringWithFormat:@"%d",(int)num];
+}
+- (void)goodsCountCut:(id)sender
+{
+    PurchaseOrderCell *cell = (PurchaseOrderCell *)sender;
+    NSInteger num = [cell.numText.text integerValue];
+    if (num > 0) {
+        num = num-1;
+    }
+    cell.numText.text = [NSString stringWithFormat:@"%d",(int)num];
+}
 - (void)updateCellSelectStatus:(id)sender
 {
     PurchaseOrderCell *cell = (PurchaseOrderCell *)sender;
-    if (cell.numText.text.length > 0 && [cell.numText.text integerValue] > 0) {
+    if (cell.selectBtn.selected == YES) {
         if (![self.selectList containsObject:@(cell.tag-CellTag)]) {
             [self.selectList addObject:@(cell.tag-CellTag)];
             [self.theTableView reloadData];

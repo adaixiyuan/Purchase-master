@@ -24,6 +24,7 @@
     [self.backButton setImage: backImage forState:UIControlStateNormal];
     [self.backButton addTarget:self action:@selector(backAction:) forControlEvents:UIControlEventTouchUpInside];
     [self.navigationItem setLeftBarButtonItem:[[UIBarButtonItem alloc] initWithCustomView:self.backButton] animated:NO];
+    
 }
 - (void)backAction:(id)sender
 {

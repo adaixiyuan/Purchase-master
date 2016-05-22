@@ -32,6 +32,7 @@ static const float CountHeight = 28;
         _selectBtn.backgroundColor = [UIColor clearColor];
         [_selectBtn setImage:[UIImage imageNamed:@"icon_select"] forState:UIControlStateNormal];
         [_selectBtn setImage:[UIImage imageNamed:@"select_highlited"] forState:UIControlStateSelected];
+        [_selectBtn addTarget:self action:@selector(selectBtnAction:) forControlEvents:UIControlEventTouchUpInside];
         [self.contentView addSubview:_selectBtn];
         
         _goodsImageView = [[UIImageView alloc]init];
@@ -50,6 +51,7 @@ static const float CountHeight = 28;
         _numCutBtn = [UIButton buttonWithType:UIButtonTypeCustom];
         _numCutBtn.backgroundColor = [UIColor clearColor];
         [_numCutBtn setImage:[UIImage imageNamed:@"btn_cut"] forState:UIControlStateNormal];
+        [_numCutBtn addTarget:self action:@selector(numCutBtnAction:) forControlEvents:UIControlEventTouchUpInside];
         [_countView addSubview:_numCutBtn];
         _numText = [[UITextField alloc]init];
         _numText.backgroundColor = [UIColor clearColor];
@@ -58,12 +60,14 @@ static const float CountHeight = 28;
         _numText.keyboardType = UIKeyboardTypeNumberPad;
         _numText.returnKeyType = UIReturnKeyDone;
         _numText.font = [UIFont customFontOfSize:14];
+        _numText.textColor = SHALLOWBLACK;
+        _numText.text = @"0";
         [_countView addSubview:_numText];
         _numAddBtn = [UIButton buttonWithType:UIButtonTypeCustom];
         _numAddBtn.backgroundColor = [UIColor clearColor];
         [_numAddBtn setImage:[UIImage imageNamed:@"btn_add"] forState:UIControlStateNormal];
+        [_numAddBtn addTarget:self action:@selector(numAddBtnAction:) forControlEvents:UIControlEventTouchUpInside];
         [_countView addSubview:_numAddBtn];
-        
         
         [_selectBtn mas_makeConstraints:^(MASConstraintMaker *make) {
             make.centerY.equalTo(self.contentView).with.offset(0);
@@ -187,7 +191,6 @@ static const float CountHeight = 28;
 - (void)setCellContentWithPurchaseInfo:(NSDictionary *)purchaseDic
 {
     PurchaseInfoModel *purchaseModel = [PurchaseInfoModel mj_objectWithKeyValues:purchaseDic];
-    
     NSString *detailStr;
     NSRange infoRange = NSMakeRange(0, 0);
     if (purchaseModel.brand_name == nil || purchaseModel.brand_name.length == 0) {
@@ -234,6 +237,14 @@ static const float CountHeight = 28;
 }
 - (void)textFieldDidEndEditing:(UITextField *)textField
 {
+    [textField resignFirstResponder];
+    if (textField.text.length == 0) {
+        textField.text = @"0";
+    }
+}
+- (void)selectBtnAction:(UIButton *)btn
+{
+    btn.selected = !btn.selected;
     if (self.theDelegate && [self.theDelegate respondsToSelector:@selector(updateCellSelectStatus:)]) {
         [self.theDelegate updateCellSelectStatus:self];
     }
@@ -244,6 +255,18 @@ static const float CountHeight = 28;
         if (self.theDelegate && [self.theDelegate respondsToSelector:@selector(imageTapAction:)]) {
             [self.theDelegate imageTapAction:self];
         }
+    }
+}
+- (void)numCutBtnAction:(UIButton *)btn
+{
+    if (self.theDelegate && [self.theDelegate respondsToSelector:@selector(goodsCountCut:)]) {
+        [self.theDelegate goodsCountCut:self];
+    }
+}
+- (void)numAddBtnAction:(UIButton *)btn
+{
+    if (self.theDelegate && [self.theDelegate respondsToSelector:@selector(goodsCountAdd:)]) {
+        [self.theDelegate goodsCountAdd:self];
     }
 }
 @end

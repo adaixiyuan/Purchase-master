@@ -11,6 +11,9 @@
 @protocol CellDelegate <NSObject>
 
 - (void)imageTapAction:(id)sender;
+- (void)goodsCountAdd:(id)sender;
+- (void)goodsCountCut:(id)sender;
+- (void)addCartToPurchase:(id)sender;
 
 @end
 

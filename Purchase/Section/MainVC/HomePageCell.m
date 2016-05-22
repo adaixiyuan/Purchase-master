@@ -85,7 +85,8 @@ static const float ImageHeight = 80;
 {
     KeyNoteModel *keyNote = [KeyNoteModel mj_objectWithKeyValues:dic];
     
-    [_goodsImageView sd_setImageWithURL:[NSURL URLWithString:SAFE_STRING(keyNote.img_urls)]];
+    NSArray *urls = [keyNote.img_urls componentsSeparatedByString:@","];
+    [_goodsImageView sd_setImageWithURL:[NSURL URLWithString:SAFE_STRING(urls[0])]];
     _titleLabel.text = SAFE_STRING(keyNote.title);
     _contentLabel.text = SAFE_STRING(keyNote.content);
     _tagLabel.text = SAFE_STRING(keyNote.tag);

@@ -9,11 +9,12 @@
 #import "HomePageViewController.h"
 #import "HomePageCell.h"
 #import "GoodsShowViewController.h"
+#import "AddKeyNoteViewController.h"
 
 static const float RowHeight = 100;
 static const NSInteger CellTag = 1000;
 
-@interface HomePageViewController ()<UITableViewDelegate,UITableViewDataSource>
+@interface HomePageViewController ()<UITableViewDelegate,UITableViewDataSource,CellDelegate>
 
 @property (nonatomic, strong) UITableView    *theTableView;
 @property (nonatomic, strong) NSMutableArray *keyNoteList;
@@ -28,6 +29,13 @@ static const NSInteger CellTag = 1000;
     // Do any additional setup after loading the view.
     self.navigationItem.title = NSLocalizedString(@"首页", @"首页");
     [self.view addSubview:self.theTableView];
+    
+    UIButton *rightBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+    rightBtn.frame = CGRectMake(0, 0, 30, 30);
+    rightBtn.backgroundColor = [UIColor clearColor];
+    [rightBtn setImage:[UIImage imageNamed:@"add_icon"] forState:UIControlStateNormal];
+    [rightBtn addTarget:self action:@selector(addkeyNoteAction:) forControlEvents:UIControlEventTouchUpInside];
+    [self.navigationItem setRightBarButtonItem:[[UIBarButtonItem alloc] initWithCustomView:rightBtn] animated:YES];
     
     self.pageNum = 1;
     self.keyNoteList = [[NSMutableArray alloc]init];
@@ -44,6 +52,16 @@ static const NSInteger CellTag = 1000;
          weakSelf.pageNum ++;
         [weakSelf getTheKeyNoteRequest];
     }];
+}
+#pragma mark - Event
+- (void)addkeyNoteAction:(UIButton *)btn
+{
+    __weak typeof(self) weakSelf = self;
+    AddKeyNoteViewController *addKeyNoteVC = [[AddKeyNoteViewController alloc]init];
+    [self.navigationController pushViewController:addKeyNoteVC animated:YES];
+    addKeyNoteVC.updataKeyNote = ^(){
+        [weakSelf getTheKeyNoteRequest];
+    };
 }
 #pragma mark - Request
 - (void)getTheKeyNoteRequest
@@ -124,9 +142,33 @@ static const NSInteger CellTag = 1000;
     [cell setCellContentWithDic:dic];
     return cell;
 }
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
-{
-
+- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath{
+    return YES;
+}
+- (UITableViewCellEditingStyle)tableView:(UITableView *)tableView editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath{
+    return UITableViewCellEditingStyleDelete;
+}
+- (NSString *)tableView:(UITableView *)tableView titleForDeleteConfirmationButtonForRowAtIndexPath:(NSIndexPath *)indexPath{
+    return @"删除";
+}
+- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath{
+    
+    if (editingStyle == UITableViewCellEditingStyleDelete) {
+        [MYMBProgressHUD showHudWithMessage:@"正在删除···" InView:self.view];
+        NSDictionary *dic = [[NSDictionary alloc]initWithDictionary:self.keyNoteList[indexPath.row]];
+        NSMutableDictionary *parameters = [[NSMutableDictionary alloc]init];
+        [parameters setObject:@"delete" forKey:@"action"];
+        [parameters setObject:@([UserInfoModel shareInstance].user_sid) forKey:@"user_sid"];
+        [parameters setObject:@([[dic objectForKey:@"sid"] integerValue]) forKey:@"sid"];
+        [[NetworkManager sharedInstance] startRequestWithURL:kKeyNoteRequest method:RequestPost parameters:parameters result:^(AFHTTPRequestOperation *operation, id responseObject) {
+            [MYMBProgressHUD hideHudFromView:self.view];
+            [self.keyNoteList removeObject:dic];
+            [self.theTableView reloadData];
+        } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+            [MYMBProgressHUD hideHudFromView:self.view];
+            [MYMBProgressHUD showMessage:error.userInfo[@"NSLocalizedDescription"]];
+        }];
+    }
 }
 #pragma mark - CellDelegate
 - (void)imageTapAction:(id)sender

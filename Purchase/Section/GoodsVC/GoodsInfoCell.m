@@ -48,6 +48,7 @@ static const float CountHeight = 28;
         _numCutBtn = [UIButton buttonWithType:UIButtonTypeCustom];
         _numCutBtn.backgroundColor = [UIColor clearColor];
         [_numCutBtn setImage:[UIImage imageNamed:@"btn_cut"] forState:UIControlStateNormal];
+        [_numCutBtn addTarget:self action:@selector(numCutBtnAction:) forControlEvents:UIControlEventTouchUpInside];
         [_countView addSubview:_numCutBtn];
         _numText = [[UITextField alloc]init];
         _numText.backgroundColor = [UIColor clearColor];
@@ -56,15 +57,19 @@ static const float CountHeight = 28;
         _numText.keyboardType = UIKeyboardTypeNumberPad;
         _numText.returnKeyType = UIReturnKeyDone;
         _numText.font = [UIFont customFontOfSize:14];
+        _numText.textColor = SHALLOWBLACK;
+        _numText.text = @"0";
         [_countView addSubview:_numText];
         _numAddBtn = [UIButton buttonWithType:UIButtonTypeCustom];
         _numAddBtn.backgroundColor = [UIColor clearColor];
         [_numAddBtn setImage:[UIImage imageNamed:@"btn_add"] forState:UIControlStateNormal];
+        [_numAddBtn addTarget:self action:@selector(numAddBtnAction:) forControlEvents:UIControlEventTouchUpInside];
         [_countView addSubview:_numAddBtn];
         
         _cartButton = [UIButton buttonWithType:UIButtonTypeCustom];
         _cartButton.backgroundColor = [UIColor clearColor];
         [_cartButton setImage:[UIImage imageNamed:@"icon_cart"] forState:UIControlStateNormal];
+        [_cartButton addTarget:self action:@selector(cartBtnAction:) forControlEvents:UIControlEventTouchUpInside];
         [self.contentView addSubview:_cartButton];
         
         [_goodsImageView mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -187,7 +192,6 @@ static const float CountHeight = 28;
         range = NSMakeRange(0, goodsModel.brand_name.length);
         detailStr = [NSString stringWithFormat:@"%@  %@",SAFE_STRING(goodsModel.brand_name),SAFE_STRING(goodsModel.des)];
     }
-    
     [_goodsImageView sd_setImageWithURL:[NSURL URLWithString:SAFE_STRING(goodsModel.img_url)]];
     
     [_goodsDesLabel setText:detailStr afterInheritingLabelAttributesAndConfiguringWithBlock:^NSMutableAttributedString *(NSMutableAttributedString *mutableAttributedString) {
@@ -256,11 +260,51 @@ static const float CountHeight = 28;
         return mutableAttributedString;
     }];
 }
+#pragma mark - UITextFieldDelegate
+- (BOOL)textFieldShouldReturn:(UITextField *)textField
+{
+    [textField resignFirstResponder];
+    return YES;
+}
+- (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string
+{
+    NSString * aString = [textField.text stringByReplacingCharactersInRange:range withString:string];
+    if ([aString length] >= 4) {
+        textField.text = [aString substringToIndex:4];
+        [textField resignFirstResponder];
+        return NO;
+    }
+    return YES;
+}
+- (void)textFieldDidEndEditing:(UITextField *)textField
+{
+    [textField resignFirstResponder];
+    if (textField.text.length == 0) {
+        textField.text = @"0";
+    }
+}
 - (void)tapAction:(UITapGestureRecognizer *)tap
 {
     if(self.theDelegate && [self.theDelegate respondsToSelector:@selector(imageTapAction:)]){
         [self.theDelegate imageTapAction:self];
     }
 }
-
+- (void)numCutBtnAction:(UIButton *)btn
+{
+    if (self.theDelegate && [self.theDelegate respondsToSelector:@selector(goodsCountCut:)]) {
+        [self.theDelegate goodsCountCut:self];
+    }
+}
+- (void)numAddBtnAction:(UIButton *)btn
+{
+    if (self.theDelegate && [self.theDelegate respondsToSelector:@selector(goodsCountAdd:)]) {
+        [self.theDelegate goodsCountAdd:self];
+    }
+}
+- (void)cartBtnAction:(UIButton *)btn
+{
+    if (self.theDelegate && [self.theDelegate respondsToSelector:@selector(addCartToPurchase:)]) {
+        [self.theDelegate addCartToPurchase:self];
+    }
+}
 @end

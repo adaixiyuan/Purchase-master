@@ -54,7 +54,6 @@ static const NSInteger CellTag = 1000;
     self.systemList = [[NSMutableArray alloc]init];
     self.livePhotosList = [[NSMutableArray alloc]init];
     // 获取记录列表
-    [MYMBProgressHUD showHudWithMessage:NSLocalizedString(@"请稍等···", @"请稍等···") InView:self.view];
     [self getGoodsListRequest];
     
     __weak typeof(self) weakSelf = self;
@@ -120,6 +119,7 @@ static const NSInteger CellTag = 1000;
 #pragma mark - Request
 - (void)getGoodsListRequest
 {
+    [MYMBProgressHUD showHudWithMessage:NSLocalizedString(@"请稍等···", @"请稍等···") InView:self.view];
     NSInteger pageNum;
     if ([self.goods_type integerValue] == 1) {
         pageNum = self.pageNum_one;
@@ -245,6 +245,37 @@ static const NSInteger CellTag = 1000;
         NSIndexPath *indexPath = [NSIndexPath indexPathForRow:index inSection:0];
         [weakSelf.theTableView scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionMiddle animated:YES];
     };
+}
+- (void)goodsCountAdd:(id)sender
+{
+    GoodsInfoCell *cell = (GoodsInfoCell *)sender;
+    NSInteger num = [cell.numText.text integerValue];
+    if (num < 9999) {
+        num = num+1;
+    }
+    cell.numText.text = [NSString stringWithFormat:@"%d",(int)num];
+}
+- (void)goodsCountCut:(id)sender
+{
+    GoodsInfoCell *cell = (GoodsInfoCell *)sender;
+    NSInteger num = [cell.numText.text integerValue];
+    if (num > 0) {
+        num = num-1;
+    }
+    cell.numText.text = [NSString stringWithFormat:@"%d",(int)num];
+}
+- (void)addCartToPurchase:(id)sender
+{
+    [MYMBProgressHUD showHudWithMessage:NSLocalizedString(@"请稍等···", @"请稍等···") InView:self.view];
+  
+    if ([self.goods_type integerValue] == 1) {
+        
+    }else if ([self.goods_type integerValue] == 2){
+        
+    }else{
+        
+    }
+
 }
 #pragma mark - Set && Get
 - (UIView *)topView

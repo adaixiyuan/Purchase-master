@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		3133DC18B4E0402EBED047A4 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 80220A287F1AF3970A4127D4 /* libPods.a */; };
+		E91814541CEFFB39001C164E /* AddKeyNoteViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E91814531CEFFB39001C164E /* AddKeyNoteViewController.m */; };
 		E91CC9AF1CE4C76B009F4D50 /* GoodsInfoModel.m in Sources */ = {isa = PBXBuildFile; fileRef = E91CC9AE1CE4C76B009F4D50 /* GoodsInfoModel.m */; };
 		E9202B081CEB63D000CB77A7 /* LocationListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E9202B071CEB63D000CB77A7 /* LocationListViewController.m */; };
 		E92AEF711CDE1C0E00ABBCAF /* RequestMacro.m in Sources */ = {isa = PBXBuildFile; fileRef = E92AEF701CDE1C0E00ABBCAF /* RequestMacro.m */; };
@@ -62,6 +63,8 @@
 /* Begin PBXFileReference section */
 		80220A287F1AF3970A4127D4 /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		AFB1325B126C63FFF2BBC151 /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
+		E91814521CEFFB39001C164E /* AddKeyNoteViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AddKeyNoteViewController.h; sourceTree = "<group>"; };
+		E91814531CEFFB39001C164E /* AddKeyNoteViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AddKeyNoteViewController.m; sourceTree = "<group>"; };
 		E91CC9AD1CE4C76B009F4D50 /* GoodsInfoModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GoodsInfoModel.h; sourceTree = "<group>"; };
 		E91CC9AE1CE4C76B009F4D50 /* GoodsInfoModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GoodsInfoModel.m; sourceTree = "<group>"; };
 		E9202B061CEB63D000CB77A7 /* LocationListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LocationListViewController.h; sourceTree = "<group>"; };
@@ -396,6 +399,8 @@
 				E9B3507B1CD79C69005A4455 /* HomePageViewController.m */,
 				E9F707091CDDC52B009DD292 /* HomePageCell.h */,
 				E9F7070A1CDDC52B009DD292 /* HomePageCell.m */,
+				E91814521CEFFB39001C164E /* AddKeyNoteViewController.h */,
+				E91814531CEFFB39001C164E /* AddKeyNoteViewController.m */,
 			);
 			path = MainVC;
 			sourceTree = "<group>";
@@ -675,6 +680,7 @@
 				E94B16571CD783D90034D164 /* MYMBProgressHUD.m in Sources */,
 				E98EAB331CDA1F9D000E5244 /* LeftViewCell.m in Sources */,
 				E92AEF711CDE1C0E00ABBCAF /* RequestMacro.m in Sources */,
+				E91814541CEFFB39001C164E /* AddKeyNoteViewController.m in Sources */,
 				E91CC9AF1CE4C76B009F4D50 /* GoodsInfoModel.m in Sources */,
 				E9D8E6A41CE81AA100FDC3AB /* SearchInfoModel.m in Sources */,
 				E9429A991CEB46B0007E6893 /* GoodsShowCell.m in Sources */,

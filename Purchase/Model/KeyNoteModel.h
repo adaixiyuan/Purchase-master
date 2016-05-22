@@ -21,4 +21,8 @@
 @property (nonatomic, assign) NSInteger type;   // 1表示普通信息, 2 表示折扣信息
 @property (nonatomic, strong) NSString *img_urls;
 
+@property (nonatomic, strong) NSString *typeStr;
+@property (nonatomic, strong) NSString *locations;
+@property (nonatomic, strong) NSString *brands;
+
 @end

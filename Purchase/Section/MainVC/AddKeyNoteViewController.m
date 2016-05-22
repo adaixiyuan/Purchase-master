@@ -1,17 +1,18 @@
 //
-//  GoodsPublishViewController.m
+//  AddKeyNoteViewController.m
 //  Purchase
 //
-//  Created by luoheng on 16/5/4.
+//  Created by luoheng on 16/5/21.
 //  Copyright © 2016年 luoheng. All rights reserved.
 //
 
-#import "GoodsPublishViewController.h"
+#import "AddKeyNoteViewController.h"
 #import "PhotoShowView.h"
-#import "CodeScanViewController.h"
 #import "GoodsInfoEditViewController.h"
 #import "BrandsViewController.h"
-#import "PublishInfoModel.h"
+#import "DatePickerView.h"
+#import "LocationListViewController.h"
+#import "KeyNoteModel.h"
 
 static const float HeadHeight = 42;
 static const float FootHeight = 80;
@@ -19,18 +20,18 @@ static const float RowHeight_one = 120;
 static const float RowHeight_two = 48;
 static const NSInteger TitleTag = 100;
 
-@interface GoodsPublishViewController ()<UITableViewDelegate,UITableViewDataSource,UITextViewDelegate,PhotoViewDelegate>
+@interface AddKeyNoteViewController ()<UITableViewDelegate,UITableViewDataSource,UITextViewDelegate,PhotoViewDelegate>
 
 @property (nonatomic, strong) AutoTableView    *theTableView;
 @property (nonatomic, strong) PhotoShowView    *myPhotoView;
 @property (nonatomic, strong) NSArray          *imageList;
 @property (nonatomic, strong) UITextView       *textView;
-@property (nonatomic, strong) UIButton         *publishBtn;
-@property (nonatomic, strong) PublishInfoModel *publishModel;
+@property (nonatomic, strong) UIButton         *addBtn;
+@property (nonatomic, strong) KeyNoteModel     *keyNoteModel;
 
 @end
 
-@implementation GoodsPublishViewController
+@implementation AddKeyNoteViewController
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
@@ -39,10 +40,10 @@ static const NSInteger TitleTag = 100;
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
-    self.navigationItem.title = NSLocalizedString(@"商品发布", @"商品发布");
+    self.navigationItem.title = NSLocalizedString(@"新增重点", @"新增重点");
     [self.view addSubview:self.theTableView];
     
-    self.publishModel = [[PublishInfoModel alloc]init];
+    self.keyNoteModel = [[KeyNoteModel alloc]init];
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardShow:) name:UIKeyboardWillShowNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardHide:) name:UIKeyboardWillHideNotification object:nil];
@@ -50,16 +51,26 @@ static const NSInteger TitleTag = 100;
 #pragma mark - Event
 - (void)publishAction:(UIButton *)btn
 {
+    if (self.keyNoteModel.brands.length > 0) {
+        self.keyNoteModel.tag = self.keyNoteModel.brands;
+        if (self.keyNoteModel.locations.length > 0) {
+            self.keyNoteModel.tag = [NSString stringWithFormat:@"%@,%@",self.keyNoteModel.brands,self.keyNoteModel.locations];
+        }
+    }else{
+        if (self.keyNoteModel.locations.length > 0) {
+            self.keyNoteModel.tag = [NSString stringWithFormat:@"%@,%@",self.keyNoteModel.brands,self.keyNoteModel.locations];
+        }
+    }
+    
     [MYMBProgressHUD showHudWithMessage:NSLocalizedString(@"请稍等···", @"请稍等···") InView:self.view];
     NSMutableDictionary *publishDic = [[NSMutableDictionary alloc]init];
     [publishDic setObject:@"add" forKey:@"action"];
+    [publishDic setObject:@(self.keyNoteModel.type) forKey:@"type"];
     [publishDic setObject:@([UserInfoModel shareInstance].user_sid) forKey:@"user_sid"];
-    [publishDic setObject:SAFE_STRING(self.publishModel.brand_name) forKey:@"brand_name"];
-    [publishDic setObject:SAFE_STRING(self.publishModel.des) forKey:@"des"];
-    [publishDic setObject:SAFE_STRING(self.publishModel.goods_no) forKey:@"goods_no"];
-    [publishDic setObject:SAFE_STRING(self.publishModel.price) forKey:@"price"];
-    [publishDic setObject:SAFE_STRING(self.publishModel.need_qty) forKey:@"need_qty"];
-    [publishDic setObject:SAFE_STRING(self.publishModel.discountInfo) forKey:@"remark"];
+    [publishDic setObject:SAFE_STRING(self.keyNoteModel.title) forKey:@"title"];
+    [publishDic setObject:SAFE_STRING(self.keyNoteModel.expire_dt) forKey:@"expire_dt"];
+    [publishDic setObject:SAFE_STRING(self.keyNoteModel.content) forKey:@"content"];
+    [publishDic setObject:SAFE_STRING(self.keyNoteModel.tag) forKey:@"tag"];
     
     NSMutableArray *dataArray = [[NSMutableArray alloc]init];
     NSMutableArray *namesArray = [[NSMutableArray alloc]init];
@@ -73,35 +84,17 @@ static const NSInteger TitleTag = 100;
         [filesArray addObject:[NSString stringWithFormat:@"img%d.png",i]];
         [mimeTypeArray addObject:@"image/png"];
     }
-    [[NetworkManager sharedInstance] uploadRequestWithURL:kProductRequest method:RequestPost parameters:publishDic datas:dataArray names:namesArray fileNames:filesArray mimeTypes:mimeTypeArray result:^(AFHTTPRequestOperation *operation, id responseObject) {
+    [[NetworkManager sharedInstance] uploadRequestWithURL:kKeyNoteRequest method:RequestPost parameters:publishDic datas:dataArray names:namesArray fileNames:filesArray mimeTypes:mimeTypeArray result:^(AFHTTPRequestOperation *operation, id responseObject) {
         [MYMBProgressHUD hideHudFromView:self.view];
+        if (self.updataKeyNote) {
+            self.updataKeyNote();
+        }
+        [self.navigationController popViewControllerAnimated:YES];
+        
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
         [MYMBProgressHUD hideHudFromView:self.view];
         [MYMBProgressHUD showMessage:error.userInfo[@"NSLocalizedDescription"]];
     }];
-}
-#pragma mark - PhotoViewDelegate
-- (void)addPicker:(UIImagePickerController *)picker
-{
-    if([[[UIDevice currentDevice] systemVersion] floatValue] >= 8.0) {
-        self.modalPresentationStyle = UIModalPresentationOverCurrentContext;
-    }
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        [self presentViewController:picker animated:YES completion:nil];
-    });
-}
-- (void)addZYQPicker:(ZYQAssetPickerController *)picker
-{
-    if([[[UIDevice currentDevice] systemVersion] floatValue] >= 8.0) {
-        self.modalPresentationStyle = UIModalPresentationOverCurrentContext;
-    }
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        [self presentViewController:picker animated:YES completion:nil];
-    });
-}
-- (void)showPhotos:(NSMutableArray *)photos
-{
-    self.imageList = [[NSMutableArray alloc]initWithArray:photos];
 }
 #pragma mark - UITableViewDelegate,UITableViewDataSource
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
@@ -131,7 +124,7 @@ static const NSInteger TitleTag = 100;
             make.left.equalTo(headView).with.offset(15);
         }];
     }
-    NSArray *titles = @[NSLocalizedString(@"商品图片", @"商品图片"),NSLocalizedString(@"商品描述", @"商品描述"),NSLocalizedString(@"其他信息", @"其他信息")];
+    NSArray *titles = @[NSLocalizedString(@"商品信息", @"商品信息"),NSLocalizedString(@"商品描述", @"商品描述"),NSLocalizedString(@"商品图片", @"商品图片")];
     UILabel *titleLabel = (UILabel *)[headView viewWithTag:TitleTag];
     titleLabel.text = titles[section];
     return headView;
@@ -155,27 +148,27 @@ static const NSInteger TitleTag = 100;
             footView = [[UITableViewHeaderFooterView alloc]initWithReuseIdentifier:sectionFootIdentifier];
             footView.contentView.backgroundColor = [UIColor clearColor];
             
-            self.publishBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-            self.publishBtn.backgroundColor = [UIColor clearColor];
-            [self.publishBtn setBackgroundImage:[UIImage imageNamed:@"button_inEffect"] forState:UIControlStateNormal];
-            [self.publishBtn setBackgroundImage:[UIImage imageNamed:@"button_invalid"] forState:UIControlStateDisabled];
-            [self.publishBtn setTitle:NSLocalizedString(@"发布", @"发布") forState:UIControlStateNormal];
-            [self.publishBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-            self.publishBtn.titleLabel.font = [UIFont customFontOfSize:15];
-            [self.publishBtn addTarget:self action:@selector(publishAction:) forControlEvents:UIControlEventTouchUpInside];
-            [footView addSubview:self.publishBtn];
+            self.addBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+            self.addBtn.backgroundColor = [UIColor clearColor];
+            [self.addBtn setBackgroundImage:[UIImage imageNamed:@"button_inEffect"] forState:UIControlStateNormal];
+            [self.addBtn setBackgroundImage:[UIImage imageNamed:@"button_invalid"] forState:UIControlStateDisabled];
+            [self.addBtn setTitle:NSLocalizedString(@"发布", @"发布") forState:UIControlStateNormal];
+            [self.addBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+            self.addBtn.titleLabel.font = [UIFont customFontOfSize:15];
+            [self.addBtn addTarget:self action:@selector(publishAction:) forControlEvents:UIControlEventTouchUpInside];
+            [footView addSubview:self.addBtn];
             
-            [self.publishBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+            [self.addBtn mas_makeConstraints:^(MASConstraintMaker *make) {
                 make.center.equalTo(footView).with.offset(0);
                 make.left.equalTo(footView).with.offset(15);
                 make.right.equalTo(footView).with.offset(-15);
                 make.height.equalTo(@(40*SizeScaleHeight));
             }];
         }
-        if (self.publishModel.des.length > 0 && self.publishModel.brand_name.length > 0) {
-            self.publishBtn.enabled = YES;
+        if (self.keyNoteModel.title.length > 0 && self.keyNoteModel.typeStr.length > 0 && self.keyNoteModel.expire_dt.length > 0) {
+            self.addBtn.enabled = YES;
         }else{
-            self.publishBtn.enabled = NO;
+            self.addBtn.enabled = NO;
         }
         return footView;
     }
@@ -215,8 +208,9 @@ static const NSInteger TitleTag = 100;
         [cell.contentView addSubview:self.textView];
     }else{
         cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
-        NSArray *titles = @[NSLocalizedString(@"品牌", @"品牌"),NSLocalizedString(@"价格", @"价格"),NSLocalizedString(@"折扣信息", @"折扣信息"),NSLocalizedString(@"收购个数", @"收购个数"),NSLocalizedString(@"条码", @"条码")];
-        NSArray *details_list = @[SAFE_STRING(self.publishModel.brand_name),SAFE_STRING(self.publishModel.price),SAFE_STRING(self.publishModel.discountInfo),SAFE_STRING(self.publishModel.need_qty),SAFE_STRING(self.publishModel.goods_no)];
+        
+        NSArray *titles = @[NSLocalizedString(@"标题", @"标题"),NSLocalizedString(@"类型", @"类型"),NSLocalizedString(@"失效时间", @"失效时间"),NSLocalizedString(@"品牌", @"品牌"),NSLocalizedString(@"地址", @"地址")];
+        NSArray *details_list = @[SAFE_STRING(self.keyNoteModel.title),SAFE_STRING(self.keyNoteModel.typeStr),SAFE_STRING(self.keyNoteModel.expire_dt),SAFE_STRING(self.keyNoteModel.brands),SAFE_STRING(self.keyNoteModel.locations)];
         cell.textLabel.text = titles[indexPath.row];
         cell.detailTextLabel.text = details_list[indexPath.row];
     }
@@ -225,44 +219,59 @@ static const NSInteger TitleTag = 100;
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
-     __weak typeof(self) weakSelf = self;
+    __weak typeof(self) weakSelf = self;
     if (indexPath.section == 2) {
         switch (indexPath.row) {
             case 0:{
-                BrandsViewController *brandListVC = [[BrandsViewController alloc]init];
-                brandListVC.brandStr = SAFE_STRING(self.publishModel.brand_name);
-                brandListVC.domain = @"Product";
-                [self.navigationController pushViewController:brandListVC animated:YES];
-                brandListVC.selectTheBrand = ^(NSString *brandStr){
-                    weakSelf.publishModel.brand_name = SAFE_STRING(brandStr);
+                GoodsInfoEditViewController *goodsInfoVC = [[GoodsInfoEditViewController alloc]init];
+                goodsInfoVC.titleStr = NSLocalizedString(@"商品标题", @"商品标题");
+                [self.navigationController pushViewController:goodsInfoVC animated:YES];
+                goodsInfoVC.updateTheGoodsInfo = ^(NSString *info){
+                    weakSelf.keyNoteModel.title = SAFE_STRING(info);
                     [weakSelf.theTableView reloadData];
                 };
             }
                 break;
-            case 1:
-            case 2:
+            case 1:{
+                NSArray *titles = @[NSLocalizedString(@"普通信息", @"普通信息"),NSLocalizedString(@"折扣信息", @"折扣信息")];
+                [UIActionSheet showInView:self.view
+                                withTitle:nil
+                        cancelButtonTitle:nil
+                   destructiveButtonTitle:nil
+                        otherButtonTitles:titles
+                                 tapBlock:^(UIActionSheet * _Nonnull actionSheet, NSInteger buttonIndex) {
+                                     weakSelf.keyNoteModel.type = buttonIndex+1;
+                                     weakSelf.keyNoteModel.typeStr = titles[buttonIndex];
+                                     [weakSelf.theTableView reloadData];
+                }];
+            }
+                break;
+            case 2:{
+                DatePickerView *dateView = [[DatePickerView alloc]init];
+                dateView.datePicker.minimumDate = [NSDate date];
+                [dateView showInView:self.view];
+                dateView.setTheTime = ^(NSString *dateStr){
+                    weakSelf.keyNoteModel.expire_dt = SAFE_STRING(dateStr);
+                    [weakSelf.theTableView reloadData];
+                };
+            }
+                break;
             case 3:{
-                NSArray *titles = @[NSLocalizedString(@"价格", @"价格"),NSLocalizedString(@"折扣信息", @"折扣信息"),NSLocalizedString(@"收购个数", @"收购个数")];
-                GoodsInfoEditViewController *goodsInfoVC = [[GoodsInfoEditViewController alloc]init];
-                goodsInfoVC.titleStr = titles[indexPath.row-1];
-                [self.navigationController pushViewController:goodsInfoVC animated:YES];
-                goodsInfoVC.updateTheGoodsInfo = ^(NSString *info){
-                    if (indexPath.row == 1) {
-                        weakSelf.publishModel.price = SAFE_STRING(info);
-                    }else if (indexPath.row == 2){
-                        weakSelf.publishModel.discountInfo = SAFE_STRING(info);
-                    }else{
-                        weakSelf.publishModel.need_qty = SAFE_STRING(info);
-                    }
+                BrandsViewController *brandListVC = [[BrandsViewController alloc]init];
+                brandListVC.brandStr = SAFE_STRING(self.keyNoteModel.brands);
+                brandListVC.domain = @"Product";
+                [self.navigationController pushViewController:brandListVC animated:YES];
+                brandListVC.selectTheBrand = ^(NSString *brandStr){
+                    weakSelf.keyNoteModel.brands = SAFE_STRING(brandStr);
                     [weakSelf.theTableView reloadData];
                 };
             }
                 break;
             case 4:{
-                CodeScanViewController *codeScanVC = [[CodeScanViewController alloc]init];
-                [self.navigationController pushViewController:codeScanVC animated:YES];
-                codeScanVC.sendTheCode = ^(NSString *goods_no){
-                    weakSelf.publishModel.goods_no = SAFE_STRING(goods_no);
+                LocationListViewController *locationVC = [[LocationListViewController alloc]init];
+                [self.navigationController pushViewController:locationVC animated:YES];
+                locationVC.saveTheAddress = ^(NSString *locationStr){
+                    self.keyNoteModel.locations = SAFE_STRING(locationStr);
                     [weakSelf.theTableView reloadData];
                 };
             }
@@ -284,8 +293,31 @@ static const NSInteger TitleTag = 100;
 - (void)textViewDidEndEditing:(UITextView *)textView
 {
     if (textView.text > 0) {
-        self.publishModel.des = SAFE_STRING(textView.text);
+        self.keyNoteModel.content = SAFE_STRING(textView.text);
     }
+}
+#pragma mark - PhotoViewDelegate
+- (void)addPicker:(UIImagePickerController *)picker
+{
+    if([[[UIDevice currentDevice] systemVersion] floatValue] >= 8.0) {
+        self.modalPresentationStyle = UIModalPresentationOverCurrentContext;
+    }
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        [self presentViewController:picker animated:YES completion:nil];
+    });
+}
+- (void)addZYQPicker:(ZYQAssetPickerController *)picker
+{
+    if([[[UIDevice currentDevice] systemVersion] floatValue] >= 8.0) {
+        self.modalPresentationStyle = UIModalPresentationOverCurrentContext;
+    }
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        [self presentViewController:picker animated:YES completion:nil];
+    });
+}
+- (void)showPhotos:(NSMutableArray *)photos
+{
+    self.imageList = [[NSMutableArray alloc]initWithArray:photos];
 }
 #pragma mark - 监听键盘
 - (void)keyboardShow:(NSNotification *)notification

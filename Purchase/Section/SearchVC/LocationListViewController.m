@@ -12,7 +12,7 @@
 static const float RowHeight = 48;
 static const float BarHeight = 44;
 
-@interface LocationListViewController ()<UITableViewDelegate,UITableViewDataSource>
+@interface LocationListViewController ()<UITableViewDelegate,UITableViewDataSource,UISearchBarDelegate>
 
 @property (nonatomic, strong) UITableView    *theTableView;
 @property (nonatomic, strong) UISearchBar    *searchBar;
