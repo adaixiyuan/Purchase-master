@@ -9,6 +9,11 @@
 			<key>isShown</key>
 			<false/>
 		</dict>
+		<key>DACircularProgress.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+		</dict>
 		<key>FMDB.xcscheme</key>
 		<dict>
 			<key>isShown</key>
@@ -30,6 +35,16 @@
 			<false/>
 		</dict>
 		<key>MJRefresh.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+		</dict>
+		<key>MWPhotoBrowser-MWPhotoBrowser.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+		</dict>
+		<key>MWPhotoBrowser.xcscheme</key>
 		<dict>
 			<key>isShown</key>
 			<false/>
@@ -92,22 +107,22 @@
 	</dict>
 	<key>SuppressBuildableAutocreation</key>
 	<dict>
-		<key>0D2115C4F11E70ABB36E154BFCCDFCA4</key>
+		<key>2C24838B9AC46C2831D6D82DA888C93E</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>2D7AA643D7E226B777967BDC2B876F08</key>
+		<key>2F16EFBD483F3E7A153FC25B74E594A5</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>333DF2FD5C33988880340DBCFE15E034</key>
+		<key>2FC24F93B30EABEA334A171BC80D053A</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>3DCAA5341E720842E9047BB589C1388E</key>
+		<key>3568A19EB3C654A7A9A70ACC1873D8D2</key>
 		<dict>
 			<key>primary</key>
 			<true/>
@@ -117,7 +132,12 @@
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>52B690DC9E42814051D90EEA938CBE81</key>
+		<key>4357363FC947104EC3936522EFCE796A</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>523064333D49CF2729A5EE238B1CC9C1</key>
 		<dict>
 			<key>primary</key>
 			<true/>
@@ -127,12 +147,17 @@
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>5F2CF5F47CF669B02157955717695165</key>
+		<key>5813251FEA21E4AEE97385709F1912DE</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>77A7201FA94944D50E7883AA76DB4A63</key>
+		<key>7A1770B0BA643D6FF47C2E56CC700B3F</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>810DDE09C703A3C0B5690CA799E318E9</key>
 		<dict>
 			<key>primary</key>
 			<true/>
@@ -147,6 +172,11 @@
 			<key>primary</key>
 			<true/>
 		</dict>
+		<key>9775596B3CA16905FC8F66DA8E2A3C67</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
 		<key>9EAB3E42EF957541E6C3C76D35FD008E</key>
 		<dict>
 			<key>primary</key>
@@ -157,17 +187,17 @@
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>A9F354E8EA8BC123BAC2106CF5593043</key>
+		<key>DE3B07ED7FF04F506B0C5E00F4973589</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>C2E32EEF790731A412A07DBA0919997F</key>
+		<key>E2FE87384A67337831E53490EEA8BF11</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>D70A24B9ED596184B851DF9056A5F81D</key>
+		<key>E301BA8CA5D3B9568502740BED133ABB</key>
 		<dict>
 			<key>primary</key>
 			<true/>

@@ -17,7 +17,7 @@ static const float TopHeight = 40;
 static const NSInteger TopTag = 100;
 static const NSInteger CellTag = 1000;
 
-@interface GoodsInfoViewController ()<UITableViewDelegate,UITableViewDataSource,CellDelegate>
+@interface GoodsInfoViewController ()<UITableViewDelegate,UITableViewDataSource,CellDelegate,MWPhotoBrowserDelegate>
 
 @property (nonatomic, strong) AutoTableView       *theTableView;
 @property (nonatomic, strong) UIView              *topView;
@@ -31,6 +31,8 @@ static const NSInteger CellTag = 1000;
 @property (nonatomic, strong) NSMutableArray      *taobaoList; // 淘宝
 @property (nonatomic, strong) NSMutableArray      *systemList; // 系统
 @property (nonatomic, strong) NSMutableArray      *livePhotosList; // 实拍
+
+@property (nonatomic, strong) NSArray             *goodsList;
 
 @end
 
@@ -226,20 +228,17 @@ static const NSInteger CellTag = 1000;
 - (void)imageTapAction:(id)sender
 {
     GoodsInfoCell *cell = (GoodsInfoCell *)sender;
-    NSArray *goodsList = [[NSArray alloc]init];
+    self.goodsList = [[NSArray alloc]init];
     if ([self.goods_type integerValue] == 1) {
-        goodsList = [[NSArray alloc]initWithArray:self.taobaoList];
+        self.goodsList = [[NSArray alloc]initWithArray:self.taobaoList];
     }else if ([self.goods_type integerValue] == 2){
-        goodsList = [[NSArray alloc]initWithArray:self.systemList];
+        self.goodsList = [[NSArray alloc]initWithArray:self.systemList];
     }else{
-        goodsList = [[NSArray alloc]initWithArray:self.livePhotosList];
+        self.goodsList = [[NSArray alloc]initWithArray:self.livePhotosList];
     }
-    GoodsShowViewController *goodsShowVC = [[GoodsShowViewController alloc]init];
-    goodsShowVC.vcType = GoodsInfoVC;
-    goodsShowVC.dataList = goodsList;
-    goodsShowVC.index = cell.tag - CellTag;
+    GoodsShowViewController *goodsShowVC = [[GoodsShowViewController alloc]initWithDelegate:self];
+    [goodsShowVC setCurrentPhotoIndex:cell.tag - CellTag];
     [self.navigationController pushViewController:goodsShowVC animated:YES];
-    
     __weak typeof(self) weakSelf = self;
     goodsShowVC.selectGoodsIndex = ^(NSInteger index){
         NSIndexPath *indexPath = [NSIndexPath indexPathForRow:index inSection:0];
@@ -275,7 +274,25 @@ static const NSInteger CellTag = 1000;
     }else{
         
     }
-
+}
+#pragma mark - MWPhotoBrowserDelegate
+- (NSUInteger)numberOfPhotosInPhotoBrowser:(MWPhotoBrowser *)photoBrowser {
+    return self.goodsList.count;
+}
+- (id <MWPhoto>)photoBrowser:(MWPhotoBrowser *)photoBrowser photoAtIndex:(NSUInteger)index {
+    
+    if (index < self.goodsList.count) {
+        NSDictionary *infoDic = [[NSDictionary alloc]initWithDictionary:[self.goodsList objectAtIndex:index]];
+        MWPhoto *photo = [MWPhoto photoWithURL:[NSURL URLWithString:SAFE_STRING([infoDic objectForKey:@"img_url"])]];
+        photo.caption = SAFE_STRING([infoDic objectForKey:@"des"]);
+        return photo;
+    }
+    return nil;
+}
+- (NSString *)photoBrowser:(MWPhotoBrowser *)photoBrowser titleForPhotoAtIndex:(NSUInteger)index
+{
+    NSDictionary *infoDic = [[NSDictionary alloc]initWithDictionary:[self.goodsList objectAtIndex:index]];
+    return SAFE_STRING([infoDic objectForKey:@"brand_name"]);
 }
 #pragma mark - Set && Get
 - (UIView *)topView

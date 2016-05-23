@@ -19,7 +19,7 @@ static const NSInteger TopTag = 100;
 static const NSInteger BottomTag = 200;
 static const NSInteger CellTag = 1000;
 
-@interface RecordViewController ()<UITableViewDelegate,UITableViewDataSource,MGSwipeTableCellDelegate,CellDelegate>
+@interface RecordViewController ()<UITableViewDelegate,UITableViewDataSource,MGSwipeTableCellDelegate,CellDelegate,MWPhotoBrowserDelegate>
 
 @property (nonatomic, strong) AutoTableView       *theTableView;
 @property (nonatomic, strong) UIButton            *editButton;
@@ -32,6 +32,8 @@ static const NSInteger CellTag = 1000;
 @property (nonatomic, strong) NSString            *record_type;  // 1表示采购记录， 2表示订货记录
 @property (nonatomic, strong) NSMutableArray      *purchaseList; // 采购
 @property (nonatomic, strong) NSMutableArray      *bookList;    // 订货
+
+@property (nonatomic, strong) NSArray             *goodsList;   // 照片浏览器
 
 @end
 
@@ -266,16 +268,14 @@ static const NSInteger CellTag = 1000;
 - (void)imageTapAction:(id)sender
 {
     RecordViewCell *cell = (RecordViewCell *)sender;
-    NSArray *goodsList = [[NSArray alloc]init];
+    self.goodsList = [[NSArray alloc]init];
     if ([self.record_type integerValue] == 1) {
-        goodsList = [[NSArray alloc]initWithArray:self.purchaseList];
+        self.goodsList = [[NSArray alloc]initWithArray:self.purchaseList];
     }else{
-        goodsList = [[NSArray alloc]initWithArray:self.bookList];
+        self.goodsList = [[NSArray alloc]initWithArray:self.bookList];
     }
-    GoodsShowViewController *goodsShowVC = [[GoodsShowViewController alloc]init];
-    goodsShowVC.vcType = RecordVC;
-    goodsShowVC.dataList = goodsList;
-    goodsShowVC.index = cell.tag - CellTag;
+    GoodsShowViewController *goodsShowVC = [[GoodsShowViewController alloc]initWithDelegate:self];
+    [goodsShowVC setCurrentPhotoIndex:cell.tag - CellTag];
     [self.navigationController pushViewController:goodsShowVC animated:YES];
     
     __weak typeof(self) weakSelf = self;
@@ -283,6 +283,25 @@ static const NSInteger CellTag = 1000;
         NSIndexPath *indexPath = [NSIndexPath indexPathForRow:index inSection:0];
         [weakSelf.theTableView scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionMiddle animated:YES];
     };
+}
+#pragma mark - MWPhotoBrowserDelegate
+- (NSUInteger)numberOfPhotosInPhotoBrowser:(MWPhotoBrowser *)photoBrowser {
+    return self.goodsList.count;
+}
+- (id <MWPhoto>)photoBrowser:(MWPhotoBrowser *)photoBrowser photoAtIndex:(NSUInteger)index {
+    
+    if (index < self.goodsList.count) {
+        NSDictionary *infoDic = [[NSDictionary alloc]initWithDictionary:[self.goodsList objectAtIndex:index]];
+        MWPhoto *photo = [MWPhoto photoWithURL:[NSURL URLWithString:SAFE_STRING([infoDic objectForKey:@"imgUrl"])]];
+        photo.caption = SAFE_STRING([infoDic objectForKey:@"des"]);
+        return photo;
+    }
+    return nil;
+}
+- (NSString *)photoBrowser:(MWPhotoBrowser *)photoBrowser titleForPhotoAtIndex:(NSUInteger)index
+{
+    NSDictionary *infoDic = [[NSDictionary alloc]initWithDictionary:[self.goodsList objectAtIndex:index]];
+    return SAFE_STRING([infoDic objectForKey:@"brand_name"]);
 }
 #pragma mark - Set && Get
 - (UIView *)topView

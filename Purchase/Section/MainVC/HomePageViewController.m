@@ -14,7 +14,7 @@
 static const float RowHeight = 100;
 static const NSInteger CellTag = 1000;
 
-@interface HomePageViewController ()<UITableViewDelegate,UITableViewDataSource,CellDelegate>
+@interface HomePageViewController ()<UITableViewDelegate,UITableViewDataSource,CellDelegate,MWPhotoBrowserDelegate>
 
 @property (nonatomic, strong) UITableView    *theTableView;
 @property (nonatomic, strong) NSMutableArray *keyNoteList;
@@ -174,18 +174,35 @@ static const NSInteger CellTag = 1000;
 - (void)imageTapAction:(id)sender
 {
     HomePageCell *cell = (HomePageCell *)sender;
-    
-    GoodsShowViewController *goodsShowVC = [[GoodsShowViewController alloc]init];
-    goodsShowVC.vcType = HomePageVC;
-    goodsShowVC.dataList = self.keyNoteList;
-    goodsShowVC.index = cell.tag - CellTag;
+    GoodsShowViewController *goodsShowVC = [[GoodsShowViewController alloc]initWithDelegate:self];
+    [goodsShowVC setCurrentPhotoIndex:cell.tag - CellTag];
     [self.navigationController pushViewController:goodsShowVC animated:YES];
-    
     __weak typeof(self) weakSelf = self;
     goodsShowVC.selectGoodsIndex = ^(NSInteger index){
         NSIndexPath *indexPath = [NSIndexPath indexPathForRow:index inSection:0];
         [weakSelf.theTableView scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionMiddle animated:YES];
     };
+}
+#pragma mark - MWPhotoBrowserDelegate
+- (NSUInteger)numberOfPhotosInPhotoBrowser:(MWPhotoBrowser *)photoBrowser {
+    return self.keyNoteList.count;
+}
+- (id <MWPhoto>)photoBrowser:(MWPhotoBrowser *)photoBrowser photoAtIndex:(NSUInteger)index {
+    
+    if (index < self.keyNoteList.count) {
+        NSDictionary *infoDic = [[NSDictionary alloc]initWithDictionary:[self.keyNoteList objectAtIndex:index]];
+        NSString *urls = SAFE_STRING([infoDic objectForKey:@"img_urls"]);
+        NSArray *urls_list = [urls componentsSeparatedByString:@","];
+        MWPhoto *photo = [MWPhoto photoWithURL:[NSURL URLWithString:SAFE_STRING([urls_list firstObject])]];
+        photo.caption = SAFE_STRING([infoDic objectForKey:@"content"]);
+        return photo;
+    }
+    return nil;
+}
+- (NSString *)photoBrowser:(MWPhotoBrowser *)photoBrowser titleForPhotoAtIndex:(NSUInteger)index
+{
+    NSDictionary *infoDic = [[NSDictionary alloc]initWithDictionary:[self.keyNoteList objectAtIndex:index]];
+    return SAFE_STRING([infoDic objectForKey:@"title"]);
 }
 #pragma mark - Set && Get
 - (UITableView *)theTableView

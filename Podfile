@@ -14,4 +14,5 @@ pod 'UITextView+Placeholder'
 pod 'MGSwipeTableCell'
 pod 'YTKKeyValueStore'
 pod 'ZXingObjC', '~> 3.0'
+pod "MWPhotoBrowser"
 inhibit_all_warnings!

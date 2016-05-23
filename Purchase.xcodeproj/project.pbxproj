@@ -18,8 +18,6 @@
 		E9429A8C1CEB43EC007E6893 /* LoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E9429A8A1CEB43EC007E6893 /* LoginViewController.m */; };
 		E9429A901CEB456F007E6893 /* MyStore.m in Sources */ = {isa = PBXBuildFile; fileRef = E9429A8F1CEB456F007E6893 /* MyStore.m */; };
 		E9429A931CEB45C4007E6893 /* PurchaseInfoModel.m in Sources */ = {isa = PBXBuildFile; fileRef = E9429A921CEB45C4007E6893 /* PurchaseInfoModel.m */; };
-		E9429A991CEB46B0007E6893 /* GoodsShowCell.m in Sources */ = {isa = PBXBuildFile; fileRef = E9429A961CEB46B0007E6893 /* GoodsShowCell.m */; };
-		E9429A9A1CEB46B0007E6893 /* GoodsShowViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E9429A981CEB46B0007E6893 /* GoodsShowViewController.m */; };
 		E94B164B1CD77E2A0034D164 /* NSDate+Additions.m in Sources */ = {isa = PBXBuildFile; fileRef = E94B16421CD77E2A0034D164 /* NSDate+Additions.m */; };
 		E94B164D1CD77E2A0034D164 /* NSString+Addition.m in Sources */ = {isa = PBXBuildFile; fileRef = E94B16461CD77E2A0034D164 /* NSString+Addition.m */; };
 		E94B164E1CD77E2A0034D164 /* UIColor+Addition.m in Sources */ = {isa = PBXBuildFile; fileRef = E94B16481CD77E2A0034D164 /* UIColor+Addition.m */; };
@@ -29,6 +27,7 @@
 		E95C9EEE1CDB8F2E002DA2C4 /* CodeScanViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E95C9EED1CDB8F2E002DA2C4 /* CodeScanViewController.m */; };
 		E95C9EF11CDB932F002DA2C4 /* NSTimer+EOCBlocksSupport.m in Sources */ = {isa = PBXBuildFile; fileRef = E95C9EEF1CDB932F002DA2C4 /* NSTimer+EOCBlocksSupport.m */; };
 		E95CFA851CE4A6B40057B649 /* UserInfoModel.m in Sources */ = {isa = PBXBuildFile; fileRef = E95CFA841CE4A6B40057B649 /* UserInfoModel.m */; };
+		E96CCD8D1CF34D7500B320AD /* GoodsShowViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E96CCD8C1CF34D7500B320AD /* GoodsShowViewController.m */; };
 		E983538D1CE8557E008F1514 /* DatePickerView.m in Sources */ = {isa = PBXBuildFile; fileRef = E983538C1CE8557E008F1514 /* DatePickerView.m */; };
 		E98353931CE8757E008F1514 /* BrandsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E98353921CE8757E008F1514 /* BrandsViewController.m */; };
 		E98EAB331CDA1F9D000E5244 /* LeftViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = E98EAB321CDA1F9D000E5244 /* LeftViewCell.m */; };
@@ -83,10 +82,6 @@
 		E9429A8F1CEB456F007E6893 /* MyStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MyStore.m; sourceTree = "<group>"; };
 		E9429A911CEB459B007E6893 /* PurchaseInfoModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PurchaseInfoModel.h; sourceTree = "<group>"; };
 		E9429A921CEB45C4007E6893 /* PurchaseInfoModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PurchaseInfoModel.m; sourceTree = "<group>"; };
-		E9429A951CEB46B0007E6893 /* GoodsShowCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GoodsShowCell.h; sourceTree = "<group>"; };
-		E9429A961CEB46B0007E6893 /* GoodsShowCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GoodsShowCell.m; sourceTree = "<group>"; };
-		E9429A971CEB46B0007E6893 /* GoodsShowViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GoodsShowViewController.h; sourceTree = "<group>"; };
-		E9429A981CEB46B0007E6893 /* GoodsShowViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GoodsShowViewController.m; sourceTree = "<group>"; };
 		E94B16411CD77E2A0034D164 /* NSDate+Additions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSDate+Additions.h"; sourceTree = "<group>"; };
 		E94B16421CD77E2A0034D164 /* NSDate+Additions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSDate+Additions.m"; sourceTree = "<group>"; };
 		E94B16451CD77E2A0034D164 /* NSString+Addition.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+Addition.h"; sourceTree = "<group>"; };
@@ -107,6 +102,8 @@
 		E95C9EF01CDB932F002DA2C4 /* NSTimer+EOCBlocksSupport.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSTimer+EOCBlocksSupport.h"; sourceTree = "<group>"; };
 		E95CFA831CE4A6B40057B649 /* UserInfoModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UserInfoModel.h; sourceTree = "<group>"; };
 		E95CFA841CE4A6B40057B649 /* UserInfoModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UserInfoModel.m; sourceTree = "<group>"; };
+		E96CCD8B1CF34D7500B320AD /* GoodsShowViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GoodsShowViewController.h; sourceTree = "<group>"; };
+		E96CCD8C1CF34D7500B320AD /* GoodsShowViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GoodsShowViewController.m; sourceTree = "<group>"; };
 		E983538B1CE8557E008F1514 /* DatePickerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DatePickerView.h; sourceTree = "<group>"; };
 		E983538C1CE8557E008F1514 /* DatePickerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DatePickerView.m; sourceTree = "<group>"; };
 		E98353911CE8757E008F1514 /* BrandsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BrandsViewController.h; sourceTree = "<group>"; };
@@ -209,10 +206,8 @@
 		E9429A941CEB4697007E6893 /* GoodsShow */ = {
 			isa = PBXGroup;
 			children = (
-				E9429A971CEB46B0007E6893 /* GoodsShowViewController.h */,
-				E9429A981CEB46B0007E6893 /* GoodsShowViewController.m */,
-				E9429A951CEB46B0007E6893 /* GoodsShowCell.h */,
-				E9429A961CEB46B0007E6893 /* GoodsShowCell.m */,
+				E96CCD8B1CF34D7500B320AD /* GoodsShowViewController.h */,
+				E96CCD8C1CF34D7500B320AD /* GoodsShowViewController.m */,
 			);
 			path = GoodsShow;
 			sourceTree = "<group>";
@@ -655,6 +650,7 @@
 				E9D8E6AA1CE81E1700FDC3AB /* BrandListViewController.m in Sources */,
 				E94B164E1CD77E2A0034D164 /* UIColor+Addition.m in Sources */,
 				E95C9EF11CDB932F002DA2C4 /* NSTimer+EOCBlocksSupport.m in Sources */,
+				E96CCD8D1CF34D7500B320AD /* GoodsShowViewController.m in Sources */,
 				E9D8E6A91CE81E1700FDC3AB /* GoodsInfoEditViewController.m in Sources */,
 				E9429A8C1CEB43EC007E6893 /* LoginViewController.m in Sources */,
 				E9C619931CE6C2BE008C3627 /* RecordInfoModel.m in Sources */,
@@ -670,7 +666,6 @@
 				E9429A901CEB456F007E6893 /* MyStore.m in Sources */,
 				E9BBCDA71CD8CC2200962298 /* AutoTableView.m in Sources */,
 				E9B3507C1CD79C69005A4455 /* HomePageViewController.m in Sources */,
-				E9429A9A1CEB46B0007E6893 /* GoodsShowViewController.m in Sources */,
 				E9429A891CEB43D5007E6893 /* PurchaseOrderCell.m in Sources */,
 				E9BBCDA61CD8CC2200962298 /* AutoScrollView.m in Sources */,
 				E98EAB481CDA54D9000E5244 /* PhotoShowView.m in Sources */,
@@ -683,7 +678,6 @@
 				E91814541CEFFB39001C164E /* AddKeyNoteViewController.m in Sources */,
 				E91CC9AF1CE4C76B009F4D50 /* GoodsInfoModel.m in Sources */,
 				E9D8E6A41CE81AA100FDC3AB /* SearchInfoModel.m in Sources */,
-				E9429A991CEB46B0007E6893 /* GoodsShowCell.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

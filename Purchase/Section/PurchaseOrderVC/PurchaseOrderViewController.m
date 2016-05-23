@@ -18,7 +18,7 @@ static const float BottomHeight = 40;
 static const float animateTime = 0.3;
 static const NSInteger CellTag = 1000;
 
-@interface PurchaseOrderViewController ()<UITableViewDelegate,UITableViewDataSource,CellDelegate>
+@interface PurchaseOrderViewController ()<UITableViewDelegate,UITableViewDataSource,CellDelegate,MWPhotoBrowserDelegate>
 
 @property (nonatomic, strong) AutoTableView  *theTableView;
 @property (nonatomic, strong) UIButton       *editButton;
@@ -322,10 +322,8 @@ static const NSInteger CellTag = 1000;
 - (void)imageTapAction:(id)sender
 {
     PurchaseOrderCell *cell = (PurchaseOrderCell *)sender;
-    GoodsShowViewController *goodsShowVC = [[GoodsShowViewController alloc]init];
-    goodsShowVC.vcType = PurchaseVC;
-    goodsShowVC.dataList = self.purchaseList;
-    goodsShowVC.index = cell.tag - CellTag;
+    GoodsShowViewController *goodsShowVC = [[GoodsShowViewController alloc]initWithDelegate:self];
+    [goodsShowVC setCurrentPhotoIndex:cell.tag - CellTag];
     [self.navigationController pushViewController:goodsShowVC animated:YES];
     
     __weak typeof(self) weakSelf = self;
@@ -366,6 +364,25 @@ static const NSInteger CellTag = 1000;
             [self.theTableView reloadData];
         }
     }
+}
+#pragma mark - MWPhotoBrowserDelegate
+- (NSUInteger)numberOfPhotosInPhotoBrowser:(MWPhotoBrowser *)photoBrowser {
+    return self.purchaseList.count;
+}
+- (id <MWPhoto>)photoBrowser:(MWPhotoBrowser *)photoBrowser photoAtIndex:(NSUInteger)index {
+    
+    if (index < self.purchaseList.count) {
+        NSDictionary *infoDic = [[NSDictionary alloc]initWithDictionary:[self.purchaseList objectAtIndex:index]];
+        MWPhoto *photo = [MWPhoto photoWithURL:[NSURL URLWithString:SAFE_STRING([infoDic objectForKey:@"img_url"])]];
+        photo.caption = SAFE_STRING([infoDic objectForKey:@"des"]);
+        return photo;
+    }
+    return nil;
+}
+- (NSString *)photoBrowser:(MWPhotoBrowser *)photoBrowser titleForPhotoAtIndex:(NSUInteger)index
+{
+    NSDictionary *infoDic = [[NSDictionary alloc]initWithDictionary:[self.purchaseList objectAtIndex:index]];
+    return SAFE_STRING([infoDic objectForKey:@"brand_name"]);
 }
 #pragma mark - Set && Get
 - (UITableView *)theTableView

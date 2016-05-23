@@ -20,6 +20,7 @@ PODS:
   - AFNetworking/UIKit (2.6.3):
     - AFNetworking/NSURLConnection
     - AFNetworking/NSURLSession
+  - DACircularProgress (2.3.1)
   - FMDB (2.6.2):
     - FMDB/standard (= 2.6.2)
   - FMDB/standard (2.6.2)
@@ -28,6 +29,10 @@ PODS:
   - MGSwipeTableCell (1.5.5)
   - MJExtension (3.0.10)
   - MJRefresh (3.1.0)
+  - MWPhotoBrowser (2.1.2):
+    - DACircularProgress (~> 2.3)
+    - MBProgressHUD (~> 0.9)
+    - SDWebImage (!= 3.7.2, ~> 3.7)
   - RESideMenu (4.0.7)
   - RSKImageCropper (1.5.1)
   - SDWebImage (3.7.6):
@@ -50,6 +55,7 @@ DEPENDENCIES:
   - MGSwipeTableCell
   - MJExtension
   - MJRefresh
+  - MWPhotoBrowser
   - RESideMenu (~> 4.0.7)
   - RSKImageCropper
   - SDWebImage (~> 3.7)
@@ -62,12 +68,14 @@ DEPENDENCIES:
 
 SPEC CHECKSUMS:
   AFNetworking: cb8d14a848e831097108418f5d49217339d4eb60
+  DACircularProgress: 4dd437c0fc3da5161cb289e07ac449493d41db71
   FMDB: 854a0341b4726e53276f2a8996f06f1b80f9259a
   Masonry: b529bb169217897b6354d4b56b1fada6d475b13d
   MBProgressHUD: 1569cf7ace17a8bac47aabfbb8580a49690386d1
   MGSwipeTableCell: bafeb5f351124544c9364ecbdf24c7b06a37d340
   MJExtension: d86aacb740c87519d20e3cca55b6fa4be6cc7548
   MJRefresh: 743e6404967d1c2c688472ea3ecfde247d872db4
+  MWPhotoBrowser: 5836d7aa041dc05a13de380c246826578adc5ea5
   RESideMenu: f24c508404b49c667344c54aba7e590883533958
   RSKImageCropper: edd65fedb3734332818deb139906d6b7f54b8a44
   SDWebImage: c325cf02c30337336b95beff20a13df489ec0ec9
