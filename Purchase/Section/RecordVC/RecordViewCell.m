@@ -221,7 +221,7 @@ static const float ImageHeight = 80;
         detailStr = [NSString stringWithFormat:@"%@  %@",SAFE_STRING(recordModel.brand_name),SAFE_STRING(recordModel.des)];
     }
     
-    [_goodsImageView sd_setImageWithURL:[NSURL URLWithString:SAFE_STRING(recordModel.imgUrl)]];
+    [_goodsImageView sd_setImageWithURL:[NSURL URLWithString:SAFE_STRING(recordModel.img_url)]];
     [_goodsDetailsLabel setText:detailStr afterInheritingLabelAttributesAndConfiguringWithBlock:^NSMutableAttributedString *(NSMutableAttributedString *mutableAttributedString) {
         //设定可点击文字的的大小
         UIFont *systemFont = [UIFont customFontOfSize:14];

@@ -292,7 +292,7 @@ static const NSInteger CellTag = 1000;
     
     if (index < self.goodsList.count) {
         NSDictionary *infoDic = [[NSDictionary alloc]initWithDictionary:[self.goodsList objectAtIndex:index]];
-        MWPhoto *photo = [MWPhoto photoWithURL:[NSURL URLWithString:SAFE_STRING([infoDic objectForKey:@"imgUrl"])]];
+        MWPhoto *photo = [MWPhoto photoWithURL:[NSURL URLWithString:SAFE_STRING([infoDic objectForKey:@"img_url"])]];
         photo.caption = SAFE_STRING([infoDic objectForKey:@"des"]);
         return photo;
     }
