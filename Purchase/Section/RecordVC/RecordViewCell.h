@@ -11,6 +11,7 @@
 @protocol CellDelegate <NSObject>
 
 - (void)imageTapAction:(id)sender;
+- (void)btnSelectActionWithBtnStatus:(BOOL)isSelect withTarget:(id)sender;
 
 @end
 

@@ -35,7 +35,7 @@ extern NSString *const kNotificationLogin;
  */
 extern NSString *const kLoginRequest;
 /**
- *   今日重点  重点内容新增
+ *   今日重点   重点内容新增
  */
 extern NSString *const kKeyNoteRequest;
 /**
@@ -43,11 +43,11 @@ extern NSString *const kKeyNoteRequest;
  */
 extern NSString *const kOrderRequest;
 /**
- *   记录获取
+ *   记录获取   记录更新／删除
  */
 extern NSString *const kBuyRecordRequest;
 /**
- *   商品信息获取  实拍商品添加
+ *   商品信息获取   实拍商品添加
  */
 extern NSString *const kProductRequest;
 /**

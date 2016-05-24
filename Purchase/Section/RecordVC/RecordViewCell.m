@@ -26,10 +26,10 @@ static const float ImageHeight = 80;
         if ([self respondsToSelector:@selector(setLayoutMargins:)]) {
             [self setLayoutMargins:UIEdgeInsetsMake(0, 0, 0, 0)];
         }
-        self.leftButtons = @[[MGSwipeButton buttonWithTitle:@"删除" backgroundColor:NAVBARCOLOR]];
+        self.leftButtons = @[[MGSwipeButton buttonWithTitle:NSLocalizedString(@"删除", @"删除") backgroundColor:NAVBARCOLOR]];
         self.leftSwipeSettings.transition = MGSwipeTransitionDrag;
         
-        self.rightButtons = @[[MGSwipeButton buttonWithTitle:@"更新" backgroundColor:NAVBARCOLOR]];
+        self.rightButtons = @[[MGSwipeButton buttonWithTitle:NSLocalizedString(@"更新", @"更新") backgroundColor:NAVBARCOLOR]];
         self.rightSwipeSettings.transition = MGSwipeTransitionDrag;
         
         
@@ -243,6 +243,9 @@ static const float ImageHeight = 80;
 - (void)selectBtnAction:(UIButton *)btn
 {
     btn.selected = !btn.selected;
+    if (self.theDelegate && [self.theDelegate respondsToSelector:@selector(btnSelectActionWithBtnStatus:withTarget:)]) {
+        [self.theDelegate btnSelectActionWithBtnStatus:btn.selected withTarget:self];
+    }
 }
 - (void)tapAction
 {

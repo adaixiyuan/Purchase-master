@@ -33,6 +33,7 @@ static const NSInteger CellTag = 1000;
 @property (nonatomic, strong) NSMutableArray      *purchaseList; // 采购
 @property (nonatomic, strong) NSMutableArray      *bookList;    // 订货
 
+@property (nonatomic, strong) NSMutableArray      *seleceGoodsList; // 编辑时的勾选项
 @property (nonatomic, strong) NSArray             *goodsList;   // 照片浏览器
 
 @end
@@ -44,6 +45,7 @@ static const NSInteger CellTag = 1000;
     // Do any additional setup after loading the view.
     self.navigationItem.title = NSLocalizedString(@"记录", @"记录");
     
+    self.seleceGoodsList = [[NSMutableArray alloc]init];
     self.isEdit = NO;
     self.record_type = @"1";
     // 创建导航栏右边按钮
@@ -126,7 +128,8 @@ static const NSInteger CellTag = 1000;
 - (void)navEditAction:(UIButton *)btn
 {
     btn.selected = !btn.selected;
-    self.isEdit = btn.selected;
+    self.isEdit = !self.isEdit;
+    self.seleceGoodsList = [[NSMutableArray alloc]init];
     
     __weak typeof(self) weakSelf = self;
     if (self.isEdit == YES) {
@@ -156,6 +159,7 @@ static const NSInteger CellTag = 1000;
         weakSelf.animateView.frame = CGRectMake(ScreenWidth/2*(btn.tag-TopTag), CGRectGetHeight(self.topView.frame)-2, ScreenWidth/2, 2);
     }];
     
+    self.seleceGoodsList = [[NSMutableArray alloc]init];
     self.record_type = [NSString stringWithFormat:@"%d",(int)(btn.tag-TopTag+1)];
     self.pageNum_one = 1;
     self.pageNum_two = 1;
@@ -164,7 +168,29 @@ static const NSInteger CellTag = 1000;
 }
 - (void)buttonAction:(UIButton *)btn
 {
-    
+    switch (btn.tag) {
+        case BottomTag:{
+            btn.selected = !btn.selected;
+            self.seleceGoodsList = [[NSMutableArray alloc]init];
+            if ([self.record_type integerValue] == 1 && btn.selected == YES) {
+                [self.seleceGoodsList addObjectsFromArray:self.purchaseList];
+            }else if ([self.record_type integerValue] == 2 && btn.selected == YES){
+                [self.seleceGoodsList addObjectsFromArray:self.bookList];
+            }
+            [self.theTableView reloadData];
+        }
+            break;
+        case BottomTag+1:{
+            
+        }
+            break;
+        case BottomTag+2:{
+            
+        }
+            break;
+        default:
+            break;
+    }
 }
 #pragma mark - Request
 - (void)getBuyRecordListRequest
@@ -248,10 +274,34 @@ static const NSInteger CellTag = 1000;
         recordDic = [[NSDictionary alloc]initWithDictionary:self.bookList[indexPath.row]];
     }
     [cell setCellContentWithDataDic:recordDic];
+    
+    if ([self.seleceGoodsList containsObject:recordDic]) {
+        cell.selectButton.selected = YES;
+    }else{
+        cell.selectButton.selected = NO;
+    }
     return cell;
 }
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    [tableView deselectRowAtIndexPath:indexPath animated:YES];
+    if (self.isEdit == YES) {
+        NSDictionary *recordDic = [[NSDictionary alloc]init];
+        if ([self.record_type integerValue] == 1) {
+            recordDic = [[NSDictionary alloc]initWithDictionary:self.purchaseList[indexPath.row]];
+        }else{
+            recordDic = [[NSDictionary alloc]initWithDictionary:self.bookList[indexPath.row]];
+        }
+        if ([self.seleceGoodsList containsObject:recordDic]) {
+            [self.seleceGoodsList removeObject:recordDic];
+        }else{
+            [self.seleceGoodsList addObject:recordDic];
+        }
+        [tableView reloadData];
+    }
+}
 #pragma mark - MGSwipeTableCellDelegate
-- (BOOL)swipeTableCell:(MGSwipeTableCell*)cell canSwipe:(MGSwipeDirection)direction
+- (BOOL)swipeTableCell:(RecordViewCell *)cell canSwipe:(MGSwipeDirection)direction
 {
     if (self.isEdit == NO) {
         return YES;
@@ -259,12 +309,80 @@ static const NSInteger CellTag = 1000;
         return NO;
     }
 }
--(BOOL) swipeTableCell:(MGSwipeTableCell*)cell tappedButtonAtIndex:(NSInteger) index direction:(MGSwipeDirection)direction fromExpansion:(BOOL) fromExpansion
+-(BOOL) swipeTableCell:(RecordViewCell *)cell tappedButtonAtIndex:(NSInteger) index direction:(MGSwipeDirection)direction fromExpansion:(BOOL) fromExpansion
 {
-    NSLog(@"-----------%ld",index);
+    NSInteger row = cell.tag - CellTag;
+    NSMutableDictionary *recordDic = [[NSMutableDictionary alloc]init];
+    if ([self.record_type integerValue] == 1) {
+        recordDic = [[NSMutableDictionary alloc]initWithDictionary:self.purchaseList[row]];
+    }else{
+        recordDic = [[NSMutableDictionary alloc]initWithDictionary:self.bookList[row]];
+    }
+    if (direction == MGSwipeDirectionLeftToRight) {
+        // 删除
+    }else{
+        // 更新
+        __weak typeof(self) weakSelf = self;
+        UIAlertView *alert = [[UIAlertView alloc]initWithTitle:nil
+                                                       message:@"请输入更新的商品个数"
+                                                      delegate:self
+                                             cancelButtonTitle:@"取消"
+                                             otherButtonTitles:@"确定", nil];
+        alert.alertViewStyle = UIAlertViewStylePlainTextInput;
+        alert.tapBlock = ^(UIAlertView *alertView, NSInteger buttonIndex) {
+            [[[UIApplication sharedApplication] keyWindow] endEditing:YES];
+            if (buttonIndex == 1) {
+                [MYMBProgressHUD showHudWithMessage:NSLocalizedString(@"请稍等···", @"请稍等···") InView:weakSelf.view];
+                NSMutableDictionary *parametersDic = [[NSMutableDictionary alloc]init];
+                [parametersDic setObject:@"update" forKey:@"action"];
+                [parametersDic setObject:@([UserInfoModel shareInstance].user_sid) forKey:@"user_sid"];
+                [parametersDic setObject:SAFE_STRING(self.record_type) forKey:@"type"];
+                [parametersDic setObject:SAFE_STRING([[alertView textFieldAtIndex:0] text]) forKey:@"new_quantity"];
+                [parametersDic setObject:@([[recordDic objectForKey:@"sid"] integerValue]) forKey:@"sid"];
+                [[NetworkManager sharedInstance] startRequestWithURL:kBuyRecordRequest method:RequestPost parameters:parametersDic result:^(AFHTTPRequestOperation *operation, id responseObject) {
+                    [MYMBProgressHUD hideHudFromView:weakSelf.view];
+                    NSMutableDictionary *recordDic = [[NSMutableDictionary alloc]init];
+                    [recordDic setObject:@([[alertView textFieldAtIndex:0].text integerValue]) forKey:@"quantity"];
+                    if ([self.record_type integerValue] == 1) {
+                        [self.purchaseList replaceObjectAtIndex:row withObject:recordDic];
+                    }else{
+                        [self.bookList replaceObjectAtIndex:row withObject:recordDic];
+                    }
+                    [weakSelf.theTableView reloadData];
+                } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+                    [MYMBProgressHUD hideHudFromView:weakSelf.view];
+                    [MYMBProgressHUD showMessage:error.userInfo[@"NSLocalizedDescription"]];
+                }];
+            }
+        };
+        alert.shouldEnableFirstOtherButtonBlock = ^BOOL(UIAlertView *alertView) {
+            return ([[[alertView textFieldAtIndex:0] text] length] > 0 && [NSString isPureInt:[[alertView textFieldAtIndex:0] text]]);
+        };
+        [alert show];
+    }
     return YES;
 }
 #pragma mark - CellDelegate
+- (void)btnSelectActionWithBtnStatus:(BOOL)isSelect withTarget:(id)sender
+{
+    RecordViewCell *cell = (RecordViewCell *)sender;
+    NSInteger row = cell.tag - CellTag;
+    NSMutableDictionary *recordDic = [[NSMutableDictionary alloc]init];
+    if ([self.record_type integerValue] == 1) {
+        recordDic = [[NSMutableDictionary alloc]initWithDictionary:self.purchaseList[row]];
+    }else{
+        recordDic = [[NSMutableDictionary alloc]initWithDictionary:self.bookList[row]];
+    }
+    if (isSelect == YES) {
+        if (![self.seleceGoodsList containsObject:recordDic]) {
+            [self.seleceGoodsList addObject:recordDic];
+        }
+    }else{
+        if ([self.seleceGoodsList containsObject:recordDic]) {
+            [self.seleceGoodsList removeObject:recordDic];
+        }
+    }
+}
 - (void)imageTapAction:(id)sender
 {
     RecordViewCell *cell = (RecordViewCell *)sender;
@@ -285,7 +403,8 @@ static const NSInteger CellTag = 1000;
     };
 }
 #pragma mark - MWPhotoBrowserDelegate
-- (NSUInteger)numberOfPhotosInPhotoBrowser:(MWPhotoBrowser *)photoBrowser {
+- (NSUInteger)numberOfPhotosInPhotoBrowser:(MWPhotoBrowser *)photoBrowser
+{
     return self.goodsList.count;
 }
 - (id <MWPhoto>)photoBrowser:(MWPhotoBrowser *)photoBrowser photoAtIndex:(NSUInteger)index {
