@@ -171,6 +171,11 @@ static const NSInteger CellTag = 1000;
     switch (btn.tag) {
         case BottomTag:{
             btn.selected = !btn.selected;
+            if(btn.selected == YES){
+                [btn setTitle:NSLocalizedString(@"全不选", @"全不选") forState:UIControlStateNormal];
+            }else{
+                [btn setTitle:NSLocalizedString(@"全选", @"全选") forState:UIControlStateNormal];
+            }
             self.seleceGoodsList = [[NSMutableArray alloc]init];
             if ([self.record_type integerValue] == 1 && btn.selected == YES) {
                 [self.seleceGoodsList addObjectsFromArray:self.purchaseList];
@@ -181,11 +186,84 @@ static const NSInteger CellTag = 1000;
         }
             break;
         case BottomTag+1:{
-            
+            if (self.seleceGoodsList.count == 0) {
+                [MYMBProgressHUD showMessage:NSLocalizedString(@"您尚未选择任何商品！", @"您尚未选择任何商品！")];
+                return;
+            }
+            NSMutableArray *sid_list = [[NSMutableArray alloc]init];
+            NSMutableArray *new_quantity_list = [[NSMutableArray alloc]init];
+            for (NSDictionary *recordDic in self.seleceGoodsList) {
+                [sid_list addObject:@([[recordDic objectForKey:@"sid"] integerValue])];
+                [new_quantity_list addObject:@"0"];
+            }
+            NSString *new_quantity_str = [new_quantity_list componentsJoinedByString:@","];
+            NSString *sid_str = [sid_list componentsJoinedByString:@","];
+            [MYMBProgressHUD showHudWithMessage:NSLocalizedString(@"请稍等···", @"请稍等···") InView:self.view];
+            NSMutableDictionary *parametersDic = [[NSMutableDictionary alloc]init];
+            [parametersDic setObject:@"update" forKey:@"action"];
+            [parametersDic setObject:@([UserInfoModel shareInstance].user_sid) forKey:@"user_sid"];
+            [parametersDic setObject:SAFE_STRING(self.record_type) forKey:@"type"];
+            [parametersDic setObject:SAFE_STRING(sid_str) forKey:@"sid"];
+            [parametersDic setObject:SAFE_STRING(new_quantity_str) forKey:@"new_quantity"];
+            [[NetworkManager sharedInstance] startRequestWithURL:kBuyRecordRequest method:RequestPost parameters:parametersDic result:^(AFHTTPRequestOperation *operation, id responseObject) {
+                [MYMBProgressHUD hideHudFromView:self.view];
+                self.seleceGoodsList = [[NSMutableArray alloc]init];
+                [self getBuyRecordListRequest];
+            } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+                [MYMBProgressHUD hideHudFromView:self.view];
+                [MYMBProgressHUD showMessage:error.userInfo[@"NSLocalizedDescription"]];
+            }];
         }
             break;
         case BottomTag+2:{
-            
+            if (self.seleceGoodsList.count == 0) {
+                [MYMBProgressHUD showMessage:NSLocalizedString(@"您尚未选择任何商品！", @"您尚未选择任何商品！")];
+                return;
+            }
+            NSMutableArray *rows = [[NSMutableArray alloc]init];
+            for (int i = 0; i < self.seleceGoodsList.count; i++) {
+                if ([self.record_type integerValue] == 1){
+                    int row = (int)[self.purchaseList indexOfObject:self.seleceGoodsList[i]];
+                    [rows addObject:@(row)];
+                }else{
+                    int row = (int)[self.bookList indexOfObject:self.seleceGoodsList[i]];
+                    [rows addObject:@(row)];
+                }
+            }
+            NSMutableArray *new_quantity_list = [[NSMutableArray alloc]init];
+            for (int i = 0;i < rows.count ; i++) {
+                NSIndexPath *row = [NSIndexPath indexPathForRow:[rows[i] integerValue] inSection:0];
+                RecordViewCell *cell = (RecordViewCell *)[self.theTableView cellForRowAtIndexPath:row];
+                [new_quantity_list addObject:SAFE_STRING(cell.numText.text)];
+            }
+            NSMutableArray *sid_list = [[NSMutableArray alloc]init];
+            for (NSDictionary *recordDic in self.seleceGoodsList) {
+                [sid_list addObject:@([[recordDic objectForKey:@"sid"] integerValue])];
+            }
+            if ([new_quantity_list containsObject:@""]) {
+                [MYMBProgressHUD showMessage:NSLocalizedString(@"请输入勾选商品的更新数量！", @"请输入勾选商品的更新数量！")];
+            }else if([new_quantity_list containsObject:@"0"]){
+                [MYMBProgressHUD showMessage:NSLocalizedString(@"更新的商品个数要大于0！", @"更新的商品个数要大于0！")];
+            }else{
+                NSString *new_quantity_str = [new_quantity_list componentsJoinedByString:@","];
+                NSString *sid_str = [sid_list componentsJoinedByString:@","];
+                [MYMBProgressHUD showHudWithMessage:NSLocalizedString(@"请稍等···", @"请稍等···") InView:self.view];
+                NSMutableDictionary *parametersDic = [[NSMutableDictionary alloc]init];
+                [parametersDic setObject:@"update" forKey:@"action"];
+                [parametersDic setObject:@([UserInfoModel shareInstance].user_sid) forKey:@"user_sid"];
+                [parametersDic setObject:SAFE_STRING(self.record_type) forKey:@"type"];
+                [parametersDic setObject:SAFE_STRING(sid_str) forKey:@"sid"];
+                [parametersDic setObject:SAFE_STRING(new_quantity_str) forKey:@"new_quantity"];
+                
+                [[NetworkManager sharedInstance] startRequestWithURL:kBuyRecordRequest method:RequestPost parameters:parametersDic result:^(AFHTTPRequestOperation *operation, id responseObject) {
+                    [MYMBProgressHUD hideHudFromView:self.view];
+                    self.seleceGoodsList = [[NSMutableArray alloc]init];
+                    [self getBuyRecordListRequest];
+                } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+                    [MYMBProgressHUD hideHudFromView:self.view];
+                    [MYMBProgressHUD showMessage:error.userInfo[@"NSLocalizedDescription"]];
+                }];
+            }
         }
             break;
         default:
@@ -285,6 +363,7 @@ static const NSInteger CellTag = 1000;
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
+    RecordViewCell *cell = (RecordViewCell *)[tableView cellForRowAtIndexPath:indexPath];
     if (self.isEdit == YES) {
         NSDictionary *recordDic = [[NSDictionary alloc]init];
         if ([self.record_type integerValue] == 1) {
@@ -294,10 +373,11 @@ static const NSInteger CellTag = 1000;
         }
         if ([self.seleceGoodsList containsObject:recordDic]) {
             [self.seleceGoodsList removeObject:recordDic];
+            cell.selectButton.selected = NO;
         }else{
             [self.seleceGoodsList addObject:recordDic];
+            cell.selectButton.selected = YES;
         }
-        [tableView reloadData];
     }
 }
 #pragma mark - MGSwipeTableCellDelegate
@@ -320,14 +400,33 @@ static const NSInteger CellTag = 1000;
     }
     if (direction == MGSwipeDirectionLeftToRight) {
         // 删除
+        [MYMBProgressHUD showHudWithMessage:NSLocalizedString(@"请稍等···", @"请稍等···") InView:self.view];
+        NSMutableDictionary *parametersDic = [[NSMutableDictionary alloc]init];
+        [parametersDic setObject:@"update" forKey:@"action"];
+        [parametersDic setObject:@([UserInfoModel shareInstance].user_sid) forKey:@"user_sid"];
+        [parametersDic setObject:SAFE_STRING(self.record_type) forKey:@"type"];
+        [parametersDic setObject:@"0" forKey:@"new_quantity"];
+        [parametersDic setObject:@([[recordDic objectForKey:@"sid"] integerValue]) forKey:@"sid"];
+        [[NetworkManager sharedInstance] startRequestWithURL:kBuyRecordRequest method:RequestPost parameters:parametersDic result:^(AFHTTPRequestOperation *operation, id responseObject) {
+            [MYMBProgressHUD hideHudFromView:self.view];
+            if ([self.record_type integerValue] == 1) {
+                [self.purchaseList removeObject:recordDic];
+            }else{
+                [self.bookList removeObject:recordDic];
+            }
+            [self.theTableView reloadData];
+        } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+            [MYMBProgressHUD hideHudFromView:self.view];
+            [MYMBProgressHUD showMessage:error.userInfo[@"NSLocalizedDescription"]];
+        }];
     }else{
         // 更新
         __weak typeof(self) weakSelf = self;
         UIAlertView *alert = [[UIAlertView alloc]initWithTitle:nil
-                                                       message:@"请输入更新的商品个数"
+                                                       message:NSLocalizedString(@"请输入更新的商品个数", @"请输入更新的商品个数")
                                                       delegate:self
-                                             cancelButtonTitle:@"取消"
-                                             otherButtonTitles:@"确定", nil];
+                                             cancelButtonTitle:NSLocalizedString(@"取消", @"取消")
+                                             otherButtonTitles:NSLocalizedString(@"确定", @"确定"), nil];
         alert.alertViewStyle = UIAlertViewStylePlainTextInput;
         alert.tapBlock = ^(UIAlertView *alertView, NSInteger buttonIndex) {
             [[[UIApplication sharedApplication] keyWindow] endEditing:YES];
@@ -356,7 +455,7 @@ static const NSInteger CellTag = 1000;
             }
         };
         alert.shouldEnableFirstOtherButtonBlock = ^BOOL(UIAlertView *alertView) {
-            return ([[[alertView textFieldAtIndex:0] text] length] > 0 && [NSString isPureInt:[[alertView textFieldAtIndex:0] text]]);
+            return ([[[alertView textFieldAtIndex:0] text] length] > 0 && [NSString isPureInt:[[alertView textFieldAtIndex:0] text]] && [[alertView textFieldAtIndex:0].text integerValue] > 0);
         };
         [alert show];
     }

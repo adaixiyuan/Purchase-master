@@ -141,6 +141,7 @@ static const float ImageHeight = 80;
 }
 - (void)setCellContentConstraintsWithStatus:(BOOL)isEdit
 {
+    _numText.text = nil;
     self.isEdit = isEdit;
     float space = 0.0;
     if (isEdit == NO) {
