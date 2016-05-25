@@ -10,6 +10,7 @@
 
 @interface GoodsInfoModel : NSObject
 
+@property (nonatomic, assign) BOOL      has_child; // 有没有子属性
 @property (nonatomic, assign) NSInteger sid; // 商品唯一id
 @property (nonatomic, strong) NSString  *des; // 商品描述
 @property (nonatomic, strong) NSString  *brand_name; // 商品品牌

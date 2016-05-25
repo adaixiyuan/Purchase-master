@@ -245,24 +245,6 @@ static const NSInteger CellTag = 1000;
         [weakSelf.theTableView scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionMiddle animated:YES];
     };
 }
-- (void)goodsCountAdd:(id)sender
-{
-    GoodsInfoCell *cell = (GoodsInfoCell *)sender;
-    NSInteger num = [cell.numText.text integerValue];
-    if (num < 9999) {
-        num = num+1;
-    }
-    cell.numText.text = [NSString stringWithFormat:@"%d",(int)num];
-}
-- (void)goodsCountCut:(id)sender
-{
-    GoodsInfoCell *cell = (GoodsInfoCell *)sender;
-    NSInteger num = [cell.numText.text integerValue];
-    if (num > 0) {
-        num = num-1;
-    }
-    cell.numText.text = [NSString stringWithFormat:@"%d",(int)num];
-}
 - (void)addCartToPurchase:(id)sender
 {
     __weak typeof(self) weakSelf = self;

@@ -123,13 +123,10 @@ static const NSInteger CellTag = 1000;
             }];
         }else{
             [self.editButton setTitle:NSLocalizedString(@"取消", @"取消") forState:UIControlStateNormal];
-            [UIView animateWithDuration:animateTime animations:^{
+            [UIView animateWithDuration:animateTime/2 animations:^{
+                self.bottomView.frame = CGRectMake(0 ,ScreenHeight-64-BottomHeight*SizeScaleHeight, ScreenWidth, BottomHeight*SizeScaleHeight);
                 self.theTableView.frame = CGRectMake(0, 0, ScreenWidth, ScreenHeight-64-BottomHeight*SizeScaleHeight);
                 [self.theTableView reloadData];
-            } completion:^(BOOL finished) {
-                [UIView animateWithDuration:animateTime animations:^{
-                    self.bottomView.frame = CGRectMake(0 ,ScreenHeight-64-BottomHeight*SizeScaleHeight, ScreenWidth, BottomHeight*SizeScaleHeight);
-                }];
             }];
         }
     }];

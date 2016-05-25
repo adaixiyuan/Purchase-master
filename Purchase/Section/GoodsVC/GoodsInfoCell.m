@@ -11,8 +11,6 @@
 
 static const float ImageWidth = 110;
 static const float ImageHeight = 90;
-static const float CountWidth = 120;
-static const float CountHeight = 28;
 
 @implementation GoodsInfoCell
 
@@ -39,83 +37,18 @@ static const float CountHeight = 28;
         UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(tapAction:)];
         [_goodsImageView addGestureRecognizer:tap];
         
-        _countView = [[UIImageView alloc]init];
-        _countView.backgroundColor = [UIColor clearColor];
-        _countView.userInteractionEnabled = YES;
-        _countView.image = [UIImage imageNamed:@"trade_btn_num"];
-        [self.contentView addSubview:_countView];
-        
-        _numCutBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-        _numCutBtn.backgroundColor = [UIColor clearColor];
-        [_numCutBtn setImage:[UIImage imageNamed:@"btn_cut"] forState:UIControlStateNormal];
-        [_numCutBtn addTarget:self action:@selector(numCutBtnAction:) forControlEvents:UIControlEventTouchUpInside];
-        [_countView addSubview:_numCutBtn];
-        _numText = [[UITextField alloc]init];
-        _numText.backgroundColor = [UIColor clearColor];
-        _numText.delegate = self;
-        _numText.textAlignment = NSTextAlignmentCenter;
-        _numText.keyboardType = UIKeyboardTypeNumberPad;
-        _numText.returnKeyType = UIReturnKeyDone;
-        _numText.font = [UIFont customFontOfSize:14];
-        _numText.textColor = SHALLOWBLACK;
-        _numText.text = @"0";
-        [_countView addSubview:_numText];
-        _numAddBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-        _numAddBtn.backgroundColor = [UIColor clearColor];
-        [_numAddBtn setImage:[UIImage imageNamed:@"btn_add"] forState:UIControlStateNormal];
-        [_numAddBtn addTarget:self action:@selector(numAddBtnAction:) forControlEvents:UIControlEventTouchUpInside];
-        [_countView addSubview:_numAddBtn];
-        
-        _cartButton = [UIButton buttonWithType:UIButtonTypeCustom];
-        _cartButton.backgroundColor = [UIColor clearColor];
-        [_cartButton setImage:[UIImage imageNamed:@"icon_cart"] forState:UIControlStateNormal];
-        [_cartButton addTarget:self action:@selector(cartBtnAction:) forControlEvents:UIControlEventTouchUpInside];
-        [self.contentView addSubview:_cartButton];
-        
-        [_goodsImageView mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.centerY.equalTo(self.contentView).with.offset(0);
-            make.left.equalTo(self.contentView).with.offset(15);
-            make.width.equalTo(@(ImageWidth*SizeScaleWidth));
-            make.height.equalTo(@(ImageHeight*SizeScaleWidth));
-        }];
-        
-        [_countView mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.left.equalTo(_goodsImageView.mas_right).with.offset(10);
-            make.bottom.equalTo(self.contentView).with.offset(-10);
-            make.width.equalTo(@(CountWidth*SizeScaleWidth));
-            make.height.equalTo(@(CountHeight*SizeScaleWidth));
-        }];
-        [_numCutBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.top.equalTo(_countView).with.offset(0);
-            make.left.equalTo(_countView).with.offset(0);
-            make.bottom.equalTo(_countView).with.offset(0);
-            make.width.equalTo(@(CountWidth*SizeScaleWidth/3));
-        }];
-        [_numText mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.top.equalTo(_countView).with.offset(0);
-            make.left.equalTo(_numCutBtn.mas_right).with.offset(0);
-            make.bottom.equalTo(_countView).with.offset(0);
-            make.right.equalTo(_numAddBtn.mas_left).with.offset(0);
-        }];
-        [_numAddBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.top.equalTo(_countView).with.offset(0);
-            make.right.equalTo(_countView).with.offset(0);
-            make.bottom.equalTo(_countView).with.offset(0);
-            make.width.equalTo(_numCutBtn.mas_width);
-        }];
-        
-        [_cartButton mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.centerY.equalTo(_countView.mas_centerY).with.offset(0);
-            make.right.equalTo(self.contentView).with.offset(-15);
-            make.width.and.height.equalTo(_countView.mas_height);
-        }];
-        
         _goodsDesLabel = [[TTTAttributedLabel alloc]initWithFrame:CGRectZero];
         _goodsDesLabel.backgroundColor = [UIColor clearColor];
         _goodsDesLabel.font = [UIFont customFontOfSize:14];
         _goodsDesLabel.textColor = SHALLOWBLACK;
         _goodsDesLabel.numberOfLines = 2;
         [self.contentView addSubview:_goodsDesLabel];
+        
+        _priceLabel = [[TTTAttributedLabel alloc]initWithFrame:CGRectZero];
+        _priceLabel.backgroundColor = [UIColor clearColor];
+        _priceLabel.font = [UIFont customFontOfSize:12];
+        _priceLabel.textColor = SHALLOWBLACK;
+        [self.contentView addSubview:_priceLabel];
         
         _sellLabel = [[TTTAttributedLabel alloc]initWithFrame:CGRectZero];
         _sellLabel.backgroundColor = [UIColor clearColor];
@@ -141,16 +74,32 @@ static const float CountHeight = 28;
         _puchaseLabel.textColor = SHALLOWBLACK;
         [self.contentView addSubview:_puchaseLabel];
         
+        _cartButton = [UIButton buttonWithType:UIButtonTypeCustom];
+        _cartButton.backgroundColor = [UIColor clearColor];
+        [_cartButton setImage:[UIImage imageNamed:@"icon_cart"] forState:UIControlStateNormal];
+        [_cartButton addTarget:self action:@selector(cartBtnAction:) forControlEvents:UIControlEventTouchUpInside];
+        [self.contentView addSubview:_cartButton];
+        
+        [_goodsImageView mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.centerY.equalTo(self.contentView).with.offset(0);
+            make.left.equalTo(self.contentView).with.offset(15);
+            make.width.equalTo(@(ImageWidth*SizeScaleWidth));
+            make.height.equalTo(@(ImageHeight*SizeScaleWidth));
+        }];
         [_goodsDesLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.top.equalTo(_goodsImageView.mas_top).with.offset(-5);
+            make.top.equalTo(_goodsImageView.mas_top).with.offset(0);
             make.left.equalTo(_goodsImageView.mas_right).with.offset(10);
-            make.right.equalTo(self.contentView).with.offset(-15);
-            make.height.equalTo(@(35*SizeScaleHeight));
+            make.right.equalTo(self.contentView).with.offset(0);
+        }];
+        [_priceLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.top.equalTo(_goodsDesLabel.mas_bottom).with.offset(8);
+            make.left.equalTo(_goodsImageView.mas_right).with.offset(10);
+            make.right.equalTo(self.contentView).with.offset(-10);
         }];
         [_sellLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.top.equalTo(_goodsDesLabel.mas_bottom).with.offset(5);
-            make.left.equalTo(_goodsImageView.mas_right).with.offset(10);
-            make.right.equalTo(_storeLabel.mas_left).with.offset(-10);
+            make.top.equalTo(_priceLabel.mas_bottom).with.offset(5);
+            make.left.equalTo(_priceLabel.mas_left).with.offset(0);
+            make.right.equalTo(_storeLabel.mas_left).with.offset(-5);
             make.bottom.equalTo(_waitToBuyLabel.mas_top).with.offset(-5);
             make.width.equalTo(_storeLabel.mas_width);
             make.width.equalTo(_waitToBuyLabel.mas_width);
@@ -160,22 +109,25 @@ static const float CountHeight = 28;
             make.height.equalTo(_puchaseLabel.mas_height);
         }];
         [_storeLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.top.equalTo(_goodsDesLabel.mas_bottom).with.offset(5);
-            make.left.equalTo(_sellLabel.mas_right).with.offset(10);
-            make.right.equalTo(self.contentView).with.offset(-15);
+            make.top.equalTo(_sellLabel.mas_top).with.offset(0);
+            make.left.equalTo(_sellLabel.mas_right).with.offset(5);
+            make.right.equalTo(_puchaseLabel.mas_right).with.offset(-5);
             make.bottom.equalTo(_waitToBuyLabel.mas_top).with.offset(-5);
         }];
         [_waitToBuyLabel mas_makeConstraints:^(MASConstraintMaker *make) {
             make.top.equalTo(_sellLabel.mas_bottom).with.offset(5);
-            make.left.equalTo(_goodsImageView.mas_right).with.offset(10);
-            make.right.equalTo(_puchaseLabel.mas_left).with.offset(-10);
-            make.bottom.equalTo(_countView.mas_top).with.offset(-5);
+            make.left.equalTo(_priceLabel.mas_left).with.offset(0);
+            make.right.equalTo(_puchaseLabel.mas_left).with.offset(-5);
         }];
         [_puchaseLabel mas_makeConstraints:^(MASConstraintMaker *make) {
             make.top.equalTo(_sellLabel.mas_bottom).with.offset(5);
-            make.left.equalTo(_sellLabel.mas_right).with.offset(10);
-            make.right.equalTo(self.contentView).with.offset(-15);
-            make.bottom.equalTo(_countView.mas_top).with.offset(-5);
+            make.left.equalTo(_sellLabel.mas_right).with.offset(5);
+            make.right.equalTo(_cartButton.mas_left).with.offset(-5);
+        }];
+        [_cartButton mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.right.equalTo(self.contentView).with.offset(-10);
+            make.centerY.equalTo(_puchaseLabel.mas_top).with.offset(0);
+            make.width.and.height.equalTo(@25);
         }];
     }
     return self;
@@ -183,6 +135,14 @@ static const float CountHeight = 28;
 - (void)setCellContentWithGoodsDic:(NSDictionary *)infoDic
 {
     GoodsInfoModel *goodsModel = [GoodsInfoModel mj_objectWithKeyValues:infoDic];
+    
+    if (goodsModel.has_child == YES) {
+        _cartButton.hidden = YES;
+        self.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+    }else{
+        _cartButton.hidden = NO;
+        self.accessoryType = UITableViewCellAccessoryNone;
+    }
     
     NSString *detailStr;
     NSRange range = NSMakeRange(0, 0);
@@ -193,7 +153,6 @@ static const float CountHeight = 28;
         detailStr = [NSString stringWithFormat:@"%@  %@",SAFE_STRING(goodsModel.brand_name),SAFE_STRING(goodsModel.des)];
     }
     [_goodsImageView sd_setImageWithURL:[NSURL URLWithString:SAFE_STRING(goodsModel.img_url)]];
-    
     [_goodsDesLabel setText:detailStr afterInheritingLabelAttributesAndConfiguringWithBlock:^NSMutableAttributedString *(NSMutableAttributedString *mutableAttributedString) {
         //设定可点击文字的的大小
         UIFont *systemFont = [UIFont customFontOfSize:14];
@@ -206,11 +165,29 @@ static const float CountHeight = 28;
         return mutableAttributedString;
     }];
     
+    NSString *priceStr;
+    if (goodsModel.recent_price > 0.000000) {
+        priceStr = [NSString stringWithFormat:@"最近购入价：¥%.2f",(float)goodsModel.recent_price];
+    }else{
+        priceStr = [NSString stringWithFormat:@"最近购入价：--"];
+    }
     NSString *sellStr = [NSString stringWithFormat:@"销量：%d",(int)goodsModel.sell_qty];
     NSString *storeStr = [NSString stringWithFormat:@"库存：%d",(int)goodsModel.stock_qty];
     NSString *buyStr = [NSString stringWithFormat:@"待采购：%d",(int)goodsModel.wait_to_buy];
     NSString *purchaseStr = [NSString stringWithFormat:@"收购量：%d",(int)goodsModel.publish_qty];
     
+    [_priceLabel setText:priceStr afterInheritingLabelAttributesAndConfiguringWithBlock:^NSMutableAttributedString *(NSMutableAttributedString *mutableAttributedString) {
+        NSRange range = NSMakeRange(6, priceStr.length-6);
+        //设定可点击文字的的大小
+        UIFont *systemFont = [UIFont customFontOfSize:13];
+        CTFontRef font = CTFontCreateWithName((__bridge CFStringRef)systemFont.fontName, systemFont.pointSize, NULL);
+        if (font) {
+            [mutableAttributedString addAttribute:(NSString *)kCTFontAttributeName value:(__bridge id)font range:range];
+            [mutableAttributedString addAttribute:(NSString*)kCTForegroundColorAttributeName value:(id)[NAVBARCOLOR CGColor] range:range];
+            CFRelease(font);
+        }
+        return mutableAttributedString;
+    }];
     [_sellLabel setText:sellStr afterInheritingLabelAttributesAndConfiguringWithBlock:^NSMutableAttributedString *(NSMutableAttributedString *mutableAttributedString) {
         NSRange range = NSMakeRange(3, sellStr.length-3);
         //设定可点击文字的的大小
@@ -218,7 +195,7 @@ static const float CountHeight = 28;
         CTFontRef font = CTFontCreateWithName((__bridge CFStringRef)systemFont.fontName, systemFont.pointSize, NULL);
         if (font) {
             [mutableAttributedString addAttribute:(NSString *)kCTFontAttributeName value:(__bridge id)font range:range];
-            [mutableAttributedString addAttribute:(NSString*)kCTForegroundColorAttributeName value:(id)[NAVBARCOLOR CGColor] range:range];
+//            [mutableAttributedString addAttribute:(NSString*)kCTForegroundColorAttributeName value:(id)[NAVBARCOLOR CGColor] range:range];
             CFRelease(font);
         }
         return mutableAttributedString;
@@ -230,7 +207,7 @@ static const float CountHeight = 28;
         CTFontRef font = CTFontCreateWithName((__bridge CFStringRef)systemFont.fontName, systemFont.pointSize, NULL);
         if (font) {
             [mutableAttributedString addAttribute:(NSString *)kCTFontAttributeName value:(__bridge id)font range:range];
-            [mutableAttributedString addAttribute:(NSString*)kCTForegroundColorAttributeName value:(id)[NAVBARCOLOR CGColor] range:range];
+//            [mutableAttributedString addAttribute:(NSString*)kCTForegroundColorAttributeName value:(id)[NAVBARCOLOR CGColor] range:range];
             CFRelease(font);
         }
         return mutableAttributedString;
@@ -242,7 +219,7 @@ static const float CountHeight = 28;
         CTFontRef font = CTFontCreateWithName((__bridge CFStringRef)systemFont.fontName, systemFont.pointSize, NULL);
         if (font) {
             [mutableAttributedString addAttribute:(NSString *)kCTFontAttributeName value:(__bridge id)font range:range];
-            [mutableAttributedString addAttribute:(NSString*)kCTForegroundColorAttributeName value:(id)[NAVBARCOLOR CGColor] range:range];
+//            [mutableAttributedString addAttribute:(NSString*)kCTForegroundColorAttributeName value:(id)[NAVBARCOLOR CGColor] range:range];
             CFRelease(font);
         }
         return mutableAttributedString;
@@ -254,51 +231,17 @@ static const float CountHeight = 28;
         CTFontRef font = CTFontCreateWithName((__bridge CFStringRef)systemFont.fontName, systemFont.pointSize, NULL);
         if (font) {
             [mutableAttributedString addAttribute:(NSString *)kCTFontAttributeName value:(__bridge id)font range:range];
-            [mutableAttributedString addAttribute:(NSString*)kCTForegroundColorAttributeName value:(id)[NAVBARCOLOR CGColor] range:range];
+//            [mutableAttributedString addAttribute:(NSString*)kCTForegroundColorAttributeName value:(id)[NAVBARCOLOR CGColor] range:range];
             CFRelease(font);
         }
         return mutableAttributedString;
     }];
 }
-#pragma mark - UITextFieldDelegate
-- (BOOL)textFieldShouldReturn:(UITextField *)textField
-{
-    [textField resignFirstResponder];
-    return YES;
-}
-- (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string
-{
-    NSString * aString = [textField.text stringByReplacingCharactersInRange:range withString:string];
-    if ([aString length] >= 4) {
-        textField.text = [aString substringToIndex:4];
-        [textField resignFirstResponder];
-        return NO;
-    }
-    return YES;
-}
-- (void)textFieldDidEndEditing:(UITextField *)textField
-{
-    [textField resignFirstResponder];
-    if (textField.text.length == 0) {
-        textField.text = @"0";
-    }
-}
+
 - (void)tapAction:(UITapGestureRecognizer *)tap
 {
     if(self.theDelegate && [self.theDelegate respondsToSelector:@selector(imageTapAction:)]){
         [self.theDelegate imageTapAction:self];
-    }
-}
-- (void)numCutBtnAction:(UIButton *)btn
-{
-    if (self.theDelegate && [self.theDelegate respondsToSelector:@selector(goodsCountCut:)]) {
-        [self.theDelegate goodsCountCut:self];
-    }
-}
-- (void)numAddBtnAction:(UIButton *)btn
-{
-    if (self.theDelegate && [self.theDelegate respondsToSelector:@selector(goodsCountAdd:)]) {
-        [self.theDelegate goodsCountAdd:self];
     }
 }
 - (void)cartBtnAction:(UIButton *)btn

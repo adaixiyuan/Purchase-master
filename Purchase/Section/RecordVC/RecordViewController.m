@@ -440,12 +440,12 @@ static const NSInteger CellTag = 1000;
                 [parametersDic setObject:@([[recordDic objectForKey:@"sid"] integerValue]) forKey:@"sid"];
                 [[NetworkManager sharedInstance] startRequestWithURL:kBuyRecordRequest method:RequestPost parameters:parametersDic result:^(AFHTTPRequestOperation *operation, id responseObject) {
                     [MYMBProgressHUD hideHudFromView:weakSelf.view];
-                    NSMutableDictionary *recordDic = [[NSMutableDictionary alloc]init];
-                    [recordDic setObject:@([[alertView textFieldAtIndex:0].text integerValue]) forKey:@"quantity"];
+                    NSMutableDictionary *newRecordDic = [[NSMutableDictionary alloc]initWithDictionary:recordDic];
+                    [newRecordDic setObject:@([[alertView textFieldAtIndex:0].text integerValue]) forKey:@"quantity"];
                     if ([self.record_type integerValue] == 1) {
-                        [self.purchaseList replaceObjectAtIndex:row withObject:recordDic];
+                        [self.purchaseList replaceObjectAtIndex:row withObject:newRecordDic];
                     }else{
-                        [self.bookList replaceObjectAtIndex:row withObject:recordDic];
+                        [self.bookList replaceObjectAtIndex:row withObject:newRecordDic];
                     }
                     [weakSelf.theTableView reloadData];
                 } failure:^(AFHTTPRequestOperation *operation, NSError *error) {

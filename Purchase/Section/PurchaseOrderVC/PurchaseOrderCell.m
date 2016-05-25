@@ -139,6 +139,7 @@ static const float CountHeight = 28;
 }
 - (void)setCellContentConstraintsWithEditStatus:(BOOL)isEdit
 {
+    _numText.text = nil;
     _isEdit = isEdit;
     if (isEdit == NO) {
         [_selectBtn mas_updateConstraints:^(MASConstraintMaker *make) {
