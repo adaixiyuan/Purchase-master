@@ -11,6 +11,7 @@
 #import "SearchViewController.h"
 #import "GoodsShowViewController.h"
 #import "SearchInfoModel.h"
+#import "TaoBaoChildViewController.h"
 
 static const float RowHeight = 125;
 static const float TopHeight = 40;
@@ -61,22 +62,22 @@ static const NSInteger CellTag = 1000;
     
     __weak typeof(self) weakSelf = self;
     self.theTableView.mj_header = [MJRefreshNormalHeader headerWithRefreshingBlock:^{
-        if ([self.goods_type integerValue] == 1) {
-            self.pageNum_one = 1;
-        }else if ([self.goods_type integerValue] == 2){
-            self.pageNum_two = 1;
+        if ([weakSelf.goods_type integerValue] == 1) {
+            weakSelf.pageNum_one = 1;
+        }else if ([weakSelf.goods_type integerValue] == 2){
+            weakSelf.pageNum_two = 1;
         }else{
-            self.pageNum_three = 1;
+            weakSelf.pageNum_three = 1;
         }
         [weakSelf getGoodsListRequest];
     }];
     self.theTableView.mj_footer = [MJRefreshBackNormalFooter footerWithRefreshingBlock:^{
-        if ([self.goods_type integerValue] == 1) {
-            self.pageNum_one ++;
-        }else if ([self.goods_type integerValue] == 2){
-            self.pageNum_two ++;
+        if ([weakSelf.goods_type integerValue] == 1) {
+            weakSelf.pageNum_one ++;
+        }else if ([weakSelf.goods_type integerValue] == 2){
+            weakSelf.pageNum_two ++;
         }else{
-            self.pageNum_three ++;
+            weakSelf.pageNum_three ++;
         }
         [weakSelf getGoodsListRequest];
     }];
@@ -95,7 +96,6 @@ static const NSInteger CellTag = 1000;
     [self.navigationController pushViewController:searchVC animated:YES];
     __weak typeof(self) weakSelf = self;
     searchVC.beginSearchWithTheKey = ^(NSString *des,NSString *brand,NSString *type, NSString *date, NSString *location){
-        
         UIButton *button = (UIButton *)[weakSelf.topView viewWithTag:[type integerValue]+TopTag-1];
         [weakSelf typeSwitch:button];
     };
@@ -109,7 +109,7 @@ static const NSInteger CellTag = 1000;
     [btn setTitleColor:NAVBARCOLOR forState:UIControlStateNormal];
     __weak typeof(self) weakSelf = self;
     [UIView animateWithDuration:0.3 animations:^{
-        weakSelf.animateView.frame = CGRectMake(ScreenWidth/3*(btn.tag-TopTag), CGRectGetHeight(self.topView.frame)-2, ScreenWidth/3, 2);
+        weakSelf.animateView.frame = CGRectMake(ScreenWidth/3*(btn.tag-TopTag), CGRectGetHeight(weakSelf.topView.frame)-2, ScreenWidth/3, 2);
     }];
     
     self.goods_type = [NSString stringWithFormat:@"%d",(int)(btn.tag-TopTag+1)];
@@ -225,6 +225,18 @@ static const NSInteger CellTag = 1000;
     [cell setCellContentWithGoodsDic:goodInfo];
     return cell;
 }
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    [tableView deselectRowAtIndexPath:indexPath animated:YES];
+    if ([self.goods_type integerValue] == 1) {
+        NSDictionary *goodsInfoDic = [[NSDictionary alloc]initWithDictionary:self.taobaoList[indexPath.row]];
+        if ([SAFE_NUMBER([goodsInfoDic objectForKey:@"has_child"]) integerValue] == 1) {
+            TaoBaoChildViewController *taobaoChildVC = [[TaoBaoChildViewController alloc]init];
+            taobaoChildVC.num_iid = [[goodsInfoDic objectForKey:@"num_iid"] integerValue];
+            [self.navigationController pushViewController:taobaoChildVC animated:YES];
+        }
+    }
+}
 #pragma mark - CellDelegate
 - (void)imageTapAction:(id)sender
 {
@@ -251,7 +263,9 @@ static const NSInteger CellTag = 1000;
     GoodsInfoCell *cell = (GoodsInfoCell *)sender;
     NSInteger row = cell.tag - CellTag;
     NSDictionary *goodsInfoDic;
-    if ([self.goods_type integerValue] == 2){
+    if ([self.goods_type integerValue] == 1) {
+        goodsInfoDic = [[NSDictionary alloc]initWithDictionary:self.taobaoList[row]];
+    }else if ([self.goods_type integerValue] == 2){
         goodsInfoDic = [[NSDictionary alloc]initWithDictionary:self.systemList[row]];
     }else{
         goodsInfoDic = [[NSDictionary alloc]initWithDictionary:self.livePhotosList[row]];
@@ -270,21 +284,27 @@ static const NSInteger CellTag = 1000;
             NSMutableDictionary *parametersDic = [[NSMutableDictionary alloc]init];
             [parametersDic setObject:@"publish" forKey:@"action"];
             [parametersDic setObject:@([UserInfoModel shareInstance].user_sid) forKey:@"user_sid"];
-            [parametersDic setObject:SAFE_STRING(self.goods_type) forKey:@"type"];
+            [parametersDic setObject:SAFE_STRING(weakSelf.goods_type) forKey:@"type"];
             [parametersDic setObject:SAFE_STRING([[alertView textFieldAtIndex:0] text]) forKey:@"need_qty"];
             [parametersDic setObject:SAFE_STRING([[alertView textFieldAtIndex:1] text]) forKey:@"price"];
-            if ([weakSelf.goods_type integerValue] == 2){
+            if([weakSelf.goods_type integerValue] == 1){
+                [parametersDic setObject:@([[goodsInfoDic objectForKey:@"num_iid"] integerValue]) forKey:@"num_iid"];
+            }else if ([weakSelf.goods_type integerValue] == 2){
                 [parametersDic setObject:@([[goodsInfoDic objectForKey:@"sid"] integerValue]) forKey:@"goods_sid"];
             }else if ([weakSelf.goods_type integerValue] == 3){
                 [parametersDic setObject:SAFE_NUMBER([goodsInfoDic objectForKey:@"sid"]) forKey:@"live_sid"];
                 [parametersDic setObject:@"true" forKey:@"is_Live_Public"];
             }
             [[NetworkManager sharedInstance] startRequestWithURL:kProductRequest method:RequestPost parameters:parametersDic result:^(AFHTTPRequestOperation *operation, id responseObject) {
-                if ([weakSelf.goods_type integerValue] == 2){
+                [MYMBProgressHUD hideHudFromView:self.view];
+                if ([weakSelf.goods_type integerValue] == 1){
+                    weakSelf.pageNum_one = 1;
+                }else if ([weakSelf.goods_type integerValue] == 2){
                     weakSelf.pageNum_two = 1;
                 }else{
                     weakSelf.pageNum_three = 1;
                 }
+                [MYMBProgressHUD showMessage:SAFE_STRING([responseObject objectForKey:@"msg"])];
                 [weakSelf getGoodsListRequest];
             } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
                 [MYMBProgressHUD hideHudFromView:weakSelf.view];

@@ -50,6 +50,8 @@
 		E9D8E6AA1CE81E1700FDC3AB /* BrandListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E9D8E6A61CE81E1700FDC3AB /* BrandListViewController.m */; };
 		E9D8E6AD1CE81FC200FDC3AB /* TypeListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E9D8E6AC1CE81FC200FDC3AB /* TypeListViewController.m */; };
 		E9D9523C1CE2253F00EE4D43 /* RecordViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = E9D9523B1CE2253F00EE4D43 /* RecordViewCell.m */; };
+		E9E8198B1CF7412F00780217 /* TaoBaoChildViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E9E8198A1CF7412F00780217 /* TaoBaoChildViewController.m */; };
+		E9E8198E1CF7474400780217 /* TaoBaoChildCell.m in Sources */ = {isa = PBXBuildFile; fileRef = E9E8198D1CF7474400780217 /* TaoBaoChildCell.m */; };
 		E9F270BB1CD75D7100AEF91E /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = E9F270BA1CD75D7100AEF91E /* main.m */; };
 		E9F270C61CD75D7100AEF91E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E9F270C51CD75D7100AEF91E /* Assets.xcassets */; };
 		E9F270D61CD75DE400AEF91E /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = E9F270D51CD75DE400AEF91E /* AppDelegate.m */; };
@@ -148,6 +150,10 @@
 		E9D8E6AC1CE81FC200FDC3AB /* TypeListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TypeListViewController.m; sourceTree = "<group>"; };
 		E9D9523A1CE2253F00EE4D43 /* RecordViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RecordViewCell.h; sourceTree = "<group>"; };
 		E9D9523B1CE2253F00EE4D43 /* RecordViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RecordViewCell.m; sourceTree = "<group>"; };
+		E9E819891CF7412F00780217 /* TaoBaoChildViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TaoBaoChildViewController.h; sourceTree = "<group>"; };
+		E9E8198A1CF7412F00780217 /* TaoBaoChildViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TaoBaoChildViewController.m; sourceTree = "<group>"; };
+		E9E8198C1CF7474400780217 /* TaoBaoChildCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TaoBaoChildCell.h; sourceTree = "<group>"; };
+		E9E8198D1CF7474400780217 /* TaoBaoChildCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TaoBaoChildCell.m; sourceTree = "<group>"; };
 		E9F270B61CD75D7100AEF91E /* Purchase.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Purchase.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E9F270BA1CD75D7100AEF91E /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		E9F270C51CD75D7100AEF91E /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -351,6 +357,10 @@
 				E98EAB3D1CDA40FD000E5244 /* GoodsInfoViewController.m */,
 				E9F7070C1CDDC9D4009DD292 /* GoodsInfoCell.h */,
 				E9F7070D1CDDC9D4009DD292 /* GoodsInfoCell.m */,
+				E9E819891CF7412F00780217 /* TaoBaoChildViewController.h */,
+				E9E8198A1CF7412F00780217 /* TaoBaoChildViewController.m */,
+				E9E8198C1CF7474400780217 /* TaoBaoChildCell.h */,
+				E9E8198D1CF7474400780217 /* TaoBaoChildCell.m */,
 			);
 			path = GoodsVC;
 			sourceTree = "<group>";
@@ -646,6 +656,7 @@
 				E9F707121CDDD0C8009DD292 /* SearchViewController.m in Sources */,
 				E9F7070B1CDDC52B009DD292 /* HomePageCell.m in Sources */,
 				E92AEF751CDE1E1700ABBCAF /* NetworkManager.m in Sources */,
+				E9E8198B1CF7412F00780217 /* TaoBaoChildViewController.m in Sources */,
 				E98EAB3E1CDA40FD000E5244 /* GoodsInfoViewController.m in Sources */,
 				E9D8E6AA1CE81E1700FDC3AB /* BrandListViewController.m in Sources */,
 				E94B164E1CD77E2A0034D164 /* UIColor+Addition.m in Sources */,
@@ -660,6 +671,7 @@
 				E9BBCDAA1CD8F38A00962298 /* LeftViewController.m in Sources */,
 				E9B3507F1CD7A095005A4455 /* HomeBaseViewController.m in Sources */,
 				E94B164D1CD77E2A0034D164 /* NSString+Addition.m in Sources */,
+				E9E8198E1CF7474400780217 /* TaoBaoChildCell.m in Sources */,
 				E9B350731CD78CA3005A4455 /* NavigationController.m in Sources */,
 				E9202B081CEB63D000CB77A7 /* LocationListViewController.m in Sources */,
 				E95CFA851CE4A6B40057B649 /* UserInfoModel.m in Sources */,

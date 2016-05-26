@@ -6,12 +6,12 @@
     },
     {
       "idiom" : "universal",
-      "filename" : "logoIcon@2x.png",
+      "filename" : "youdian_icon@2x.png",
       "scale" : "2x"
     },
     {
       "idiom" : "universal",
-      "filename" : "logoIcon@3x.png",
+      "filename" : "youdian_icon@3x.png",
       "scale" : "3x"
     }
   ],
