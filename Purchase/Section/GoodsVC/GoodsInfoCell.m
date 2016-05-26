@@ -111,7 +111,7 @@ static const float ImageHeight = 90;
         [_storeLabel mas_makeConstraints:^(MASConstraintMaker *make) {
             make.top.equalTo(_sellLabel.mas_top).with.offset(0);
             make.left.equalTo(_sellLabel.mas_right).with.offset(5);
-            make.right.equalTo(_puchaseLabel.mas_right).with.offset(-5);
+            make.right.equalTo(_puchaseLabel.mas_right).with.offset(0);
             make.bottom.equalTo(_waitToBuyLabel.mas_top).with.offset(-5);
         }];
         [_waitToBuyLabel mas_makeConstraints:^(MASConstraintMaker *make) {

@@ -56,6 +56,7 @@ static const NSInteger CellTag = 1000;
     self.systemList = [[NSMutableArray alloc]init];
     self.livePhotosList = [[NSMutableArray alloc]init];
     // 获取记录列表
+    [MYMBProgressHUD showHudWithMessage:NSLocalizedString(@"请稍等···", @"请稍等···") InView:self.view];
     [self getGoodsListRequest];
     
     __weak typeof(self) weakSelf = self;
@@ -116,12 +117,12 @@ static const NSInteger CellTag = 1000;
     self.pageNum_two = 1;
     self.pageNum_three = 1;
     [self.theTableView reloadData];
+    [MYMBProgressHUD showHudWithMessage:NSLocalizedString(@"请稍等···", @"请稍等···") InView:self.view];
     [self getGoodsListRequest];
 }
 #pragma mark - Request
 - (void)getGoodsListRequest
 {
-    [MYMBProgressHUD showHudWithMessage:NSLocalizedString(@"请稍等···", @"请稍等···") InView:self.view];
     NSInteger pageNum;
     if ([self.goods_type integerValue] == 1) {
         pageNum = self.pageNum_one;
@@ -247,49 +248,57 @@ static const NSInteger CellTag = 1000;
 }
 - (void)addCartToPurchase:(id)sender
 {
+    GoodsInfoCell *cell = (GoodsInfoCell *)sender;
+    NSInteger row = cell.tag - CellTag;
+    NSDictionary *goodsInfoDic;
+    if ([self.goods_type integerValue] == 2){
+        goodsInfoDic = [[NSDictionary alloc]initWithDictionary:self.systemList[row]];
+    }else{
+        goodsInfoDic = [[NSDictionary alloc]initWithDictionary:self.livePhotosList[row]];
+    }
     __weak typeof(self) weakSelf = self;
     UIAlertView *alert = [[UIAlertView alloc]initWithTitle:nil
-                                                   message:@"请输入更新的商品个数"
+                                                   message:@"请输入商品个数与价格"
                                                   delegate:self
                                          cancelButtonTitle:@"取消"
                                          otherButtonTitles:@"确定", nil];
-    alert.alertViewStyle = UIAlertViewStylePlainTextInput;
+    alert.alertViewStyle = UIAlertViewStyleLoginAndPasswordInput;
     alert.tapBlock = ^(UIAlertView *alertView, NSInteger buttonIndex) {
         [[[UIApplication sharedApplication] keyWindow] endEditing:YES];
         if (buttonIndex == 1) {
-    
-            if ([self.goods_type integerValue] == 1) {
-                
-            }else if ([self.goods_type integerValue] == 2){
-                
-            }else{
-                
+            [MYMBProgressHUD showHudWithMessage:NSLocalizedString(@"请稍等···", @"请稍等···") InView:weakSelf.view];
+            NSMutableDictionary *parametersDic = [[NSMutableDictionary alloc]init];
+            [parametersDic setObject:@"publish" forKey:@"action"];
+            [parametersDic setObject:@([UserInfoModel shareInstance].user_sid) forKey:@"user_sid"];
+            [parametersDic setObject:SAFE_STRING(self.goods_type) forKey:@"type"];
+            [parametersDic setObject:SAFE_STRING([[alertView textFieldAtIndex:0] text]) forKey:@"need_qty"];
+            [parametersDic setObject:SAFE_STRING([[alertView textFieldAtIndex:1] text]) forKey:@"price"];
+            if ([weakSelf.goods_type integerValue] == 2){
+                [parametersDic setObject:@([[goodsInfoDic objectForKey:@"sid"] integerValue]) forKey:@"goods_sid"];
+            }else if ([weakSelf.goods_type integerValue] == 3){
+                [parametersDic setObject:SAFE_NUMBER([goodsInfoDic objectForKey:@"sid"]) forKey:@"live_sid"];
+                [parametersDic setObject:@"true" forKey:@"is_Live_Public"];
             }
-//            [MYMBProgressHUD showHudWithMessage:NSLocalizedString(@"请稍等···", @"请稍等···") InView:weakSelf.view];
-//            NSMutableDictionary *parametersDic = [[NSMutableDictionary alloc]init];
-//            [parametersDic setObject:@"publish" forKey:@"action"];
-//            [parametersDic setObject:@([UserInfoModel shareInstance].user_sid) forKey:@"user_sid"];
-//            [parametersDic setObject:SAFE_STRING(self.record_type) forKey:@"type"];
-//            [parametersDic setObject:SAFE_STRING([[alertView textFieldAtIndex:0] text]) forKey:@"new_quantity"];
-//            [parametersDic setObject:@([[recordDic objectForKey:@"sid"] integerValue]) forKey:@"sid"];
-//            [[NetworkManager sharedInstance] startRequestWithURL:kProductRequest method:RequestPost parameters:parametersDic result:^(AFHTTPRequestOperation *operation, id responseObject) {
-//                [MYMBProgressHUD hideHudFromView:weakSelf.view];
-//                NSMutableDictionary *recordDic = [[NSMutableDictionary alloc]init];
-//                [recordDic setObject:@([[alertView textFieldAtIndex:0].text integerValue]) forKey:@"quantity"];
-//                if ([self.record_type integerValue] == 1) {
-//                    [self.purchaseList replaceObjectAtIndex:row withObject:recordDic];
-//                }else{
-//                    [self.bookList replaceObjectAtIndex:row withObject:recordDic];
-//                }
-//                [weakSelf.theTableView reloadData];
-//            } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-//                [MYMBProgressHUD hideHudFromView:weakSelf.view];
-//                [MYMBProgressHUD showMessage:error.userInfo[@"NSLocalizedDescription"]];
-//            }];
+            [[NetworkManager sharedInstance] startRequestWithURL:kProductRequest method:RequestPost parameters:parametersDic result:^(AFHTTPRequestOperation *operation, id responseObject) {
+                if ([weakSelf.goods_type integerValue] == 2){
+                    weakSelf.pageNum_two = 1;
+                }else{
+                    weakSelf.pageNum_three = 1;
+                }
+                [weakSelf getGoodsListRequest];
+            } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+                [MYMBProgressHUD hideHudFromView:weakSelf.view];
+                [MYMBProgressHUD showMessage:error.userInfo[@"NSLocalizedDescription"]];
+            }];
         }
     };
     alert.shouldEnableFirstOtherButtonBlock = ^BOOL(UIAlertView *alertView) {
-        return ([[[alertView textFieldAtIndex:0] text] length] > 0 && [NSString isPureInt:[[alertView textFieldAtIndex:0] text]]);
+        [alertView textFieldAtIndex:0].placeholder = @"请输入商品个数";
+        [alertView textFieldAtIndex:1].placeholder = @"请输入商品价格";
+        [alertView textFieldAtIndex:1].secureTextEntry = NO;
+        [alertView textFieldAtIndex:0].keyboardType = UIKeyboardTypeNumberPad;
+        [alertView textFieldAtIndex:1].keyboardType = UIKeyboardTypeNumbersAndPunctuation;
+        return ([alertView textFieldAtIndex:0].text.length > 0 && [NSString isPureInt:[alertView textFieldAtIndex:0].text] && [alertView textFieldAtIndex:1].text.length > 0 && ([NSString isPureFloat:[alertView textFieldAtIndex:1].text] || [NSString isPureInt:[alertView textFieldAtIndex:1].text]));
     };
     [alert show];
 }
