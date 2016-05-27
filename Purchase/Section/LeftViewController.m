@@ -115,9 +115,29 @@ static const float RowHeight = 42;
             [self.sideMenuViewController setContentViewController:[[NavigationController alloc] initWithRootViewController:[[GoodsInfoViewController alloc]init]] animated:YES];
             [self.sideMenuViewController hideMenuViewController];
             break;
-        case 4:
-            [self.sideMenuViewController setContentViewController:[[NavigationController alloc] initWithRootViewController:[[GoodsPublishViewController alloc]init]] animated:YES];
-            [self.sideMenuViewController hideMenuViewController];
+        case 4:{
+            if ([[UserInfoModel shareInstance].role isEqualToString:@"buyer"]) {
+                // 设置
+                
+            }else{
+                [self.sideMenuViewController setContentViewController:[[NavigationController alloc] initWithRootViewController:[[GoodsPublishViewController alloc]init]] animated:YES];
+                [self.sideMenuViewController hideMenuViewController];
+            }
+        }
+            break;
+        case 5:{
+            if ([[UserInfoModel shareInstance].role isEqualToString:@"buyer"]) {
+                [self.sideMenuViewController hideMenuViewController];
+                [UIAlertView showWithTitle:NSLocalizedString(@"确认退出登录？", @"确认退出登录？") message:nil cancelButtonTitle:NSLocalizedString(@"取消", @"取消") otherButtonTitles:@[NSLocalizedString(@"确定", @"确定")] tapBlock:^(UIAlertView * _Nonnull alertView, NSInteger buttonIndex) {
+                    if (buttonIndex == 1) {
+                        AppDelegate *app = (AppDelegate *)[UIApplication sharedApplication].delegate;
+                        [app goToLoginVC];
+                    }
+                }];
+            }else{
+                // 设置
+            }
+        }
             break;
         case 6:{
             [self.sideMenuViewController hideMenuViewController];
@@ -127,7 +147,6 @@ static const float RowHeight = 42;
                     [app goToLoginVC];
                 }
             }];
-            
         }
             break;
         default:
@@ -151,7 +170,12 @@ static const float RowHeight = 42;
 - (NSArray *)titles
 {
     if (_titles == nil) {
-        _titles = @[NSLocalizedString(@"首页", @"首页"),NSLocalizedString(@"采购单", @"采购单"),NSLocalizedString(@"记录", @"记录"),NSLocalizedString(@"商品信息", @"商品信息"),NSLocalizedString(@"商品发布", @"商品发布"),NSLocalizedString(@"设置", @"设置"),NSLocalizedString(@"退出登录", @"退出登录")];
+        if([[UserInfoModel shareInstance].role isEqualToString:@"buyer"]){
+            _titles = @[NSLocalizedString(@"首页", @"首页"),NSLocalizedString(@"采购单", @"采购单"),NSLocalizedString(@"记录", @"记录"),NSLocalizedString(@"商品信息", @"商品信息"),NSLocalizedString(@"设置", @"设置"),NSLocalizedString(@"退出登录", @"退出登录")];
+        }else{
+           _titles = @[NSLocalizedString(@"首页", @"首页"),NSLocalizedString(@"采购单", @"采购单"),NSLocalizedString(@"记录", @"记录"),NSLocalizedString(@"商品信息", @"商品信息"),NSLocalizedString(@"商品发布", @"商品发布"),NSLocalizedString(@"设置", @"设置"),NSLocalizedString(@"退出登录", @"退出登录")];
+        }
+
     }
     return _titles;
 }

@@ -89,7 +89,7 @@ static const NSInteger CellTag = 1000;
     
     [SearchInfoModel shareInstance].fromType = FromGoodsInfoVC;
     [SearchInfoModel shareInstance].typeID = self.goods_type;
-    [SearchInfoModel shareInstance].typeList = @[@"淘宝商品",@"系统商品",@"实拍商品"];
+    [SearchInfoModel shareInstance].typeList = @[NSLocalizedString(@"淘宝商品", @"淘宝商品"),NSLocalizedString(@"系统商品", @"系统商品"),NSLocalizedString(@"实拍商品", @"实拍商品")];
     [SearchInfoModel shareInstance].domain = @"Product";
     [SearchInfoModel shareInstance].typeName = [[SearchInfoModel shareInstance].typeList objectAtIndex:[self.goods_type integerValue]-1];
     
@@ -260,6 +260,10 @@ static const NSInteger CellTag = 1000;
 }
 - (void)addCartToPurchase:(id)sender
 {
+    if([[UserInfoModel shareInstance].role isEqualToString:@"buyer"]){
+        [MYMBProgressHUD showMessage:NSLocalizedString(@"采购员暂无此权限！", @"采购员暂无此权限！")];
+        return;
+    }
     GoodsInfoCell *cell = (GoodsInfoCell *)sender;
     NSInteger row = cell.tag - CellTag;
     NSDictionary *goodsInfoDic;
@@ -272,10 +276,10 @@ static const NSInteger CellTag = 1000;
     }
     __weak typeof(self) weakSelf = self;
     UIAlertView *alert = [[UIAlertView alloc]initWithTitle:nil
-                                                   message:@"请输入商品个数与价格"
+                                                   message:NSLocalizedString(@"请输入商品个数与价格", @"请输入商品个数与价格")
                                                   delegate:self
-                                         cancelButtonTitle:@"取消"
-                                         otherButtonTitles:@"确定", nil];
+                                         cancelButtonTitle:NSLocalizedString(@"取消", @"取消")
+                                         otherButtonTitles:NSLocalizedString(@"确定", @"确定"), nil];
     alert.alertViewStyle = UIAlertViewStyleLoginAndPasswordInput;
     alert.tapBlock = ^(UIAlertView *alertView, NSInteger buttonIndex) {
         [[[UIApplication sharedApplication] keyWindow] endEditing:YES];
@@ -313,8 +317,8 @@ static const NSInteger CellTag = 1000;
         }
     };
     alert.shouldEnableFirstOtherButtonBlock = ^BOOL(UIAlertView *alertView) {
-        [alertView textFieldAtIndex:0].placeholder = @"请输入商品个数";
-        [alertView textFieldAtIndex:1].placeholder = @"请输入商品价格";
+        [alertView textFieldAtIndex:0].placeholder = NSLocalizedString(@"请输入商品个数", @"请输入商品个数");
+        [alertView textFieldAtIndex:1].placeholder = NSLocalizedString(@"请输入商品价格", @"请输入商品价格");
         [alertView textFieldAtIndex:1].secureTextEntry = NO;
         [alertView textFieldAtIndex:0].keyboardType = UIKeyboardTypeNumberPad;
         [alertView textFieldAtIndex:1].keyboardType = UIKeyboardTypeNumbersAndPunctuation;

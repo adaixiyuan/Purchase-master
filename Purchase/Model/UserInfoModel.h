@@ -12,7 +12,7 @@
 
 + (instancetype)shareInstance;
 
-@property (nonatomic, strong) NSString *role; // 用户角色
+@property (nonatomic, strong) NSString *role; // 用户角色  buyer
 @property (nonatomic, strong) NSString *user_name; // 用户名
 @property (nonatomic, assign) NSInteger user_sid; // 用户唯一识别ID
 
