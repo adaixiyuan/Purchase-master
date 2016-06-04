@@ -16,8 +16,8 @@
 #import "AppDelegate.h"
 #import "SearchInfoModel.h"
 
-static const float SectionHeadHeight = 150;
-static const float RowHeight = 42;
+static const float SectionHeadHeight = 180;
+static const float RowHeight = 44;
 
 @interface LeftViewController ()<UITableViewDelegate,UITableViewDataSource>
 
@@ -117,16 +117,6 @@ static const float RowHeight = 42;
             break;
         case 4:{
             if ([[UserInfoModel shareInstance].role isEqualToString:@"buyer"]) {
-                // 设置
-                
-            }else{
-                [self.sideMenuViewController setContentViewController:[[NavigationController alloc] initWithRootViewController:[[GoodsPublishViewController alloc]init]] animated:YES];
-                [self.sideMenuViewController hideMenuViewController];
-            }
-        }
-            break;
-        case 5:{
-            if ([[UserInfoModel shareInstance].role isEqualToString:@"buyer"]) {
                 [self.sideMenuViewController hideMenuViewController];
                 [UIAlertView showWithTitle:NSLocalizedString(@"确认退出登录？", @"确认退出登录？") message:nil cancelButtonTitle:NSLocalizedString(@"取消", @"取消") otherButtonTitles:@[NSLocalizedString(@"确定", @"确定")] tapBlock:^(UIAlertView * _Nonnull alertView, NSInteger buttonIndex) {
                     if (buttonIndex == 1) {
@@ -135,11 +125,12 @@ static const float RowHeight = 42;
                     }
                 }];
             }else{
-                // 设置
+                [self.sideMenuViewController setContentViewController:[[NavigationController alloc] initWithRootViewController:[[GoodsPublishViewController alloc]init]] animated:YES];
+                [self.sideMenuViewController hideMenuViewController];
             }
         }
             break;
-        case 6:{
+        case 5:{
             [self.sideMenuViewController hideMenuViewController];
             [UIAlertView showWithTitle:NSLocalizedString(@"确认退出登录？", @"确认退出登录？") message:nil cancelButtonTitle:NSLocalizedString(@"取消", @"取消") otherButtonTitles:@[NSLocalizedString(@"确定", @"确定")] tapBlock:^(UIAlertView * _Nonnull alertView, NSInteger buttonIndex) {
                 if (buttonIndex == 1) {
@@ -170,11 +161,10 @@ static const float RowHeight = 42;
 - (NSArray *)titles
 {
     if (_titles == nil) {
-        [UserInfoModel shareInstance].role = @"buyer+";
         if([[UserInfoModel shareInstance].role isEqualToString:@"buyer"]){
-            _titles = @[NSLocalizedString(@"首页", @"首页"),NSLocalizedString(@"采购单", @"采购单"),NSLocalizedString(@"记录", @"记录"),NSLocalizedString(@"商品信息", @"商品信息"),NSLocalizedString(@"设置", @"设置"),NSLocalizedString(@"退出登录", @"退出登录")];
+            _titles = @[NSLocalizedString(@"首页", @"首页"),NSLocalizedString(@"采购单", @"采购单"),NSLocalizedString(@"记录", @"记录"),NSLocalizedString(@"商品信息", @"商品信息"),NSLocalizedString(@"退出登录", @"退出登录")];
         }else{
-           _titles = @[NSLocalizedString(@"首页", @"首页"),NSLocalizedString(@"采购单", @"采购单"),NSLocalizedString(@"记录", @"记录"),NSLocalizedString(@"商品信息", @"商品信息"),NSLocalizedString(@"商品发布", @"商品发布"),NSLocalizedString(@"设置", @"设置"),NSLocalizedString(@"退出登录", @"退出登录")];
+           _titles = @[NSLocalizedString(@"首页", @"首页"),NSLocalizedString(@"采购单", @"采购单"),NSLocalizedString(@"记录", @"记录"),NSLocalizedString(@"商品信息", @"商品信息"),NSLocalizedString(@"商品发布", @"商品发布"),NSLocalizedString(@"退出登录", @"退出登录")];
         }
 
     }
@@ -183,7 +173,11 @@ static const float RowHeight = 42;
 - (NSArray *)iconImages
 {
     if (_iconImages == nil) {
-        _iconImages = @[@"home_page",@"order_icon",@"record_icon",@"goods_icon",@"publish_icon",@"set_icon",@"exit_icon"];
+        if([[UserInfoModel shareInstance].role isEqualToString:@"buyer"]){
+            _iconImages = @[@"home_page",@"order_icon",@"record_icon",@"goods_icon",@"exit_icon"];
+        }else{
+           _iconImages = @[@"home_page",@"order_icon",@"record_icon",@"goods_icon",@"publish_icon",@"exit_icon"];
+        }
     }
     return _iconImages;
 }
