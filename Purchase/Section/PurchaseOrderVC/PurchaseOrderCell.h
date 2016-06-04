@@ -14,9 +14,6 @@
 - (void)updateCellSelectStatus:(id)sender;
 - (void)imageTapAction:(id)sender;
 
-- (void)goodsCountAdd:(id)sender;
-- (void)goodsCountCut:(id)sender;
-
 @end
 
 @interface PurchaseOrderCell : UITableViewCell<UITextFieldDelegate>

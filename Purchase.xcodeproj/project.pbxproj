@@ -40,6 +40,9 @@
 		E9B350731CD78CA3005A4455 /* NavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = E9B350721CD78CA3005A4455 /* NavigationController.m */; };
 		E9B3507C1CD79C69005A4455 /* HomePageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E9B3507B1CD79C69005A4455 /* HomePageViewController.m */; };
 		E9B3507F1CD7A095005A4455 /* HomeBaseViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E9B3507E1CD7A095005A4455 /* HomeBaseViewController.m */; };
+		E9B4A3741D0282C100A2370C /* UpdateKeyNoteViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E9B4A3731D0282C100A2370C /* UpdateKeyNoteViewController.m */; };
+		E9B4A37A1D028FF100A2370C /* ParallaxHeaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = E9B4A3771D028FF100A2370C /* ParallaxHeaderView.m */; };
+		E9B4A37B1D028FF100A2370C /* UIImage+ImageEffects.m in Sources */ = {isa = PBXBuildFile; fileRef = E9B4A3791D028FF100A2370C /* UIImage+ImageEffects.m */; };
 		E9BBCDA61CD8CC2200962298 /* AutoScrollView.m in Sources */ = {isa = PBXBuildFile; fileRef = E9BBCDA31CD8CC2200962298 /* AutoScrollView.m */; };
 		E9BBCDA71CD8CC2200962298 /* AutoTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = E9BBCDA51CD8CC2200962298 /* AutoTableView.m */; };
 		E9BBCDAA1CD8F38A00962298 /* LeftViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E9BBCDA91CD8F38A00962298 /* LeftViewController.m */; };
@@ -129,6 +132,12 @@
 		E9B3507B1CD79C69005A4455 /* HomePageViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HomePageViewController.m; sourceTree = "<group>"; };
 		E9B3507D1CD7A095005A4455 /* HomeBaseViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HomeBaseViewController.h; sourceTree = "<group>"; };
 		E9B3507E1CD7A095005A4455 /* HomeBaseViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HomeBaseViewController.m; sourceTree = "<group>"; };
+		E9B4A3721D0282C100A2370C /* UpdateKeyNoteViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UpdateKeyNoteViewController.h; sourceTree = "<group>"; };
+		E9B4A3731D0282C100A2370C /* UpdateKeyNoteViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UpdateKeyNoteViewController.m; sourceTree = "<group>"; };
+		E9B4A3761D028FF100A2370C /* ParallaxHeaderView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ParallaxHeaderView.h; sourceTree = "<group>"; };
+		E9B4A3771D028FF100A2370C /* ParallaxHeaderView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ParallaxHeaderView.m; sourceTree = "<group>"; };
+		E9B4A3781D028FF100A2370C /* UIImage+ImageEffects.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+ImageEffects.h"; sourceTree = "<group>"; };
+		E9B4A3791D028FF100A2370C /* UIImage+ImageEffects.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+ImageEffects.m"; sourceTree = "<group>"; };
 		E9BBCDA21CD8CC2200962298 /* AutoScrollView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AutoScrollView.h; sourceTree = "<group>"; };
 		E9BBCDA31CD8CC2200962298 /* AutoScrollView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AutoScrollView.m; sourceTree = "<group>"; };
 		E9BBCDA41CD8CC2200962298 /* AutoTableView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AutoTableView.h; sourceTree = "<group>"; };
@@ -266,6 +275,7 @@
 		E94B163E1CD77C8B0034D164 /* Vendors */ = {
 			isa = PBXGroup;
 			children = (
+				E9B4A3751D028FF100A2370C /* ParallaxHeaderView */,
 				E98EAB421CDA54D9000E5244 /* PhotoView */,
 			);
 			path = Vendors;
@@ -406,8 +416,21 @@
 				E9F7070A1CDDC52B009DD292 /* HomePageCell.m */,
 				E91814521CEFFB39001C164E /* AddKeyNoteViewController.h */,
 				E91814531CEFFB39001C164E /* AddKeyNoteViewController.m */,
+				E9B4A3721D0282C100A2370C /* UpdateKeyNoteViewController.h */,
+				E9B4A3731D0282C100A2370C /* UpdateKeyNoteViewController.m */,
 			);
 			path = MainVC;
+			sourceTree = "<group>";
+		};
+		E9B4A3751D028FF100A2370C /* ParallaxHeaderView */ = {
+			isa = PBXGroup;
+			children = (
+				E9B4A3761D028FF100A2370C /* ParallaxHeaderView.h */,
+				E9B4A3771D028FF100A2370C /* ParallaxHeaderView.m */,
+				E9B4A3781D028FF100A2370C /* UIImage+ImageEffects.h */,
+				E9B4A3791D028FF100A2370C /* UIImage+ImageEffects.m */,
+			);
+			path = ParallaxHeaderView;
 			sourceTree = "<group>";
 		};
 		E9BBCDA11CD8CC2200962298 /* AutoView */ = {
@@ -554,7 +577,7 @@
 				TargetAttributes = {
 					E9F270B51CD75D7100AEF91E = {
 						CreatedOnToolsVersion = 7.3;
-						DevelopmentTeam = KUYE37GN3G;
+						DevelopmentTeam = G96XDNWUAC;
 					};
 				};
 			};
@@ -652,6 +675,7 @@
 				E9F7070E1CDDC9D4009DD292 /* GoodsInfoCell.m in Sources */,
 				E94B165D1CD787B70034D164 /* BaseViewController.m in Sources */,
 				E98EAB3B1CDA39FE000E5244 /* RecordViewController.m in Sources */,
+				E9B4A3741D0282C100A2370C /* UpdateKeyNoteViewController.m in Sources */,
 				E9F270BB1CD75D7100AEF91E /* main.m in Sources */,
 				E9F707121CDDD0C8009DD292 /* SearchViewController.m in Sources */,
 				E9F7070B1CDDC52B009DD292 /* HomePageCell.m in Sources */,
@@ -680,6 +704,7 @@
 				E9B3507C1CD79C69005A4455 /* HomePageViewController.m in Sources */,
 				E9429A891CEB43D5007E6893 /* PurchaseOrderCell.m in Sources */,
 				E9BBCDA61CD8CC2200962298 /* AutoScrollView.m in Sources */,
+				E9B4A37B1D028FF100A2370C /* UIImage+ImageEffects.m in Sources */,
 				E98EAB481CDA54D9000E5244 /* PhotoShowView.m in Sources */,
 				E9F5CCD01CECA7F90000206F /* KeyNoteModel.m in Sources */,
 				E94B164F1CD77E2A0034D164 /* UIFont+Addition.m in Sources */,
@@ -688,6 +713,7 @@
 				E98EAB331CDA1F9D000E5244 /* LeftViewCell.m in Sources */,
 				E92AEF711CDE1C0E00ABBCAF /* RequestMacro.m in Sources */,
 				E91814541CEFFB39001C164E /* AddKeyNoteViewController.m in Sources */,
+				E9B4A37A1D028FF100A2370C /* ParallaxHeaderView.m in Sources */,
 				E91CC9AF1CE4C76B009F4D50 /* GoodsInfoModel.m in Sources */,
 				E9D8E6A41CE81AA100FDC3AB /* SearchInfoModel.m in Sources */,
 			);

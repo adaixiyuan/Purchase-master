@@ -10,6 +10,7 @@
 #import "HomePageCell.h"
 #import "GoodsShowViewController.h"
 #import "AddKeyNoteViewController.h"
+#import "UpdateKeyNoteViewController.h"
 
 static const float RowHeight = 100;
 static const NSInteger CellTag = 1000;
@@ -56,9 +57,9 @@ static const NSInteger CellTag = 1000;
 #pragma mark - Event
 - (void)addkeyNoteAction:(UIButton *)btn
 {
-    __weak typeof(self) weakSelf = self;
     AddKeyNoteViewController *addKeyNoteVC = [[AddKeyNoteViewController alloc]init];
     [self.navigationController pushViewController:addKeyNoteVC animated:YES];
+    __weak typeof(self) weakSelf = self;
     addKeyNoteVC.updataKeyNote = ^(){
         [weakSelf getTheKeyNoteRequest];
     };
@@ -141,6 +142,17 @@ static const NSInteger CellTag = 1000;
     NSDictionary *dic = [[NSDictionary alloc]initWithDictionary:self.keyNoteList[indexPath.row]];
     [cell setCellContentWithDic:dic];
     return cell;
+}
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    [tableView deselectRowAtIndexPath:indexPath animated:YES];
+    UpdateKeyNoteViewController *updateKeyVC = [[UpdateKeyNoteViewController alloc]init];
+    updateKeyVC.goodsDic = [[NSDictionary alloc]initWithDictionary:self.keyNoteList[indexPath.row]];
+    [self.navigationController pushViewController:updateKeyVC animated:YES];
+    __weak typeof(self) weakSelf = self;
+    updateKeyVC.updataKeyNote = ^(){
+        [weakSelf getTheKeyNoteRequest];
+    };
 }
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath{
     return YES;

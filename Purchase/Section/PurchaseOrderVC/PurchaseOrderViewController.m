@@ -315,6 +315,25 @@ static const NSInteger CellTag = 1000;
     }
     return cell;
 }
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    [tableView deselectRowAtIndexPath:indexPath animated:YES];
+    if (self.isEdit == YES) {
+        PurchaseOrderCell *cell = (PurchaseOrderCell *)[tableView cellForRowAtIndexPath:indexPath];
+        cell.selectBtn.selected = !cell.selectBtn.selected;
+        if (cell.selectBtn.selected == YES) {
+            if (![self.selectList containsObject:@(cell.tag-CellTag)]) {
+                [self.selectList addObject:@(cell.tag-CellTag)];
+                [self.theTableView reloadData];
+            }
+        }else{
+            if ([self.selectList containsObject:@(cell.tag-CellTag)]) {
+                [self.selectList removeObject:@(cell.tag-CellTag)];
+                [self.theTableView reloadData];
+            }
+        }
+    }
+}
 #pragma mark - CellDelegate
 - (void)imageTapAction:(id)sender
 {
@@ -328,24 +347,6 @@ static const NSInteger CellTag = 1000;
         NSIndexPath *indexPath = [NSIndexPath indexPathForRow:0 inSection:index];
         [weakSelf.theTableView scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionMiddle animated:YES];
     };
-}
-- (void)goodsCountAdd:(id)sender
-{
-    PurchaseOrderCell *cell = (PurchaseOrderCell *)sender;
-    NSInteger num = [cell.numText.text integerValue];
-    if (num < 9999) {
-        num = num+1;
-    }
-    cell.numText.text = [NSString stringWithFormat:@"%d",(int)num];
-}
-- (void)goodsCountCut:(id)sender
-{
-    PurchaseOrderCell *cell = (PurchaseOrderCell *)sender;
-    NSInteger num = [cell.numText.text integerValue];
-    if (num > 0) {
-        num = num-1;
-    }
-    cell.numText.text = [NSString stringWithFormat:@"%d",(int)num];
 }
 - (void)updateCellSelectStatus:(id)sender
 {

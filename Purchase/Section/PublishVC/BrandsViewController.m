@@ -38,6 +38,7 @@ static const float BarHeight = 44;
     NSMutableDictionary *parametersDic = [[NSMutableDictionary alloc]init];
     [parametersDic setObject:@([UserInfoModel shareInstance].user_sid) forKey:@"user_sid"];
     [parametersDic setObject:SAFE_STRING(self.domain) forKey:@"domain"];
+    [parametersDic setObject:SAFE_STRING(self.searchBar.text) forKey:@"brand_name"];
     [[NetworkManager sharedInstance] startRequestWithURL:kBrandListRequest method:RequestPost parameters:parametersDic result:^(AFHTTPRequestOperation *operation, id responseObject) {
         [MYMBProgressHUD hideHudFromView:self.view];
         NSArray *dataList = [[NSArray alloc]initWithArray:[responseObject objectForKey:@"data"]];
@@ -87,7 +88,7 @@ static const float BarHeight = 44;
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
-    NSDictionary *brandDic = [[NSDictionary alloc]initWithDictionary:self.brandList[indexPath.row]];
+    NSDictionary *brandDic = [[NSDictionary alloc]initWithDictionary:self.searchList[indexPath.row]];
     if (self.selectTheBrand) {
         self.selectTheBrand(SAFE_STRING([brandDic objectForKey:@"brand_name"]));
     }
@@ -104,8 +105,8 @@ static const float BarHeight = 44;
 }
 -(void) searchBarSearchButtonClicked:(UISearchBar *)searchBar
 {
-    [self searchBar:self.searchBar textDidChange:self.searchBar.text];
     [self.searchBar resignFirstResponder];
+    [self getBrandListRequest];
 }
 - (void)searchBar:(UISearchBar *)searchBar textDidChange:(NSString *)searchText
 {

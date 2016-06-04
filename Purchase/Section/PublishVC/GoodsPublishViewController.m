@@ -15,8 +15,8 @@
 
 static const float HeadHeight = 42;
 static const float FootHeight = 80;
-static const float RowHeight_one = 120;
-static const float RowHeight_two = 48;
+static const float RowHeight_one = 110;
+static const float RowHeight_two = 44;
 static const NSInteger TitleTag = 100;
 
 @interface GoodsPublishViewController ()<UITableViewDelegate,UITableViewDataSource,UITextViewDelegate,PhotoViewDelegate>

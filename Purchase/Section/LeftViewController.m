@@ -170,6 +170,7 @@ static const float RowHeight = 42;
 - (NSArray *)titles
 {
     if (_titles == nil) {
+        [UserInfoModel shareInstance].role = @"buyer+";
         if([[UserInfoModel shareInstance].role isEqualToString:@"buyer"]){
             _titles = @[NSLocalizedString(@"首页", @"首页"),NSLocalizedString(@"采购单", @"采购单"),NSLocalizedString(@"记录", @"记录"),NSLocalizedString(@"商品信息", @"商品信息"),NSLocalizedString(@"设置", @"设置"),NSLocalizedString(@"退出登录", @"退出登录")];
         }else{

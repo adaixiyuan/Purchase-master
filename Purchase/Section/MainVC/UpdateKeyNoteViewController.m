@@ -1,18 +1,20 @@
 //
-//  AddKeyNoteViewController.m
+//  UpdateKeyNoteViewController.m
 //  Purchase
 //
-//  Created by luoheng on 16/5/21.
+//  Created by luoheng on 16/6/4.
 //  Copyright © 2016年 luoheng. All rights reserved.
 //
 
-#import "AddKeyNoteViewController.h"
+#import "UpdateKeyNoteViewController.h"
 #import "PhotoShowView.h"
 #import "GoodsInfoEditViewController.h"
 #import "BrandsViewController.h"
 #import "DatePickerView.h"
 #import "LocationListViewController.h"
 #import "KeyNoteModel.h"
+#import "ParallaxHeaderView.h"
+#import "GoodsShowViewController.h"
 
 static const float HeadHeight = 42;
 static const float FootHeight = 80;
@@ -20,7 +22,7 @@ static const float RowHeight_one = 110;
 static const float RowHeight_two = 44;
 static const NSInteger TitleTag = 100;
 
-@interface AddKeyNoteViewController ()<UITableViewDelegate,UITableViewDataSource,UITextViewDelegate,PhotoViewDelegate>
+@interface UpdateKeyNoteViewController ()<UITableViewDelegate,UITableViewDataSource,UITextViewDelegate,PhotoViewDelegate,MWPhotoBrowserDelegate>
 
 @property (nonatomic, strong) AutoTableView    *theTableView;
 @property (nonatomic, strong) PhotoShowView    *myPhotoView;
@@ -31,7 +33,7 @@ static const NSInteger TitleTag = 100;
 
 @end
 
-@implementation AddKeyNoteViewController
+@implementation UpdateKeyNoteViewController
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
@@ -40,13 +42,46 @@ static const NSInteger TitleTag = 100;
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
-    self.navigationItem.title = NSLocalizedString(@"新增重点", @"新增重点");
+    self.navigationItem.title = NSLocalizedString(@"更新重点", @"更新重点");
     [self.view addSubview:self.theTableView];
     
     self.keyNoteModel = [[KeyNoteModel alloc]init];
+    self.keyNoteModel = [KeyNoteModel mj_objectWithKeyValues:self.goodsDic];
+    if (self.keyNoteModel.type == 1) {
+        self.keyNoteModel.typeStr = @"普通信息";
+    }else{
+        self.keyNoteModel.typeStr = @"折扣信息";
+    }
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardShow:) name:UIKeyboardWillShowNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardHide:) name:UIKeyboardWillHideNotification object:nil];
+    
+    [self setlayoutHeaderView];
+}
+-(void)setlayoutHeaderView{
+    
+    NSArray *img_urls = [self.keyNoteModel.img_urls componentsSeparatedByString:@","];
+    UIImageView *imageView = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, ScreenWidth, 200)];
+    imageView.backgroundColor = [UIColor clearColor];
+    imageView.userInteractionEnabled = YES;
+    if (img_urls.count > 0) {
+        [imageView sd_setImageWithURL:[NSURL URLWithString:SAFE_STRING([img_urls objectAtIndex:0])]];
+    }
+    UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(imageViewTapAction:)];
+    [imageView addGestureRecognizer:tap];
+    ParallaxHeaderView *headerView = [ParallaxHeaderView parallaxHeaderViewWithSubView:imageView];
+    [self.theTableView setTableHeaderView:headerView];
+}
+-(void)scrollViewDidScroll:(UIScrollView *)scrollView
+{
+    if (scrollView == self.theTableView){
+        [(ParallaxHeaderView *)self.theTableView.tableHeaderView layoutHeaderViewForScrollViewOffset:scrollView.contentOffset];
+    }
+}
+- (void)imageViewTapAction:(UITapGestureRecognizer *)tap
+{
+    GoodsShowViewController *goodsShowVC = [[GoodsShowViewController alloc]initWithDelegate:self];
+    [self.navigationController pushViewController:goodsShowVC animated:YES];
 }
 #pragma mark - Event
 - (void)publishAction:(UIButton *)btn
@@ -64,13 +99,14 @@ static const NSInteger TitleTag = 100;
     
     [MYMBProgressHUD showHudWithMessage:NSLocalizedString(@"请稍等···", @"请稍等···") InView:self.view];
     NSMutableDictionary *publishDic = [[NSMutableDictionary alloc]init];
-    [publishDic setObject:@"add" forKey:@"action"];
+    [publishDic setObject:@"update" forKey:@"action"];
     [publishDic setObject:@(self.keyNoteModel.type) forKey:@"type"];
     [publishDic setObject:@([UserInfoModel shareInstance].user_sid) forKey:@"user_sid"];
     [publishDic setObject:SAFE_STRING(self.keyNoteModel.title) forKey:@"title"];
     [publishDic setObject:SAFE_STRING(self.keyNoteModel.expire_dt) forKey:@"expire_dt"];
     [publishDic setObject:SAFE_STRING(self.keyNoteModel.content) forKey:@"content"];
     [publishDic setObject:SAFE_STRING(self.keyNoteModel.tag) forKey:@"tag"];
+    [publishDic setObject:SAFE_STRING(self.keyNoteModel.img_urls) forKey:@"img_urls"];
     
     NSMutableArray *dataArray = [[NSMutableArray alloc]init];
     NSMutableArray *namesArray = [[NSMutableArray alloc]init];
@@ -124,7 +160,7 @@ static const NSInteger TitleTag = 100;
             make.left.equalTo(headView).with.offset(15);
         }];
     }
-    NSArray *titles = @[NSLocalizedString(@"商品图片", @"商品图片"),NSLocalizedString(@"商品内容", @"商品内容"),NSLocalizedString(@"商品信息", @"商品信息")];
+    NSArray *titles = @[NSLocalizedString(@"新增商品图片", @"新增商品图片"),NSLocalizedString(@"商品内容", @"商品内容"),NSLocalizedString(@"商品信息", @"商品信息")];
     UILabel *titleLabel = (UILabel *)[headView viewWithTag:TitleTag];
     titleLabel.text = titles[section];
     return headView;
@@ -243,7 +279,7 @@ static const NSInteger TitleTag = 100;
                                      weakSelf.keyNoteModel.type = buttonIndex+1;
                                      weakSelf.keyNoteModel.typeStr = titles[buttonIndex];
                                      [weakSelf.theTableView reloadData];
-                }];
+                                 }];
             }
                 break;
             case 2:{
@@ -280,6 +316,20 @@ static const NSInteger TitleTag = 100;
                 break;
         }
     }
+}
+#pragma mark - MWPhotoBrowserDelegate
+- (NSUInteger)numberOfPhotosInPhotoBrowser:(MWPhotoBrowser *)photoBrowser {
+    return [self.keyNoteModel.img_urls componentsSeparatedByString:@","].count;
+}
+- (id <MWPhoto>)photoBrowser:(MWPhotoBrowser *)photoBrowser photoAtIndex:(NSUInteger)index {
+    
+    NSArray *image_urls = [self.keyNoteModel.img_urls componentsSeparatedByString:@","];
+    MWPhoto *photo = [MWPhoto photoWithURL:[NSURL URLWithString:SAFE_STRING([image_urls firstObject])]];
+    return photo;
+}
+- (NSString *)photoBrowser:(MWPhotoBrowser *)photoBrowser titleForPhotoAtIndex:(NSUInteger)index
+{
+    return SAFE_STRING(self.keyNoteModel.title);
 }
 #pragma mark - UITextViewDelegate
 -(BOOL)textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString*)text
@@ -382,13 +432,9 @@ static const NSInteger TitleTag = 100;
         _textView.textColor = SHALLOWBLACK;
         _textView.font = [UIFont customFontOfSize:14];
     }
+    _textView.text = SAFE_STRING(self.keyNoteModel.content);
     return _textView;
 }
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
-}
-
 /*
 #pragma mark - Navigation
 

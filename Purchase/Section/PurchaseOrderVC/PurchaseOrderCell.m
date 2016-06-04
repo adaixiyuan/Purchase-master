@@ -139,7 +139,6 @@ static const float CountHeight = 28;
 }
 - (void)setCellContentConstraintsWithEditStatus:(BOOL)isEdit
 {
-    _numText.text = nil;
     _isEdit = isEdit;
     if (isEdit == NO) {
         [_selectBtn mas_updateConstraints:^(MASConstraintMaker *make) {
@@ -242,6 +241,14 @@ static const float CountHeight = 28;
     if (textField.text.length == 0) {
         textField.text = @"0";
     }
+    if ([textField.text integerValue] > 0) {
+        _selectBtn.selected = YES;
+    }else{
+        _selectBtn.selected = NO;
+    }
+    if (self.theDelegate && [self.theDelegate respondsToSelector:@selector(updateCellSelectStatus:)]) {
+        [self.theDelegate updateCellSelectStatus:self];
+    }
 }
 - (void)selectBtnAction:(UIButton *)btn
 {
@@ -260,14 +267,34 @@ static const float CountHeight = 28;
 }
 - (void)numCutBtnAction:(UIButton *)btn
 {
-    if (self.theDelegate && [self.theDelegate respondsToSelector:@selector(goodsCountCut:)]) {
-        [self.theDelegate goodsCountCut:self];
+    NSInteger num = [_numText.text integerValue];
+    if (num > 0) {
+        num = num-1;
+    }
+    _numText.text = [NSString stringWithFormat:@"%d",(int)num];
+    if ([_numText.text integerValue] > 0) {
+        _selectBtn.selected = YES;
+    }else{
+        _selectBtn.selected = NO;
+    }
+    if (self.theDelegate && [self.theDelegate respondsToSelector:@selector(updateCellSelectStatus:)]) {
+        [self.theDelegate updateCellSelectStatus:self];
     }
 }
 - (void)numAddBtnAction:(UIButton *)btn
 {
-    if (self.theDelegate && [self.theDelegate respondsToSelector:@selector(goodsCountAdd:)]) {
-        [self.theDelegate goodsCountAdd:self];
+    NSInteger num = [_numText.text integerValue];
+    if (num < 9999) {
+        num = num+1;
+    }
+    _numText.text = [NSString stringWithFormat:@"%d",(int)num];
+    if ([_numText.text integerValue] > 0) {
+        _selectBtn.selected = YES;
+    }else{
+        _selectBtn.selected = NO;
+    }
+    if (self.theDelegate && [self.theDelegate respondsToSelector:@selector(updateCellSelectStatus:)]) {
+        [self.theDelegate updateCellSelectStatus:self];
     }
 }
 @end
