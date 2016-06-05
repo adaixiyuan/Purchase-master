@@ -217,7 +217,6 @@ static const float CountHeight = 28;
         return mutableAttributedString;
     }];
     [_numLabel setText:numStr];
-
 }
 #pragma mark - UITextFieldDelegate
 - (BOOL)textFieldShouldReturn:(UITextField *)textField

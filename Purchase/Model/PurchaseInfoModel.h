@@ -22,5 +22,4 @@
 @property (nonatomic, assign) NSInteger type;      // 1为淘宝订单， 2 为收货订单，3为实时发布商品单
 @property (nonatomic, assign) NSInteger wait_to_buy; // 待采购个数
 
-
 @end

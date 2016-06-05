@@ -33,6 +33,8 @@ static const NSInteger CellTag = 1000;
 @property (nonatomic, strong) NSString       *searchBrandStr;// 搜索品牌
 @property (nonatomic, strong) NSString       *searchLocation; //  搜索地点
 
+@property (nonatomic, assign) BOOL           setNumTextOriginal; // numtext 还原
+
 @end
 
 @implementation PurchaseOrderViewController
@@ -42,6 +44,7 @@ static const NSInteger CellTag = 1000;
     // Do any additional setup after loading the view.
     self.navigationItem.title = NSLocalizedString(@"采购单", @"采购单");
     self.isEdit = NO;
+    self.setNumTextOriginal = NO;
     self.selectList = [[NSMutableArray alloc]init];
     // 创建导航栏右边按钮
     [self creatRightNavView];
@@ -108,6 +111,7 @@ static const NSInteger CellTag = 1000;
 {
     btn.selected = !btn.selected;
     self.isEdit = btn.selected;
+    self.setNumTextOriginal = NO;
     [UIView animateWithDuration:animateTime*3 animations:^{
         [UIView setAnimationCurve:UIViewAnimationCurveEaseInOut];
         [UIView setAnimationTransition:UIViewAnimationTransitionFlipFromRight forView:self.theTableView cache:YES];
@@ -139,7 +143,7 @@ static const NSInteger CellTag = 1000;
     NSIndexPath *indexPath = [self.theTableView indexPathForRowAtPoint:currentTouchPosition];
     PurchaseOrderCell *cell = (PurchaseOrderCell *)[self.theTableView cellForRowAtIndexPath:indexPath];
     NSDictionary *purchaseDic = [[NSDictionary alloc]initWithDictionary:[self.purchaseList objectAtIndex:indexPath.section]];
-    NSString *sidStr = [NSString stringWithFormat:@"%d",(int)[purchaseDic objectForKey:@"sid"]];
+    NSString *sidStr = [NSString stringWithFormat:@"%d",[[purchaseDic objectForKey:@"sid"] intValue]];
     NSString *qtyStr = cell.numText.text;
     if ([btn.titleLabel.text isEqualToString:NSLocalizedString(@"采购", @"采购")]) {
         if (qtyStr.length == 0) {
@@ -167,7 +171,7 @@ static const NSInteger CellTag = 1000;
     NSMutableArray *qty_list = [[NSMutableArray alloc]init];
     for (int i = 0; i < self.selectList.count; i++) {
         NSDictionary *purchaseDic = [[NSDictionary alloc]initWithDictionary:[self.purchaseList objectAtIndex:[self.selectList[i] integerValue]]];
-        [sid_list addObject:[NSString stringWithFormat:@"%d",(int)[purchaseDic objectForKey:@"sid"]]];
+        [sid_list addObject:[NSString stringWithFormat:@"%d",[[purchaseDic objectForKey:@"sid"] intValue]]];
         NSIndexPath *indexPath =  [NSIndexPath indexPathForRow:0 inSection:[self.selectList[i] integerValue]];
         PurchaseOrderCell *cell = (PurchaseOrderCell *)[self.theTableView cellForRowAtIndexPath:indexPath];
          [qty_list addObject:SAFE_STRING(cell.numText.text)];
@@ -194,6 +198,7 @@ static const NSInteger CellTag = 1000;
     
     [[NetworkManager sharedInstance] startRequestWithURL:kOrderRequest method:RequestPost parameters:parametersDic result:^(AFHTTPRequestOperation *operation, id responseObject) {
         self.pageNum = 1;
+        [self.selectList removeAllObjects];
         [self getPurchaseRequest];
         [MYMBProgressHUD hideHudFromView:self.view];
         [MYMBProgressHUD showMessage:SAFE_STRING([responseObject objectForKey:@"msg"])];
@@ -215,7 +220,6 @@ static const NSInteger CellTag = 1000;
     [parametersDic setObject:SAFE_STRING([SearchInfoModel shareInstance].brandName) forKey:@"brand_name"];
     
     [[NetworkManager sharedInstance] startRequestWithURL:kOrderRequest method:RequestPost parameters:parametersDic result:^(AFHTTPRequestOperation *operation, id responseObject) {
-        
         [self.theTableView.mj_header endRefreshing];
         [self.theTableView.mj_footer endRefreshingWithNoMoreData];
         [MYMBProgressHUD hideHudFromView:self.view];
@@ -226,6 +230,8 @@ static const NSInteger CellTag = 1000;
             [self.purchaseList addObjectsFromArray:dataList];
         }
         [self.theTableView reloadData];
+        self.setNumTextOriginal = YES; // 还原输入框
+        
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
         if (self.pageNum > 1) {
             self.pageNum--;
@@ -272,7 +278,6 @@ static const NSInteger CellTag = 1000;
             actionButton.titleLabel.font = [UIFont customFontOfSize:14];
             [actionButton addTarget:self action:@selector(goodsAction:event:) forControlEvents:UIControlEventTouchUpInside];
             [footView addSubview:actionButton];
-            
             if (i > 0) {
                 UIView *line = [[UIView alloc]initWithFrame:CGRectMake(ScreenWidth/3*i, 5, HalfScale,FootHeight*SizeScaleHeight-10)];
                 line.backgroundColor = separateLineColor;
@@ -300,6 +305,9 @@ static const NSInteger CellTag = 1000;
     PurchaseOrderCell *cell = [tableView dequeueReusableCellWithIdentifier:identifier];
     if (!cell) {
         cell = [[PurchaseOrderCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:identifier];
+    }
+    if(self.setNumTextOriginal == YES){
+        cell.numText.text = @"0";
     }
     cell.tag = CellTag+indexPath.section;
     cell.theDelegate = self;
