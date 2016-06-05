@@ -75,6 +75,7 @@ static const NSInteger TitleTag = 100;
     }
     [[NetworkManager sharedInstance] uploadRequestWithURL:kProductRequest method:RequestPost parameters:publishDic datas:dataArray names:namesArray fileNames:filesArray mimeTypes:mimeTypeArray result:^(AFHTTPRequestOperation *operation, id responseObject) {
         [MYMBProgressHUD hideHudFromView:self.view];
+        [MYMBProgressHUD showMessage:SAFE_STRING([responseObject objectForKey:@"msg"])];
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
         [MYMBProgressHUD hideHudFromView:self.view];
         [MYMBProgressHUD showMessage:error.userInfo[@"NSLocalizedDescription"]];

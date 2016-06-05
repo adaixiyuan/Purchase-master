@@ -100,6 +100,7 @@ static const NSInteger TitleTag = 100;
     [MYMBProgressHUD showHudWithMessage:NSLocalizedString(@"请稍等···", @"请稍等···") InView:self.view];
     NSMutableDictionary *publishDic = [[NSMutableDictionary alloc]init];
     [publishDic setObject:@"update" forKey:@"action"];
+    [publishDic setObject:@([[self.goodsDic objectForKey:@"sid"] integerValue]) forKey:@"sid"];
     [publishDic setObject:@(self.keyNoteModel.type) forKey:@"type"];
     [publishDic setObject:@([UserInfoModel shareInstance].user_sid) forKey:@"user_sid"];
     [publishDic setObject:SAFE_STRING(self.keyNoteModel.title) forKey:@"title"];
@@ -125,6 +126,7 @@ static const NSInteger TitleTag = 100;
         if (self.updataKeyNote) {
             self.updataKeyNote();
         }
+        [MYMBProgressHUD showMessage:SAFE_STRING([responseObject objectForKey:@"msg"])];
         [self.navigationController popViewControllerAnimated:YES];
         
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
@@ -324,7 +326,7 @@ static const NSInteger TitleTag = 100;
 - (id <MWPhoto>)photoBrowser:(MWPhotoBrowser *)photoBrowser photoAtIndex:(NSUInteger)index {
     
     NSArray *image_urls = [self.keyNoteModel.img_urls componentsSeparatedByString:@","];
-    MWPhoto *photo = [MWPhoto photoWithURL:[NSURL URLWithString:SAFE_STRING([image_urls firstObject])]];
+    MWPhoto *photo = [MWPhoto photoWithURL:[NSURL URLWithString:SAFE_STRING([image_urls objectAtIndex:index])]];
     return photo;
 }
 - (NSString *)photoBrowser:(MWPhotoBrowser *)photoBrowser titleForPhotoAtIndex:(NSUInteger)index

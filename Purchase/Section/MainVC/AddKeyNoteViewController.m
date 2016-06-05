@@ -89,6 +89,7 @@ static const NSInteger TitleTag = 100;
         if (self.updataKeyNote) {
             self.updataKeyNote();
         }
+        [MYMBProgressHUD showMessage:SAFE_STRING([responseObject objectForKey:@"msg"])];
         [self.navigationController popViewControllerAnimated:YES];
         
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
