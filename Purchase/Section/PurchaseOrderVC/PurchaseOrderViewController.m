@@ -13,7 +13,7 @@
 #import "GoodsShowViewController.h"
 
 static const float FootHeight = 35;
-static const float RowHeight = 120;
+static const float RowHeight = 130;
 static const float BottomHeight = 40;
 static const float animateTime = 0.3;
 static const NSInteger CellTag = 1000;

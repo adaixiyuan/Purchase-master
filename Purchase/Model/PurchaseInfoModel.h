@@ -12,7 +12,7 @@
 
 @property (nonatomic, strong) NSString *brand_name;
 @property (nonatomic, strong) NSString *des;
-@property (nonatomic, assign) NSInteger goods_no;  // 条码
+@property (nonatomic, strong) NSString *goods_no;  // 条码
 @property (nonatomic, strong) NSString *img_url;
 @property (nonatomic, strong) NSString *locs;      // 购买地
 @property (nonatomic, assign) NSInteger num_iid;   // 淘宝numIid

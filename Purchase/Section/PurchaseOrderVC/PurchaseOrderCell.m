@@ -84,7 +84,7 @@ static const float CountHeight = 28;
         
         [_countView mas_makeConstraints:^(MASConstraintMaker *make) {
             make.right.equalTo(self.contentView).with.offset(-15);
-            make.bottom.equalTo(self.contentView).with.offset(-10);
+            make.bottom.equalTo(self.contentView).with.offset(-7.5);
             make.width.equalTo(@(CountWidth*SizeScaleWidth));
             make.height.equalTo(@(CountHeight*SizeScaleWidth));
         }];
@@ -120,14 +120,25 @@ static const float CountHeight = 28;
         _numLabel.textColor = SHALLOWGRAY;
         [self.contentView addSubview:_numLabel];
         
+        _goods_noLabel = [[TTTAttributedLabel alloc]initWithFrame:CGRectZero];
+        _goods_noLabel.backgroundColor = [UIColor clearColor];
+        _goods_noLabel.font = [UIFont customFontOfSize:13];
+        _goods_noLabel.textColor = SHALLOWGRAY;
+        [self.contentView addSubview:_goods_noLabel];
+        
         [_infoLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.top.equalTo(_goodsImageView.mas_top).with.offset(0);
+            make.top.equalTo(_goodsImageView.mas_top).with.offset(-4);
             make.left.equalTo(_goodsImageView.mas_right).with.offset(10);
             make.right.equalTo(self.contentView).with.offset(-15);
             make.height.equalTo(@(35*SizeScaleHeight));
         }];
         [_numLabel mas_makeConstraints:^(MASConstraintMaker *make) {
             make.top.equalTo(_infoLabel.mas_bottom).with.offset(5);
+            make.left.equalTo(_goodsImageView.mas_right).with.offset(10);
+            make.right.equalTo(self.contentView).with.offset(-15);
+        }];
+        [_goods_noLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.top.equalTo(_numLabel.mas_bottom).with.offset(0);
             make.left.equalTo(_goodsImageView.mas_right).with.offset(10);
             make.right.equalTo(self.contentView).with.offset(-15);
         }];
@@ -153,13 +164,18 @@ static const float CountHeight = 28;
             make.height.equalTo(@(ImageHeight*SizeScaleWidth));
         }];
         [_infoLabel mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.top.equalTo(_goodsImageView.mas_top).with.offset(0);
+            make.top.equalTo(_goodsImageView.mas_top).with.offset(-4);
             make.left.equalTo(_goodsImageView.mas_right).with.offset(10);
             make.right.equalTo(self.contentView).with.offset(-15);
             make.height.equalTo(@(35*SizeScaleHeight));
         }];
         [_numLabel mas_updateConstraints:^(MASConstraintMaker *make) {
             make.top.equalTo(_infoLabel.mas_bottom).with.offset(5);
+            make.left.equalTo(_goodsImageView.mas_right).with.offset(10);
+            make.right.equalTo(self.contentView).with.offset(-15);
+        }];
+        [_goods_noLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.top.equalTo(_numLabel.mas_bottom).with.offset(0);
             make.left.equalTo(_goodsImageView.mas_right).with.offset(10);
             make.right.equalTo(self.contentView).with.offset(-15);
         }];
@@ -176,13 +192,18 @@ static const float CountHeight = 28;
             make.height.equalTo(@(ImageHeight*SizeScaleWidth));
         }];
         [_infoLabel mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.top.equalTo(_goodsImageView.mas_top).with.offset(0);
+            make.top.equalTo(_goodsImageView.mas_top).with.offset(-4);
             make.left.equalTo(_goodsImageView.mas_right).with.offset(10);
             make.right.equalTo(self.contentView).with.offset(-15);
             make.height.equalTo(@(35*SizeScaleHeight));
         }];
         [_numLabel mas_updateConstraints:^(MASConstraintMaker *make) {
             make.top.equalTo(_infoLabel.mas_bottom).with.offset(5);
+            make.left.equalTo(_goodsImageView.mas_right).with.offset(10);
+            make.right.equalTo(self.contentView).with.offset(-15);
+        }];
+        [_goods_noLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.top.equalTo(_numLabel.mas_bottom).with.offset(0);
             make.left.equalTo(_goodsImageView.mas_right).with.offset(10);
             make.right.equalTo(self.contentView).with.offset(-15);
         }];
@@ -200,7 +221,8 @@ static const float CountHeight = 28;
         detailStr = [NSString stringWithFormat:@"%@  %@",SAFE_STRING(purchaseModel.brand_name),SAFE_STRING(purchaseModel.des)];
     }
     
-    NSString *numStr = [NSString stringWithFormat:@"待采购数：%d   价格:%.2f",(int)purchaseModel.wait_to_buy,purchaseModel.price];
+    NSString *numStr = [NSString stringWithFormat:@"待采购数：%d    价格:%.2f",(int)purchaseModel.wait_to_buy,purchaseModel.price];
+    NSString *goods_NoStr = [NSString stringWithFormat:@"商品条码：%@",purchaseModel.goods_no];
     
     [_goodsImageView sd_setImageWithURL:[NSURL URLWithString:SAFE_STRING(purchaseModel.img_url)]];
     [_infoLabel setText:detailStr afterInheritingLabelAttributesAndConfiguringWithBlock:^NSMutableAttributedString *(NSMutableAttributedString *mutableAttributedString) {
@@ -217,6 +239,21 @@ static const float CountHeight = 28;
         return mutableAttributedString;
     }];
     [_numLabel setText:numStr];
+    [_goods_noLabel setText:goods_NoStr afterInheritingLabelAttributesAndConfiguringWithBlock:^NSMutableAttributedString *(NSMutableAttributedString *mutableAttributedString) {
+        NSRange noRange = NSMakeRange(5, goods_NoStr.length-5);
+        //设定可点击文字的的大小
+        UIFont *systemFont = [UIFont customFontOfSize:13];
+        CTFontRef font = CTFontCreateWithName((__bridge CFStringRef)systemFont.fontName, systemFont.pointSize, NULL);
+        if (font) {
+            //设置可点击文本的大小
+            [mutableAttributedString addAttribute:(NSString *)kCTFontAttributeName value:(__bridge id)font range:noRange];
+            //设置可点击文本的颜色
+            [mutableAttributedString addAttribute:(NSString*)kCTForegroundColorAttributeName value:(id)[SHALLOWBLACK CGColor] range:noRange];
+            CFRelease(font);
+        }
+        return mutableAttributedString;
+    }];
+
 }
 #pragma mark - UITextFieldDelegate
 - (BOOL)textFieldShouldReturn:(UITextField *)textField
