@@ -212,15 +212,15 @@ static const float CountHeight = 28;
 - (void)setCellContentWithPurchaseInfo:(NSDictionary *)purchaseDic
 {
     PurchaseInfoModel *purchaseModel = [PurchaseInfoModel mj_objectWithKeyValues:purchaseDic];
+    self.numLimit = purchaseModel.wait_to_buy;  // 数量限制
+    
     NSString *detailStr;
-    NSRange infoRange = NSMakeRange(0, 0);
+    NSRange infoRange = NSMakeRange(0, purchaseModel.brand_name.length);
     if (purchaseModel.brand_name == nil || purchaseModel.brand_name.length == 0) {
         detailStr = SAFE_STRING(purchaseModel.des);
     }else{
-        infoRange = NSMakeRange(0, purchaseModel.brand_name.length);
         detailStr = [NSString stringWithFormat:@"%@  %@",SAFE_STRING(purchaseModel.brand_name),SAFE_STRING(purchaseModel.des)];
     }
-    
     NSString *numStr = [NSString stringWithFormat:@"待采购数：%d    价格:%.2f",(int)purchaseModel.wait_to_buy,purchaseModel.price];
     NSString *goods_NoStr = [NSString stringWithFormat:@"商品条码：%@",purchaseModel.goods_no];
     
@@ -271,11 +271,19 @@ static const float CountHeight = 28;
     }
     return YES;
 }
+- (void)textFieldDidBeginEditing:(UITextField *)textField
+{
+    textField.text = @"";
+}
 - (void)textFieldDidEndEditing:(UITextField *)textField
 {
     [textField resignFirstResponder];
     if (textField.text.length == 0) {
         textField.text = @"0";
+    }
+    if ([textField.text integerValue] > self.numLimit){
+        [MYMBProgressHUD showMessage:@"数目不能超过待采购数~"];
+        textField.text = [NSString stringWithFormat:@"%d",(int)self.numLimit];
     }
     if ([textField.text integerValue] > 0) {
         _selectBtn.selected = YES;
@@ -320,7 +328,7 @@ static const float CountHeight = 28;
 - (void)numAddBtnAction:(UIButton *)btn
 {
     NSInteger num = [_numText.text integerValue];
-    if (num < 9999) {
+    if (num < self.numLimit) {
         num = num+1;
     }
     _numText.text = [NSString stringWithFormat:@"%d",(int)num];

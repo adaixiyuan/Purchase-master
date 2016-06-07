@@ -65,6 +65,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		4FDAF47B1D06ADD90010C221 /* 0607反馈.docx */ = {isa = PBXFileReference; lastKnownFileType = file; path = "0607反馈.docx"; sourceTree = "<group>"; };
 		80220A287F1AF3970A4127D4 /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		AFB1325B126C63FFF2BBC151 /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
 		E91814521CEFFB39001C164E /* AddKeyNoteViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AddKeyNoteViewController.h; sourceTree = "<group>"; };
@@ -447,6 +448,7 @@
 		E9F270AD1CD75D7100AEF91E = {
 			isa = PBXGroup;
 			children = (
+				4FDAF47B1D06ADD90010C221 /* 0607反馈.docx */,
 				E9C810791CE8D8B300A4B5F5 /* API说明(1).docx */,
 				E9F270B81CD75D7100AEF91E /* Purchase */,
 				E9F270B71CD75D7100AEF91E /* Products */,

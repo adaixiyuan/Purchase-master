@@ -260,12 +260,40 @@ static const NSInteger TitleTag = 100;
             }
                 break;
             case 4:{
-                CodeScanViewController *codeScanVC = [[CodeScanViewController alloc]init];
-                [self.navigationController pushViewController:codeScanVC animated:YES];
-                codeScanVC.sendTheCode = ^(NSString *goods_no){
-                    weakSelf.publishModel.goods_no = SAFE_STRING(goods_no);
-                    [weakSelf.theTableView reloadData];
-                };
+                __weak typeof(self) weakSelf = self;
+                [UIActionSheet showInView:self.view
+                                withTitle:nil
+                        cancelButtonTitle:@"取消"
+                   destructiveButtonTitle:nil
+                        otherButtonTitles:@[@"手动输入",@"相机扫描"]
+                                 tapBlock:^(UIActionSheet * _Nonnull actionSheet, NSInteger buttonIndex) {
+                                     if (buttonIndex == 0) {
+                                         UIAlertView *alert = [[UIAlertView alloc]initWithTitle:nil
+                                                                                        message:NSLocalizedString(@"请输入商品条码", @"请输入商品条码")
+                                                                                       delegate:self
+                                                                              cancelButtonTitle:NSLocalizedString(@"取消", @"取消")
+                                                                              otherButtonTitles:NSLocalizedString(@"确定", @"确定"), nil];
+                                         alert.alertViewStyle = UIAlertViewStylePlainTextInput;
+                                         alert.tapBlock = ^(UIAlertView *alertView, NSInteger buttonIndex) {
+                                             [[[UIApplication sharedApplication] keyWindow] endEditing:YES];
+                                             if (buttonIndex == 1) {
+                                                 weakSelf.publishModel.goods_no = SAFE_STRING([[alertView textFieldAtIndex:0] text]);
+                                                 [weakSelf.theTableView reloadData];
+                                             }
+                                         };
+                                         alert.shouldEnableFirstOtherButtonBlock = ^BOOL(UIAlertView *alertView) {
+                                             return ([[[alertView textFieldAtIndex:0] text] length] > 0);
+                                         };
+                                        [alert show];
+                                     }else if (buttonIndex == 1){
+                                         CodeScanViewController *codeScanVC = [[CodeScanViewController alloc]init];
+                                         [weakSelf.navigationController pushViewController:codeScanVC animated:YES];
+                                         codeScanVC.sendTheCode = ^(NSString *goods_no){
+                                             weakSelf.publishModel.goods_no = SAFE_STRING(goods_no);
+                                             [weakSelf.theTableView reloadData];
+                                         };
+                                     }
+                                 }];
             }
                 break;
             default:

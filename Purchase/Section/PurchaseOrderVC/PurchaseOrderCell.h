@@ -29,7 +29,8 @@
 @property (nonatomic, strong) UIButton           *numCutBtn;
 @property (nonatomic, strong) UITextField        *numText;
 
-@property (nonatomic, assign) NSInteger   isEdit;
+@property (nonatomic, assign) NSInteger          numLimit;
+@property (nonatomic, assign) NSInteger          isEdit;
 @property (nonatomic, strong) id <CellDelegate> theDelegate;
 
 - (void)setCellContentConstraintsWithEditStatus:(BOOL)isEdit;
