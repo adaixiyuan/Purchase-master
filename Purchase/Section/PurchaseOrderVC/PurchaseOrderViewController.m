@@ -250,7 +250,7 @@ static const NSInteger CellTag = 1000;
    
     NSDictionary *purchaseDic = [[NSDictionary alloc]initWithDictionary:[self.purchaseList objectAtIndex:indexPath.section]];
     [cell setCellContentWithPurchaseInfo:purchaseDic];
-
+    
     if ([self.selectList containsObject:@(indexPath.section)]) {
         cell.selectBtn.selected = YES;
     }else{
@@ -269,6 +269,7 @@ static const NSInteger CellTag = 1000;
         [self.navigationController pushViewController:purchaseVC animated:YES];
     }else{
         PurchaseOrderCell *cell = (PurchaseOrderCell *)[tableView cellForRowAtIndexPath:indexPath];
+        cell.selectBtn.selected = !cell.selectBtn.selected;
         [self updateCellSelectStatus:cell];
     }
 }
