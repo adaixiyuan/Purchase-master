@@ -25,7 +25,7 @@
 @property (nonatomic, strong) UILabel            *updateNumLabel;
 @property (nonatomic, strong) UITextField        *numText;
 
-@property (nonatomic, assign) NSInteger   isEdit;
+@property (nonatomic, assign) NSInteger          isEdit;
 @property (nonatomic, weak) id <CellDelegate> theDelegate;
 
 - (void)setCellContentWithDataDic:(NSDictionary *)dic;

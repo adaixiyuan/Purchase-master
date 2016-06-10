@@ -27,6 +27,13 @@ static const float ImageHeight = 80;
             [self setLayoutMargins:UIEdgeInsetsMake(0, 0, 0, 0)];
         }
         
+        _selectBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+        _selectBtn.backgroundColor = [UIColor clearColor];
+        [_selectBtn setImage:[UIImage imageNamed:@"icon_select"] forState:UIControlStateNormal];
+        [_selectBtn setImage:[UIImage imageNamed:@"select_highlited"] forState:UIControlStateSelected];
+        [_selectBtn addTarget:self action:@selector(selectBtnAction:) forControlEvents:UIControlEventTouchUpInside];
+        [self.contentView addSubview:_selectBtn];
+        
         _goodsImageView = [[UIImageView alloc]init];
         _goodsImageView.backgroundColor = [UIColor clearColor];
         _goodsImageView.layer.borderColor = separateLineColor.CGColor;
@@ -34,9 +41,14 @@ static const float ImageHeight = 80;
         _goodsImageView.userInteractionEnabled = YES;
         [self.contentView addSubview:_goodsImageView];
         
+        [_selectBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.centerY.equalTo(self.contentView).with.offset(0);
+            make.left.equalTo(self.contentView).with.offset(10);
+            make.width.and.height.equalTo(@25);
+        }];
         [_goodsImageView mas_makeConstraints:^(MASConstraintMaker *make) {
             make.centerY.equalTo(self.contentView).with.offset(0);
-            make.left.equalTo(self.contentView).with.offset(15);
+            make.left.equalTo(_selectBtn.mas_right).with.offset(10);
             make.width.equalTo(@(ImageWidth*SizeScaleWidth));
             make.height.equalTo(@(ImageHeight*SizeScaleWidth));
         }];
@@ -81,6 +93,42 @@ static const float ImageHeight = 80;
     }
     return self;
 }
+- (void)setCellContentConstraintsWithStatus:(BOOL)isEdit
+{
+    self.isEdit = isEdit;
+    float space = 0.0;
+    if (isEdit == NO) {
+        space = 0;
+    }else{
+        space = 10;
+    }
+    [_selectBtn mas_updateConstraints:^(MASConstraintMaker *make) {
+        make.centerY.equalTo(self.contentView).with.offset(0);
+        make.left.equalTo(self.contentView).with.offset(10);
+        make.width.and.height.equalTo(@(2.5*space));
+    }];
+    [_goodsImageView mas_updateConstraints:^(MASConstraintMaker *make) {
+        make.centerY.equalTo(self.contentView).with.offset(0);
+        make.left.equalTo(_selectBtn.mas_right).with.offset(space);
+        make.width.equalTo(@(ImageWidth*SizeScaleWidth));
+        make.height.equalTo(@(ImageHeight*SizeScaleWidth));
+    }];
+    [_titleLabel mas_updateConstraints:^(MASConstraintMaker *make) {
+        make.top.equalTo(_goodsImageView.mas_top).with.offset(0);
+        make.left.equalTo(_goodsImageView.mas_right).with.offset(10);
+        make.bottom.equalTo(_contentLabel.mas_top).with.offset(-5);
+    }];
+    [_contentLabel mas_updateConstraints:^(MASConstraintMaker *make) {
+        make.top.equalTo(_titleLabel.mas_bottom).with.offset(5);
+        make.left.equalTo(_goodsImageView.mas_right).with.offset(10);
+        make.bottom.equalTo(_tagLabel.mas_top).with.offset(-5);
+    }];
+    [_tagLabel mas_updateConstraints:^(MASConstraintMaker *make) {
+        make.top.equalTo(_contentLabel.mas_bottom).with.offset(5);
+        make.left.equalTo(_goodsImageView.mas_right).with.offset(10);
+        make.bottom.equalTo(_goodsImageView.mas_bottom).with.offset(-5);
+    }];
+}
 - (void)setCellContentWithDic:(NSDictionary *)dic
 {
     KeyNoteModel *keyNote = [KeyNoteModel mj_objectWithKeyValues:dic];
@@ -91,6 +139,13 @@ static const float ImageHeight = 80;
     _contentLabel.text = SAFE_STRING(keyNote.content);
     _tagLabel.text = SAFE_STRING(keyNote.tag);
     
+}
+- (void)selectBtnAction:(UIButton *)btn
+{
+    btn.selected = !btn.selected;
+    if (self.theDelegate && [self.theDelegate respondsToSelector:@selector(updateCellSelectStatus:)]) {
+        [self.theDelegate updateCellSelectStatus:self];
+    }
 }
 - (void)tapAction
 {

@@ -111,7 +111,6 @@ static const NSInteger CellTag = 1000;
         [self navEditAction:self.editButton];
     }
     SearchViewController *searchVC = [[SearchViewController alloc]init];
-    
     [SearchInfoModel shareInstance].fromType = FromRecordVC;
     [SearchInfoModel shareInstance].typeID = self.record_type;
     [SearchInfoModel shareInstance].typeList = @[NSInternationalString(@"采购记录", @"采购记录"),NSInternationalString(@"订货记录", @"订货记录")];

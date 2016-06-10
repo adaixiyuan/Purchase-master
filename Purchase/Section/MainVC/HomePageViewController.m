@@ -14,32 +14,40 @@
 
 static const float RowHeight = 100;
 static const NSInteger CellTag = 1000;
+static const float BootomHeight = 45;
+static const NSInteger BottomTag = 100;
 
 @interface HomePageViewController ()<UITableViewDelegate,UITableViewDataSource,CellDelegate,MWPhotoBrowserDelegate>
 
 @property (nonatomic, strong) UITableView    *theTableView;
+@property (nonatomic, strong) UIButton       *editButton;
+@property (nonatomic, strong) UIView         *bottomView;
 @property (nonatomic, strong) NSMutableArray *keyNoteList;
 @property (nonatomic, assign) NSInteger      pageNum;
+@property (nonatomic, strong) NSMutableArray *selectList;
+@property (nonatomic, assign) BOOL           isEdit;
 
 @end
 
 @implementation HomePageViewController
-
+- (void)viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear:animated];
+    self.isEdit = YES;
+    [self navEditAction:nil];
+}
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     self.navigationItem.title = NSInternationalString(@"首页", @"首页");
+    [self.view addSubview:self.bottomView];
     [self.view addSubview:self.theTableView];
+    [self creatRightNavView];
     
-    UIButton *rightBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    rightBtn.frame = CGRectMake(0, 0, 30, 30);
-    rightBtn.backgroundColor = [UIColor clearColor];
-    [rightBtn setImage:[UIImage imageNamed:@"add_icon"] forState:UIControlStateNormal];
-    [rightBtn addTarget:self action:@selector(addkeyNoteAction:) forControlEvents:UIControlEventTouchUpInside];
-    [self.navigationItem setRightBarButtonItem:[[UIBarButtonItem alloc] initWithCustomView:rightBtn] animated:YES];
-    
+    self.isEdit = NO;
     self.pageNum = 1;
     self.keyNoteList = [[NSMutableArray alloc]init];
+    self.selectList = [[NSMutableArray alloc]init];
     // 获取今日重点内容
     [MYMBProgressHUD showHudWithMessage:NSInternationalString(@"请稍等···", @"请稍等···") InView:self.view];
     [self getTheKeyNoteRequest];
@@ -54,6 +62,30 @@ static const NSInteger CellTag = 1000;
         [weakSelf getTheKeyNoteRequest];
     }];
 }
+- (void)creatRightNavView
+{
+    UIView *rightView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, 95, 40)];
+    rightView.backgroundColor = [UIColor clearColor];
+    
+    UIButton *addButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    addButton.frame = CGRectMake(0, 0, 40, 40);
+    addButton.backgroundColor = [UIColor clearColor];
+    [addButton setImage:[UIImage imageNamed:@"add_icon"] forState:UIControlStateNormal];
+    [addButton addTarget:self action:@selector(addkeyNoteAction:) forControlEvents:UIControlEventTouchUpInside];
+    [rightView addSubview:addButton];
+    
+    self.editButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    self.editButton.frame = CGRectMake(45, 0, 50, 40);
+    self.editButton.backgroundColor = [UIColor clearColor];
+    [self.editButton setTitle:NSInternationalString(@"编辑", @"编辑") forState:UIControlStateNormal];
+    [self.editButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    self.editButton.titleLabel.font = [UIFont customFontOfSize:13];
+    [self.editButton setContentHorizontalAlignment:UIControlContentHorizontalAlignmentRight];
+    [self.editButton addTarget:self action:@selector(navEditAction:) forControlEvents:UIControlEventTouchUpInside];
+    [rightView addSubview:self.editButton];
+    
+    [self.navigationItem setRightBarButtonItem:[[UIBarButtonItem alloc] initWithCustomView:rightView] animated:YES];
+}
 #pragma mark - Event
 - (void)addkeyNoteAction:(UIButton *)btn
 {
@@ -63,6 +95,75 @@ static const NSInteger CellTag = 1000;
     addKeyNoteVC.updataKeyNote = ^(){
         [weakSelf getTheKeyNoteRequest];
     };
+}
+- (void)navEditAction:(UIButton *)btn
+{
+    btn.selected = !btn.selected;
+    self.isEdit = !self.isEdit;
+    self.selectList = [[NSMutableArray alloc]init];
+    
+    __weak typeof(self) weakSelf = self;
+    if (self.isEdit == YES) {
+        [self.editButton setTitle:NSInternationalString(@"取消", @"取消") forState:UIControlStateNormal];
+        [UIView animateWithDuration:0.3 animations:^{
+            weakSelf.bottomView.frame = CGRectMake(0, ScreenHeight-64-BootomHeight*SizeScaleHeight, ScreenWidth, BootomHeight*SizeScaleHeight);
+            weakSelf.theTableView.frame = CGRectMake(0, 0, ScreenWidth, ScreenHeight-64-BootomHeight*SizeScaleHeight);
+        }];
+    }else{
+        [self.editButton setTitle:NSInternationalString(@"编辑", @"编辑") forState:UIControlStateNormal];
+        [UIView animateWithDuration:0.3 animations:^{
+            weakSelf.bottomView.frame = CGRectMake(0, ScreenHeight-64, ScreenWidth, BootomHeight*SizeScaleHeight);
+            weakSelf.theTableView.frame = CGRectMake(0, 0, ScreenWidth, ScreenHeight-64);
+        }];
+    }
+    [self.theTableView reloadData];
+}
+- (void)buttonAction:(UIButton *)btn
+{
+    switch (btn.tag) {
+        case BottomTag:{
+            btn.selected = !btn.selected;
+            self.selectList = [[NSMutableArray alloc]init];
+            if(btn.selected == YES){
+                [btn setTitle:NSInternationalString(@"全不选", @"全不选") forState:UIControlStateNormal];
+                [self.selectList addObjectsFromArray:self.keyNoteList];
+            }else{
+                [btn setTitle:NSInternationalString(@"全选", @"全选") forState:UIControlStateNormal];
+            }
+            [self.theTableView reloadData];
+        }
+            break;
+        case BottomTag+1:{
+            if (self.selectList.count == 0) {
+                [MYMBProgressHUD showMessage:NSInternationalString(@"您尚未选择任何商品！", @"您尚未选择任何商品！")];
+                return;
+            }
+            NSMutableArray *sid_list = [[NSMutableArray alloc]init];
+            for (NSDictionary *keyDic in self.selectList) {
+                [sid_list addObject:@([[keyDic objectForKey:@"sid"] integerValue])];
+            }
+            NSString *sid_str = [sid_list componentsJoinedByString:@","];
+            [MYMBProgressHUD showHudWithMessage:NSInternationalString(@"正在删除···", @"正在删除···") InView:self.view];
+            NSMutableDictionary *parameters = [[NSMutableDictionary alloc]init];
+            [parameters setObject:@"delete" forKey:@"action"];
+            [parameters setObject:@([UserInfoModel shareInstance].user_sid) forKey:@"user_sid"];
+            [parameters setObject:SAFE_STRING(sid_str) forKey:@"sid"];
+            [[NetworkManager sharedInstance] startRequestWithURL:kKeyNoteRequest method:RequestPost parameters:parameters result:^(AFHTTPRequestOperation *operation, id responseObject) {
+                [MYMBProgressHUD hideHudFromView:self.view];
+                for (NSDictionary *keyDic in self.selectList) {
+                    [self.keyNoteList removeObject:keyDic];
+                }
+                [self.selectList removeAllObjects];
+                [self.theTableView reloadData];
+            } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+                [MYMBProgressHUD hideHudFromView:self.view];
+                [MYMBProgressHUD showMessage:error.userInfo[@"NSLocalizedDescription"]];
+            }];
+        }
+            break;
+        default:
+            break;
+    }
 }
 #pragma mark - Request
 - (void)getTheKeyNoteRequest
@@ -132,7 +233,7 @@ static const NSInteger CellTag = 1000;
 }
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    static NSString *identifier = @"cell";
+    NSString *identifier = [NSString stringWithFormat:@"cell%d%d",(int)indexPath.section,(int)indexPath.row];
     HomePageCell *cell = [tableView dequeueReusableCellWithIdentifier:identifier];
     if (!cell) {
         cell = [[HomePageCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:identifier];
@@ -141,18 +242,31 @@ static const NSInteger CellTag = 1000;
     cell.tag = CellTag + indexPath.row;
     NSDictionary *dic = [[NSDictionary alloc]initWithDictionary:self.keyNoteList[indexPath.row]];
     [cell setCellContentWithDic:dic];
+    [cell setCellContentConstraintsWithStatus:self.isEdit];
+    
+    if ([self.selectList containsObject:dic]) {
+        cell.selectBtn.selected = YES;
+    }else{
+        cell.selectBtn.selected = NO;
+    }
     return cell;
 }
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
-    UpdateKeyNoteViewController *updateKeyVC = [[UpdateKeyNoteViewController alloc]init];
-    updateKeyVC.goodsDic = [[NSDictionary alloc]initWithDictionary:self.keyNoteList[indexPath.row]];
-    [self.navigationController pushViewController:updateKeyVC animated:YES];
-    __weak typeof(self) weakSelf = self;
-    updateKeyVC.updataKeyNote = ^(){
-        [weakSelf getTheKeyNoteRequest];
-    };
+    HomePageCell *cell = (HomePageCell *)[tableView cellForRowAtIndexPath:indexPath];
+    if (self.isEdit == YES) {
+        cell.selectBtn.selected = !cell.selectBtn.selected;
+        [self updateCellSelectStatus:cell];
+    }else{
+        UpdateKeyNoteViewController *updateKeyVC = [[UpdateKeyNoteViewController alloc]init];
+        updateKeyVC.goodsDic = [[NSDictionary alloc]initWithDictionary:self.keyNoteList[indexPath.row]];
+        [self.navigationController pushViewController:updateKeyVC animated:YES];
+        __weak typeof(self) weakSelf = self;
+        updateKeyVC.updataKeyNote = ^(){
+            [weakSelf getTheKeyNoteRequest];
+        };
+    }
 }
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath{
     return YES;
@@ -195,6 +309,24 @@ static const NSInteger CellTag = 1000;
         [weakSelf.theTableView scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionMiddle animated:YES];
     };
 }
+- (void)updateCellSelectStatus:(id)sender
+{
+    HomePageCell *cell = (HomePageCell *)sender;
+    NSInteger row = cell.tag - CellTag;
+    NSDictionary *keyDic = [[NSDictionary alloc]initWithDictionary:self.keyNoteList[row]];
+    if (cell.selectBtn.selected == YES) {
+        if (![self.selectList containsObject:keyDic]) {
+            [self.selectList addObject:keyDic];
+            [self.theTableView reloadData];
+        }
+    }else{
+        if ([self.selectList containsObject:keyDic]) {
+            [self.selectList removeObject:keyDic];
+            [self.theTableView reloadData];
+        }
+    }
+    NSLog(@"======%@",self.selectList);
+}
 #pragma mark - MWPhotoBrowserDelegate
 - (NSUInteger)numberOfPhotosInPhotoBrowser:(MWPhotoBrowser *)photoBrowser {
     return self.keyNoteList.count;
@@ -234,6 +366,27 @@ static const NSInteger CellTag = 1000;
         }
     }
     return _theTableView;
+}
+- (UIView *)bottomView
+{
+    if (_bottomView == nil) {
+        _bottomView = [[UIView alloc]initWithFrame:CGRectMake(0, ScreenHeight-64, ScreenWidth, BootomHeight*SizeScaleHeight)];
+        _bottomView.backgroundColor = NAVBARCOLOR;
+        
+        NSArray *titles = @[NSInternationalString(@"全选", @"全选"),NSInternationalString(@"删除", @"删除")];
+        for (int i = 0; i < titles.count; i++) {
+            UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
+            button.frame = CGRectMake(ScreenWidth/titles.count*i, 0, ScreenWidth/titles.count, BootomHeight*SizeScaleHeight);
+            button.backgroundColor = [UIColor clearColor];
+            [button setTitle:titles[i] forState:UIControlStateNormal];
+            [button setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+            button.titleLabel.font = [UIFont customFontOfSize:14];
+            button.tag = BottomTag+i;
+            [button addTarget:self action:@selector(buttonAction:) forControlEvents:UIControlEventTouchUpInside];
+            [_bottomView addSubview:button];
+        }
+    }
+    return _bottomView;
 }
 
 /*

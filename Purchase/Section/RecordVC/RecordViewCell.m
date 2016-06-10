@@ -122,7 +122,6 @@ static const float ImageHeight = 80;
             make.height.equalTo(@(25*SizeScaleHeight));
         }];
 
-        
         [_timeLabel mas_makeConstraints:^(MASConstraintMaker *make) {
             make.top.equalTo(_numLabel.mas_bottom).with.offset(5);
             make.left.equalTo(_goodsDetailsLabel.mas_left).with.offset(0);
