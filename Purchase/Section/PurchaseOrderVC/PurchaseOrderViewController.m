@@ -39,7 +39,7 @@ static const NSInteger CellTag = 1000;
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
-    self.navigationItem.title = NSLocalizedString(@"采购单", @"采购单");
+    self.navigationItem.title = NSInternationalString(@"采购列表", @"采购列表");
     self.setNumTextOriginal = NO;
     self.selectList = [[NSMutableArray alloc]init];
     // 创建导航栏右边按钮
@@ -50,7 +50,7 @@ static const NSInteger CellTag = 1000;
     self.pageNum = 1;
     self.purchaseList = [[NSMutableArray alloc]init];
     // 获取采购单列表
-    [MYMBProgressHUD showHudWithMessage:NSLocalizedString(@"请稍等···", @"请稍等···") InView:self.view];
+    [MYMBProgressHUD showHudWithMessage:NSInternationalString(@"请稍等···", @"请稍等···") InView:self.view];
     [self getPurchaseRequest];
     
     __weak typeof(self) weakSelf = self;
@@ -77,21 +77,21 @@ static const NSInteger CellTag = 1000;
 {
     SearchViewController *searchVC = [[SearchViewController alloc]init];
     [SearchInfoModel shareInstance].fromType = FromPurchaseVC;
-    [SearchInfoModel shareInstance].typeList = @[@"采购单",@"收货单",@"实时发布商品"];
+    [SearchInfoModel shareInstance].typeList = @[NSInternationalString(@"采购单", @"采购单"),NSInternationalString(@"收货单", @"收货单"),NSInternationalString(@"实时发布商品", @"实时发布商品")];
     [SearchInfoModel shareInstance].domain = @"Order";
     
     [self.navigationController pushViewController:searchVC animated:YES];
     __weak typeof(self) weakSelf = self;
     searchVC.beginSearchWithTheKey = ^(NSString *des,NSString *brand,NSString *type, NSString *date, NSString *location){
         weakSelf.pageNum = 1;
-        [MYMBProgressHUD showHudWithMessage:NSLocalizedString(@"请稍等···", @"请稍等···") InView:weakSelf.view];
+        [MYMBProgressHUD showHudWithMessage:NSInternationalString(@"请稍等···", @"请稍等···") InView:weakSelf.view];
         [weakSelf getPurchaseRequest];
     };
 }
 - (void)goodsBatchAction:(UIButton *)btn
 {
     if (self.selectList.count == 0) {
-        [MYMBProgressHUD showMessage:NSLocalizedString(@"请选择批量操作的商品！", @"请选择批量操作的商品！")];
+        [MYMBProgressHUD showMessage:NSInternationalString(@"请选择批量操作的商品！", @"请选择批量操作的商品！")];
         return;
     }
     NSMutableArray *sid_list = [[NSMutableArray alloc]init];
@@ -105,17 +105,17 @@ static const NSInteger CellTag = 1000;
     }
     NSString *sidStr = [sid_list componentsJoinedByString:@","];
     NSString *qtyStr = [qty_list componentsJoinedByString:@","];
-    if ([btn.titleLabel.text isEqualToString:NSLocalizedString(@"批量采购", @"批量采购")]) {
+    if ([btn.titleLabel.text isEqualToString:NSInternationalString(@"批量采购", @"批量采购")]) {
         [self purchaseOrderWithSid:sidStr withQty:qtyStr withLoc:nil withAction:@"purchase"];
-    }else if ([btn.titleLabel.text isEqualToString:NSLocalizedString(@"批量订购", @"批量订购")]){
+    }else if ([btn.titleLabel.text isEqualToString:NSInternationalString(@"批量订购", @"批量订购")]){
         [self purchaseOrderWithSid:sidStr withQty:qtyStr withLoc:nil withAction:@"reserve"];
     }else{
         __weak typeof(self) weakSelf = self;
         UIAlertView *alert = [[UIAlertView alloc]initWithTitle:nil
-                                                       message:NSLocalizedString(@"请输入缺货地点", @"请输入缺货地点")
+                                                       message:NSInternationalString(@"请输入缺货地点", @"请输入缺货地点")
                                                       delegate:self
-                                             cancelButtonTitle:NSLocalizedString(@"取消", @"取消")
-                                             otherButtonTitles:NSLocalizedString(@"确定", @"确定"), nil];
+                                             cancelButtonTitle:NSInternationalString(@"取消", @"取消")
+                                             otherButtonTitles:NSInternationalString(@"确定", @"确定"), nil];
         alert.alertViewStyle = UIAlertViewStylePlainTextInput;
         alert.tapBlock = ^(UIAlertView *alertView, NSInteger buttonIndex) {
             [[[UIApplication sharedApplication] keyWindow] endEditing:YES];
@@ -132,7 +132,7 @@ static const NSInteger CellTag = 1000;
 // 采购操作
 - (void)purchaseOrderWithSid:(NSString *)sid withQty:(NSString *)qty withLoc:(NSString *)loc withAction:(NSString *)action
 {
-    [MYMBProgressHUD showHudWithMessage:NSLocalizedString(@"请稍等···", @"请稍等···") InView:self.view];
+    [MYMBProgressHUD showHudWithMessage:NSInternationalString(@"请稍等···", @"请稍等···") InView:self.view];
     NSMutableDictionary *parametersDic = [[NSMutableDictionary alloc]init];
     [parametersDic setObject:action forKey:@"action"];
     [parametersDic setObject:@([UserInfoModel shareInstance].user_sid) forKey:@"user_sid"];
@@ -325,7 +325,7 @@ static const NSInteger CellTag = 1000;
         _bottomView = [[UIView alloc]initWithFrame:CGRectMake(0, ScreenHeight-64-BottomHeight*SizeScaleHeight, ScreenWidth, BottomHeight*SizeScaleHeight)];
         _bottomView.backgroundColor = NAVBARCOLOR;
         
-        NSArray *titles = @[NSLocalizedString(@"批量采购", @"批量采购"),NSLocalizedString(@"批量订购", @"批量订购"),NSLocalizedString(@"批量缺货", @"批量缺货")];
+        NSArray *titles = @[NSInternationalString(@"批量采购", @"批量采购"),NSInternationalString(@"批量订购", @"批量订购"),NSInternationalString(@"批量缺货", @"批量缺货")];
         for (int i = 0; i < titles.count; i ++) {
             UIButton *actionButton = [UIButton buttonWithType:UIButtonTypeCustom];
             actionButton.backgroundColor = [UIColor clearColor];

@@ -35,7 +35,7 @@ static const float FootHeight = 80;
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
-    self.navigationItem.title = NSLocalizedString(@"搜索", @"搜索");
+    self.navigationItem.title = NSInternationalString(@"搜索", @"搜索");
     self.isClean = YES;
     [self.view addSubview:self.theTableView];
 }
@@ -47,7 +47,7 @@ static const float FootHeight = 80;
 - (void)searchAction:(UIButton *)btn
 {
     self.isClean = NO;
-    if ([[SearchInfoModel shareInstance].brandName isEqualToString:NSLocalizedString(@"默认", @"默认")]) {
+    if ([[SearchInfoModel shareInstance].brandName isEqualToString:NSInternationalString(@"默认", @"默认")]) {
         [SearchInfoModel shareInstance].brandName = nil;
     }
     if (self.beginSearchWithTheKey) {
@@ -75,7 +75,7 @@ static const float FootHeight = 80;
         UIButton *searchBtn = [UIButton buttonWithType:UIButtonTypeCustom];
         searchBtn.backgroundColor = [UIColor clearColor];
         [searchBtn setBackgroundImage:[UIImage imageNamed:@"button_inEffect"] forState:UIControlStateNormal];
-        [searchBtn setTitle:NSLocalizedString(@"搜索", @"搜索") forState:UIControlStateNormal];
+        [searchBtn setTitle:NSInternationalString(@"搜索", @"搜索") forState:UIControlStateNormal];
         [searchBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
         searchBtn.titleLabel.font = [UIFont customFontOfSize:15];
         [searchBtn addTarget:self action:@selector(searchAction:) forControlEvents:UIControlEventTouchUpInside];
@@ -129,7 +129,7 @@ static const float FootHeight = 80;
     switch (indexPath.row) {
         case 0:{
             GoodsInfoEditViewController *goodsInfoVC = [[GoodsInfoEditViewController alloc]init];
-            goodsInfoVC.titleStr = @"关键字";
+            goodsInfoVC.titleStr = NSInternationalString(@"关键字", @"关键字");
             [self.navigationController pushViewController:goodsInfoVC animated:YES];
             goodsInfoVC.updateTheGoodsInfo = ^(NSString *keyStr){
                 [SearchInfoModel shareInstance].keyStr = SAFE_STRING(keyStr);
@@ -205,9 +205,9 @@ static const float FootHeight = 80;
 {
     if (_baseArray == nil) {
         if([SearchInfoModel shareInstance].fromType != FromPurchaseVC){
-            _baseArray = @[NSLocalizedString(@"关键字", @"关键字"),NSLocalizedString(@"品牌", @"品牌"),NSLocalizedString(@"类型", @"类型"),NSLocalizedString(@"日期", @"日期")];
+            _baseArray = @[NSInternationalString(@"关键字", @"关键字"),NSInternationalString(@"品牌", @"品牌"),NSInternationalString(@"类型", @"类型"),NSInternationalString(@"日期", @"日期")];
         }else{
-            _baseArray = @[NSLocalizedString(@"关键字", @"关键字"),NSLocalizedString(@"品牌", @"品牌"),NSLocalizedString(@"类型", @"类型"),NSLocalizedString(@"地点", @"地点")];
+            _baseArray = @[NSInternationalString(@"关键字", @"关键字"),NSInternationalString(@"品牌", @"品牌"),NSInternationalString(@"类型", @"类型"),NSInternationalString(@"地点", @"地点")];
         }
     }
     return _baseArray;

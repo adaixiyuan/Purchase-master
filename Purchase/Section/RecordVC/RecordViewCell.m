@@ -26,10 +26,10 @@ static const float ImageHeight = 80;
         if ([self respondsToSelector:@selector(setLayoutMargins:)]) {
             [self setLayoutMargins:UIEdgeInsetsMake(0, 0, 0, 0)];
         }
-        self.leftButtons = @[[MGSwipeButton buttonWithTitle:NSLocalizedString(@"删除", @"删除") backgroundColor:NAVBARCOLOR]];
+        self.leftButtons = @[[MGSwipeButton buttonWithTitle:NSInternationalString(@"删除", @"删除") backgroundColor:NAVBARCOLOR]];
         self.leftSwipeSettings.transition = MGSwipeTransitionDrag;
         
-        self.rightButtons = @[[MGSwipeButton buttonWithTitle:NSLocalizedString(@"更新", @"更新") backgroundColor:NAVBARCOLOR]];
+        self.rightButtons = @[[MGSwipeButton buttonWithTitle:NSInternationalString(@"更新", @"更新") backgroundColor:NAVBARCOLOR]];
         self.rightSwipeSettings.transition = MGSwipeTransitionDrag;
         
         
@@ -57,13 +57,13 @@ static const float ImageHeight = 80;
         _numLabel = [[UILabel alloc]initWithFrame:CGRectZero];
         _numLabel.backgroundColor = [UIColor clearColor];
         _numLabel.textColor = SHALLOWBLACK;
-        _numLabel.font = [UIFont customFontOfSize:14];
+        _numLabel.font = [UIFont customFontOfSize:13];
         [self.contentView addSubview:_numLabel];
         
         _updateNumLabel = [[UILabel alloc]initWithFrame:CGRectZero];
         _updateNumLabel.backgroundColor = [UIColor clearColor];
         _updateNumLabel.textColor = SHALLOWBLACK;
-        _updateNumLabel.font = [UIFont customFontOfSize:14];
+        _updateNumLabel.font = [UIFont customFontOfSize:13];
         [self.contentView addSubview:_updateNumLabel];
         
         _numText = [[UITextField alloc]init];
@@ -236,8 +236,10 @@ static const float ImageHeight = 80;
         }
         return mutableAttributedString;
     }];
-    _numLabel.text = [NSString stringWithFormat:@"商品个数：%d",(int)recordModel.quantity];
-    _updateNumLabel.text = @"新个数：";
+    
+    NSString *num_Str = NSInternationalString(@"商品个数", @"商品个数");
+    _numLabel.text = [NSString stringWithFormat:@"%@：%d",num_Str,(int)recordModel.quantity];
+    _updateNumLabel.text = NSInternationalString(@"新个数", @"新个数");
     _timeLabel.text = SAFE_STRING(recordModel.create_dt);
 }
 #pragma mark - Event

@@ -26,10 +26,10 @@ static const float TextHeight = 45;
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
-    self.navigationItem.title = NSLocalizedString(self.titleStr, self.titleStr);
+    self.navigationItem.title = NSInternationalString(self.titleStr, self.titleStr);
     [self.view addSubview:self.bgView];
     
-    [self.navigationItem setRightBarButtonItem:[[UIBarButtonItem alloc]initWithTitle:NSLocalizedString(@"保存", @"保存") style:UIBarButtonItemStylePlain target:self action:@selector(saveGoodsInfoAction)]];
+    [self.navigationItem setRightBarButtonItem:[[UIBarButtonItem alloc]initWithTitle:NSInternationalString(@"保存", @"保存") style:UIBarButtonItemStylePlain target:self action:@selector(saveGoodsInfoAction)]];
     
     UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(tapAction:)];
     [self.view addGestureRecognizer:tap];
@@ -67,12 +67,12 @@ static const float TextHeight = 45;
         _theTextField.backgroundColor = [UIColor clearColor];
         _theTextField.font = [UIFont customFontOfSize:14];
         _theTextField.textColor = SHALLOWBLACK;
-        _theTextField.placeholder = [NSString stringWithFormat:NSLocalizedString(@"请输入商品%@", @"请输入商品%@"),_titleStr];
+        _theTextField.placeholder = NSInternationalString(@"请输入相关信息", @"请输入相关信息");
         _theTextField.clearButtonMode = UITextFieldViewModeWhileEditing;
         _theTextField.returnKeyType = UIReturnKeyDone;
-        if ([_titleStr isEqualToString:NSLocalizedString(@"收购个数", @"收购个数")]) {
+        if ([_titleStr isEqualToString:NSInternationalString(@"收购个数", @"收购个数")]) {
             _theTextField.keyboardType = UIKeyboardTypeNumberPad;
-        }else if ([_titleStr isEqualToString:NSLocalizedString(@"价格", @"价格")]){
+        }else if ([_titleStr isEqualToString:NSInternationalString(@"价格", @"价格")]){
             _theTextField.keyboardType = UIKeyboardTypeNumbersAndPunctuation;
         }
         [_bgView addSubview:_theTextField];

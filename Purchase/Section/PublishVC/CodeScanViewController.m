@@ -54,7 +54,7 @@ static const float ScanHight = 250;
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
-    self.navigationItem.title = NSLocalizedString(@"扫一扫", @"扫一扫");
+    self.navigationItem.title = NSInternationalString(@"扫一扫", @"扫一扫");
     self.isDown = NO;
     self.num = 0;
     
@@ -66,9 +66,9 @@ static const float ScanHight = 250;
     NSString * mediaType = AVMediaTypeVideo;
     AVAuthorizationStatus  authorizationStatus = [AVCaptureDevice authorizationStatusForMediaType:mediaType];
     if (authorizationStatus == AVAuthorizationStatusRestricted|| authorizationStatus == AVAuthorizationStatusDenied) {
-        [UIAlertView showWithTitle:NSLocalizedString(@"请在“设置-隐私-相机“选项中,允许C-Life访问你的相机", @"请在“设置-隐私-相机“选项中,允许C-Life访问你的相机")
+        [UIAlertView showWithTitle:NSInternationalString(@"请在“设置-隐私-相机“选项中,允许访问你的相机", @"请在“设置-隐私-相机“选项中,允许访问你的相机")
                            message:nil
-                 cancelButtonTitle:NSLocalizedString(@"知道了", @"知道了")
+                 cancelButtonTitle:NSInternationalString(@"知道了", @"知道了")
                  otherButtonTitles:nil tapBlock:^(UIAlertView * _Nonnull alertView, NSInteger buttonIndex) {
                  }];
     }
@@ -101,10 +101,10 @@ static const float ScanHight = 250;
         [self.capture stop];
         
         __weak typeof(self) weakSelf = self;
-        [UIAlertView showWithTitle:NSLocalizedString(@"条码信息", @"条码信息")
+        [UIAlertView showWithTitle:NSInternationalString(@"条码信息", @"条码信息")
                            message:SAFE_STRING(resultStr)
-                 cancelButtonTitle:NSLocalizedString(@"取消", @"取消")
-                 otherButtonTitles:@[NSLocalizedString(@"保存", @"保存")]
+                 cancelButtonTitle:NSInternationalString(@"取消", @"取消")
+                 otherButtonTitles:@[NSInternationalString(@"保存", @"保存")]
                           tapBlock:^(UIAlertView * _Nonnull alertView, NSInteger buttonIndex) {
                               if (buttonIndex == 1) {
                                   if (weakSelf.sendTheCode) {
@@ -160,7 +160,7 @@ static const float ScanHight = 250;
         _tipLabel.textColor = [UIColor whiteColor];
         _tipLabel.font = [UIFont customFontOfSize:14];
         _tipLabel.textAlignment = NSTextAlignmentCenter;
-        _tipLabel.text = NSLocalizedString(@"请将二维码或条码放入框内", @"请将二维码或条码放入框内");
+        _tipLabel.text = NSInternationalString(@"请将二维码或条码放入框内", @"请将二维码或条码放入框内");
     }
     return _tipLabel;
 }

@@ -28,6 +28,14 @@ extern NSString *const kRememberTable;
  *  登录超时
  */
 extern NSString *const kNotificationLogin;
+/**
+ *  国际化
+ */
+extern NSString *const InternationalLanguage;
+/**
+ *  设置语言
+ */
+extern NSString *const kNotificationChangeLanguage;
 
 
 /**

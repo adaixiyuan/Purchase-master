@@ -101,12 +101,6 @@ static const float ImageHeight = 90;
             make.left.equalTo(_priceLabel.mas_left).with.offset(0);
             make.right.equalTo(_storeLabel.mas_left).with.offset(-5);
             make.bottom.equalTo(_waitToBuyLabel.mas_top).with.offset(-5);
-            make.width.equalTo(_storeLabel.mas_width);
-            make.width.equalTo(_waitToBuyLabel.mas_width);
-            make.width.equalTo(_puchaseLabel.mas_width);
-            make.height.equalTo(_storeLabel.mas_height);
-            make.height.equalTo(_waitToBuyLabel.mas_height);
-            make.height.equalTo(_puchaseLabel.mas_height);
         }];
         [_storeLabel mas_makeConstraints:^(MASConstraintMaker *make) {
             make.top.equalTo(_sellLabel.mas_top).with.offset(0);
@@ -123,6 +117,13 @@ static const float ImageHeight = 90;
             make.top.equalTo(_sellLabel.mas_bottom).with.offset(5);
             make.left.equalTo(_sellLabel.mas_right).with.offset(5);
             make.right.equalTo(_cartButton.mas_left).with.offset(-5);
+            
+            make.width.equalTo(_sellLabel.mas_width);
+            make.width.equalTo(_storeLabel.mas_width);
+            make.width.equalTo(_waitToBuyLabel.mas_width);
+            make.height.equalTo(_sellLabel.mas_height);
+            make.height.equalTo(_storeLabel.mas_height);
+            make.height.equalTo(_waitToBuyLabel.mas_height);
         }];
         [_cartButton mas_makeConstraints:^(MASConstraintMaker *make) {
             make.right.equalTo(self.contentView).with.offset(-10);
@@ -156,19 +157,25 @@ static const float ImageHeight = 90;
         return mutableAttributedString;
     }];
     
+    NSString *str1 = NSInternationalString(@"最近购入价", @"最近购入价");
+    NSString *str2 = NSInternationalString(@"销量", @"销量");
+    NSString *str3 = NSInternationalString(@"库存", @"库存");
+    NSString *str4 = NSInternationalString(@"待采购", @"待采购");
+    NSString *str5 = NSInternationalString(@"收购量", @"收购量");
+    
     NSString *priceStr;
     if (goodsModel.recent_price > 0.000000) {
-        priceStr = [NSString stringWithFormat:@"最近购入价：¥%.2f",(float)goodsModel.recent_price];
+        priceStr = [NSString stringWithFormat:@"%@：¥%.2f",str1,(float)goodsModel.recent_price];
     }else{
-        priceStr = [NSString stringWithFormat:@"最近购入价：--"];
+        priceStr = NSInternationalString(@"最近购入价：--", @"最近购入价：--");
     }
-    NSString *sellStr = [NSString stringWithFormat:@"销量：%d",(int)goodsModel.sell_qty];
-    NSString *storeStr = [NSString stringWithFormat:@"库存：%d",(int)goodsModel.stock_qty];
-    NSString *buyStr = [NSString stringWithFormat:@"待采购：%d",(int)goodsModel.wait_to_buy];
-    NSString *purchaseStr = [NSString stringWithFormat:@"收购量：%d",(int)goodsModel.publish_qty];
+    NSString *sellStr = [NSString stringWithFormat:@"%@：%d",str2,(int)goodsModel.sell_qty];
+    NSString *storeStr = [NSString stringWithFormat:@"%@：%d",str3,(int)goodsModel.stock_qty];
+    NSString *buyStr = [NSString stringWithFormat:@"%@：%d",str4,(int)goodsModel.wait_to_buy];
+    NSString *purchaseStr = [NSString stringWithFormat:@"%@：%d",str5,(int)goodsModel.publish_qty];
     
     [_priceLabel setText:priceStr afterInheritingLabelAttributesAndConfiguringWithBlock:^NSMutableAttributedString *(NSMutableAttributedString *mutableAttributedString) {
-        NSRange range = NSMakeRange(6, priceStr.length-6);
+        NSRange range = NSMakeRange(str1.length+1, priceStr.length-str1.length-1);
         //设定可点击文字的的大小
         UIFont *systemFont = [UIFont customFontOfSize:13];
         CTFontRef font = CTFontCreateWithName((__bridge CFStringRef)systemFont.fontName, systemFont.pointSize, NULL);
@@ -180,49 +187,45 @@ static const float ImageHeight = 90;
         return mutableAttributedString;
     }];
     [_sellLabel setText:sellStr afterInheritingLabelAttributesAndConfiguringWithBlock:^NSMutableAttributedString *(NSMutableAttributedString *mutableAttributedString) {
-        NSRange range = NSMakeRange(3, sellStr.length-3);
+        NSRange range = NSMakeRange(str2.length+1, sellStr.length-str2.length-1);
         //设定可点击文字的的大小
         UIFont *systemFont = [UIFont customFontOfSize:13];
         CTFontRef font = CTFontCreateWithName((__bridge CFStringRef)systemFont.fontName, systemFont.pointSize, NULL);
         if (font) {
             [mutableAttributedString addAttribute:(NSString *)kCTFontAttributeName value:(__bridge id)font range:range];
-            //            [mutableAttributedString addAttribute:(NSString*)kCTForegroundColorAttributeName value:(id)[NAVBARCOLOR CGColor] range:range];
             CFRelease(font);
         }
         return mutableAttributedString;
     }];
     [_storeLabel setText:storeStr afterInheritingLabelAttributesAndConfiguringWithBlock:^NSMutableAttributedString *(NSMutableAttributedString *mutableAttributedString) {
-        NSRange range = NSMakeRange(3, storeStr.length-3);
+        NSRange range = NSMakeRange(str3.length+1, storeStr.length-str3.length-1);
         //设定可点击文字的的大小
         UIFont *systemFont = [UIFont customFontOfSize:13];
         CTFontRef font = CTFontCreateWithName((__bridge CFStringRef)systemFont.fontName, systemFont.pointSize, NULL);
         if (font) {
             [mutableAttributedString addAttribute:(NSString *)kCTFontAttributeName value:(__bridge id)font range:range];
-            //            [mutableAttributedString addAttribute:(NSString*)kCTForegroundColorAttributeName value:(id)[NAVBARCOLOR CGColor] range:range];
             CFRelease(font);
         }
         return mutableAttributedString;
     }];
     [_waitToBuyLabel setText:buyStr afterInheritingLabelAttributesAndConfiguringWithBlock:^NSMutableAttributedString *(NSMutableAttributedString *mutableAttributedString) {
-        NSRange range = NSMakeRange(4, buyStr.length-4);
+        NSRange range = NSMakeRange(str4.length+1, buyStr.length-str4.length-1);
         //设定可点击文字的的大小
         UIFont *systemFont = [UIFont customFontOfSize:13];
         CTFontRef font = CTFontCreateWithName((__bridge CFStringRef)systemFont.fontName, systemFont.pointSize, NULL);
         if (font) {
             [mutableAttributedString addAttribute:(NSString *)kCTFontAttributeName value:(__bridge id)font range:range];
-            //            [mutableAttributedString addAttribute:(NSString*)kCTForegroundColorAttributeName value:(id)[NAVBARCOLOR CGColor] range:range];
             CFRelease(font);
         }
         return mutableAttributedString;
     }];
     [_puchaseLabel setText:purchaseStr afterInheritingLabelAttributesAndConfiguringWithBlock:^NSMutableAttributedString *(NSMutableAttributedString *mutableAttributedString) {
-        NSRange range = NSMakeRange(4, purchaseStr.length-4);
+        NSRange range = NSMakeRange(str5.length+1, purchaseStr.length-str5.length-1);
         //设定可点击文字的的大小
         UIFont *systemFont = [UIFont customFontOfSize:13];
         CTFontRef font = CTFontCreateWithName((__bridge CFStringRef)systemFont.fontName, systemFont.pointSize, NULL);
         if (font) {
             [mutableAttributedString addAttribute:(NSString *)kCTFontAttributeName value:(__bridge id)font range:range];
-            //            [mutableAttributedString addAttribute:(NSString*)kCTForegroundColorAttributeName value:(id)[NAVBARCOLOR CGColor] range:range];
             CFRelease(font);
         }
         return mutableAttributedString;

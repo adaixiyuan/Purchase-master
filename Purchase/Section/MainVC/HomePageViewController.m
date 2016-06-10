@@ -28,7 +28,7 @@ static const NSInteger CellTag = 1000;
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
-    self.navigationItem.title = NSLocalizedString(@"首页", @"首页");
+    self.navigationItem.title = NSInternationalString(@"首页", @"首页");
     [self.view addSubview:self.theTableView];
     
     UIButton *rightBtn = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -41,7 +41,7 @@ static const NSInteger CellTag = 1000;
     self.pageNum = 1;
     self.keyNoteList = [[NSMutableArray alloc]init];
     // 获取今日重点内容
-    [MYMBProgressHUD showHudWithMessage:NSLocalizedString(@"请稍等···", @"请稍等···") InView:self.view];
+    [MYMBProgressHUD showHudWithMessage:NSInternationalString(@"请稍等···", @"请稍等···") InView:self.view];
     [self getTheKeyNoteRequest];
     
     __weak typeof(self) weakSelf = self;
@@ -112,7 +112,7 @@ static const NSInteger CellTag = 1000;
         titleLabel.backgroundColor = [UIColor clearColor];
         titleLabel.textColor = SHALLOWBLACK;
         titleLabel.font = [UIFont customFontOfSize:14];
-        titleLabel.text = NSLocalizedString(@"今日重点", @"今日重点");
+        titleLabel.text = NSInternationalString(@"今日重点", @"今日重点");
         [headView addSubview:titleLabel];
         
         [titleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -161,12 +161,12 @@ static const NSInteger CellTag = 1000;
     return UITableViewCellEditingStyleDelete;
 }
 - (NSString *)tableView:(UITableView *)tableView titleForDeleteConfirmationButtonForRowAtIndexPath:(NSIndexPath *)indexPath{
-    return @"删除";
+    return NSInternationalString(@"删除", @"删除");
 }
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath{
     
     if (editingStyle == UITableViewCellEditingStyleDelete) {
-        [MYMBProgressHUD showHudWithMessage:@"正在删除···" InView:self.view];
+        [MYMBProgressHUD showHudWithMessage:NSInternationalString(@"正在删除···", @"正在删除···") InView:self.view];
         NSDictionary *dic = [[NSDictionary alloc]initWithDictionary:self.keyNoteList[indexPath.row]];
         NSMutableDictionary *parameters = [[NSMutableDictionary alloc]init];
         [parameters setObject:@"delete" forKey:@"action"];

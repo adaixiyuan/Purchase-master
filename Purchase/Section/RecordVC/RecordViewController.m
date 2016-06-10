@@ -43,7 +43,7 @@ static const NSInteger CellTag = 1000;
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
-    self.navigationItem.title = NSLocalizedString(@"记录", @"记录");
+    self.navigationItem.title = NSInternationalString(@"记录", @"记录");
     
     self.seleceGoodsList = [[NSMutableArray alloc]init];
     self.isEdit = NO;
@@ -59,7 +59,7 @@ static const NSInteger CellTag = 1000;
     self.purchaseList = [[NSMutableArray alloc]init];
     self.bookList = [[NSMutableArray alloc]init];
     // 获取记录列表
-    [MYMBProgressHUD showHudWithMessage:NSLocalizedString(@"请稍等···", @"请稍等···") InView:self.view];
+    [MYMBProgressHUD showHudWithMessage:NSInternationalString(@"请稍等···", @"请稍等···") InView:self.view];
     [self getBuyRecordListRequest];
     
     __weak typeof(self) weakSelf = self;
@@ -82,7 +82,7 @@ static const NSInteger CellTag = 1000;
 }
 - (void)creatRightNavView
 {
-    UIView *rightView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, 85, 40)];
+    UIView *rightView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, 95, 40)];
     rightView.backgroundColor = [UIColor clearColor];
     
     UIButton *searchButton = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -93,11 +93,11 @@ static const NSInteger CellTag = 1000;
     [rightView addSubview:searchButton];
     
     self.editButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    self.editButton.frame = CGRectMake(45, 0, 40, 40);
+    self.editButton.frame = CGRectMake(45, 0, 50, 40);
     self.editButton.backgroundColor = [UIColor clearColor];
-    [self.editButton setTitle:NSLocalizedString(@"编辑", @"编辑") forState:UIControlStateNormal];
+    [self.editButton setTitle:NSInternationalString(@"编辑", @"编辑") forState:UIControlStateNormal];
     [self.editButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-    self.editButton.titleLabel.font = [UIFont customFontOfSize:14];
+    self.editButton.titleLabel.font = [UIFont customFontOfSize:13];
     [self.editButton setContentHorizontalAlignment:UIControlContentHorizontalAlignmentRight];
     [self.editButton addTarget:self action:@selector(navEditAction:) forControlEvents:UIControlEventTouchUpInside];
     [rightView addSubview:self.editButton];
@@ -114,7 +114,7 @@ static const NSInteger CellTag = 1000;
     
     [SearchInfoModel shareInstance].fromType = FromRecordVC;
     [SearchInfoModel shareInstance].typeID = self.record_type;
-    [SearchInfoModel shareInstance].typeList = @[@"采购记录",@"订货记录"];
+    [SearchInfoModel shareInstance].typeList = @[NSInternationalString(@"采购记录", @"采购记录"),NSInternationalString(@"订货记录", @"订货记录")];
     [SearchInfoModel shareInstance].domain = @"BuyRecord";
     [SearchInfoModel shareInstance].typeName = [[SearchInfoModel shareInstance].typeList objectAtIndex:[self.record_type integerValue]-1];
     
@@ -134,13 +134,13 @@ static const NSInteger CellTag = 1000;
     
     __weak typeof(self) weakSelf = self;
     if (self.isEdit == YES) {
-        [self.editButton setTitle:NSLocalizedString(@"取消", @"取消") forState:UIControlStateNormal];
+        [self.editButton setTitle:NSInternationalString(@"取消", @"取消") forState:UIControlStateNormal];
         [UIView animateWithDuration:0.3 animations:^{
             weakSelf.bottomView.frame = CGRectMake(0, ScreenHeight-64-BootomHeight*SizeScaleHeight, ScreenWidth, BootomHeight*SizeScaleHeight);
             weakSelf.theTableView.frame = CGRectMake(0, TopHeight*SizeScaleHeight, ScreenWidth, ScreenHeight-64-TopHeight*SizeScaleHeight-BootomHeight*SizeScaleHeight);
         }];
     }else{
-        [self.editButton setTitle:NSLocalizedString(@"编辑", @"编辑") forState:UIControlStateNormal];
+        [self.editButton setTitle:NSInternationalString(@"编辑", @"编辑") forState:UIControlStateNormal];
         [UIView animateWithDuration:0.3 animations:^{
             weakSelf.bottomView.frame = CGRectMake(0, ScreenHeight-64, ScreenWidth, BootomHeight*SizeScaleHeight);
             weakSelf.theTableView.frame = CGRectMake(0, TopHeight*SizeScaleHeight, ScreenWidth, ScreenHeight-64-TopHeight*SizeScaleHeight);
@@ -173,9 +173,9 @@ static const NSInteger CellTag = 1000;
         case BottomTag:{
             btn.selected = !btn.selected;
             if(btn.selected == YES){
-                [btn setTitle:NSLocalizedString(@"全不选", @"全不选") forState:UIControlStateNormal];
+                [btn setTitle:NSInternationalString(@"全不选", @"全不选") forState:UIControlStateNormal];
             }else{
-                [btn setTitle:NSLocalizedString(@"全选", @"全选") forState:UIControlStateNormal];
+                [btn setTitle:NSInternationalString(@"全选", @"全选") forState:UIControlStateNormal];
             }
             self.seleceGoodsList = [[NSMutableArray alloc]init];
             if ([self.record_type integerValue] == 1 && btn.selected == YES) {
@@ -188,7 +188,7 @@ static const NSInteger CellTag = 1000;
             break;
         case BottomTag+1:{
             if (self.seleceGoodsList.count == 0) {
-                [MYMBProgressHUD showMessage:NSLocalizedString(@"您尚未选择任何商品！", @"您尚未选择任何商品！")];
+                [MYMBProgressHUD showMessage:NSInternationalString(@"您尚未选择任何商品！", @"您尚未选择任何商品！")];
                 return;
             }
             NSMutableArray *sid_list = [[NSMutableArray alloc]init];
@@ -199,7 +199,7 @@ static const NSInteger CellTag = 1000;
             }
             NSString *new_quantity_str = [new_quantity_list componentsJoinedByString:@","];
             NSString *sid_str = [sid_list componentsJoinedByString:@","];
-            [MYMBProgressHUD showHudWithMessage:NSLocalizedString(@"请稍等···", @"请稍等···") InView:self.view];
+            [MYMBProgressHUD showHudWithMessage:NSInternationalString(@"请稍等···", @"请稍等···") InView:self.view];
             NSMutableDictionary *parametersDic = [[NSMutableDictionary alloc]init];
             [parametersDic setObject:@"update" forKey:@"action"];
             [parametersDic setObject:@([UserInfoModel shareInstance].user_sid) forKey:@"user_sid"];
@@ -218,7 +218,7 @@ static const NSInteger CellTag = 1000;
             break;
         case BottomTag+2:{
             if (self.seleceGoodsList.count == 0) {
-                [MYMBProgressHUD showMessage:NSLocalizedString(@"您尚未选择任何商品！", @"您尚未选择任何商品！")];
+                [MYMBProgressHUD showMessage:NSInternationalString(@"您尚未选择任何商品！", @"您尚未选择任何商品！")];
                 return;
             }
             NSMutableArray *rows = [[NSMutableArray alloc]init];
@@ -242,13 +242,13 @@ static const NSInteger CellTag = 1000;
                 [sid_list addObject:@([[recordDic objectForKey:@"sid"] integerValue])];
             }
             if ([new_quantity_list containsObject:@""]) {
-                [MYMBProgressHUD showMessage:NSLocalizedString(@"请输入勾选商品的更新数量！", @"请输入勾选商品的更新数量！")];
+                [MYMBProgressHUD showMessage:NSInternationalString(@"请输入勾选商品的更新数量！", @"请输入勾选商品的更新数量！")];
             }else if([new_quantity_list containsObject:@"0"]){
-                [MYMBProgressHUD showMessage:NSLocalizedString(@"更新的商品个数要大于0！", @"更新的商品个数要大于0！")];
+                [MYMBProgressHUD showMessage:NSInternationalString(@"更新的商品个数要大于0！", @"更新的商品个数要大于0！")];
             }else{
                 NSString *new_quantity_str = [new_quantity_list componentsJoinedByString:@","];
                 NSString *sid_str = [sid_list componentsJoinedByString:@","];
-                [MYMBProgressHUD showHudWithMessage:NSLocalizedString(@"请稍等···", @"请稍等···") InView:self.view];
+                [MYMBProgressHUD showHudWithMessage:NSInternationalString(@"请稍等···", @"请稍等···") InView:self.view];
                 NSMutableDictionary *parametersDic = [[NSMutableDictionary alloc]init];
                 [parametersDic setObject:@"update" forKey:@"action"];
                 [parametersDic setObject:@([UserInfoModel shareInstance].user_sid) forKey:@"user_sid"];
@@ -401,7 +401,7 @@ static const NSInteger CellTag = 1000;
     }
     if (direction == MGSwipeDirectionLeftToRight) {
         // 删除
-        [MYMBProgressHUD showHudWithMessage:NSLocalizedString(@"请稍等···", @"请稍等···") InView:self.view];
+        [MYMBProgressHUD showHudWithMessage:NSInternationalString(@"请稍等···", @"请稍等···") InView:self.view];
         NSMutableDictionary *parametersDic = [[NSMutableDictionary alloc]init];
         [parametersDic setObject:@"update" forKey:@"action"];
         [parametersDic setObject:@([UserInfoModel shareInstance].user_sid) forKey:@"user_sid"];
@@ -424,15 +424,15 @@ static const NSInteger CellTag = 1000;
         // 更新
         __weak typeof(self) weakSelf = self;
         UIAlertView *alert = [[UIAlertView alloc]initWithTitle:nil
-                                                       message:NSLocalizedString(@"请输入更新的商品个数", @"请输入更新的商品个数")
+                                                       message:NSInternationalString(@"请输入更新的商品个数", @"请输入更新的商品个数")
                                                       delegate:self
-                                             cancelButtonTitle:NSLocalizedString(@"取消", @"取消")
-                                             otherButtonTitles:NSLocalizedString(@"确定", @"确定"), nil];
+                                             cancelButtonTitle:NSInternationalString(@"取消", @"取消")
+                                             otherButtonTitles:NSInternationalString(@"确定", @"确定"), nil];
         alert.alertViewStyle = UIAlertViewStylePlainTextInput;
         alert.tapBlock = ^(UIAlertView *alertView, NSInteger buttonIndex) {
             [[[UIApplication sharedApplication] keyWindow] endEditing:YES];
             if (buttonIndex == 1) {
-                [MYMBProgressHUD showHudWithMessage:NSLocalizedString(@"请稍等···", @"请稍等···") InView:weakSelf.view];
+                [MYMBProgressHUD showHudWithMessage:NSInternationalString(@"请稍等···", @"请稍等···") InView:weakSelf.view];
                 NSMutableDictionary *parametersDic = [[NSMutableDictionary alloc]init];
                 [parametersDic setObject:@"update" forKey:@"action"];
                 [parametersDic setObject:@([UserInfoModel shareInstance].user_sid) forKey:@"user_sid"];
@@ -530,7 +530,7 @@ static const NSInteger CellTag = 1000;
         _topView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, ScreenWidth, TopHeight*SizeScaleHeight-5)];
         _topView.backgroundColor = [UIColor whiteColor];
         
-        NSArray *titles = @[NSLocalizedString(@"采购", @"采购"),NSLocalizedString(@"订货", @"订货")];
+        NSArray *titles = @[NSInternationalString(@"采购", @"采购"),NSInternationalString(@"订货", @"订货")];
         for (int i = 0; i < titles.count; i++) {
             UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
             button.frame = CGRectMake(ScreenWidth/titles.count*i, 0, ScreenWidth/titles.count, CGRectGetHeight(_topView.frame));
@@ -592,7 +592,7 @@ static const NSInteger CellTag = 1000;
         _bottomView = [[UIView alloc]initWithFrame:CGRectMake(0, ScreenHeight-64, ScreenWidth, BootomHeight*SizeScaleHeight)];
         _bottomView.backgroundColor = NAVBARCOLOR;
         
-        NSArray *titles = @[NSLocalizedString(@"全选", @"全选"),NSLocalizedString(@"删除", @"删除"),NSLocalizedString(@"更新", @"更新")];
+        NSArray *titles = @[NSInternationalString(@"全选", @"全选"),NSInternationalString(@"删除", @"删除"),NSInternationalString(@"更新", @"更新")];
         for (int i = 0; i < titles.count; i++) {
             UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
             button.frame = CGRectMake(15+ScreenWidth/titles.count*i, 0, ScreenWidth/titles.count-30, BootomHeight*SizeScaleHeight);

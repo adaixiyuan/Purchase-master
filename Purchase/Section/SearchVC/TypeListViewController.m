@@ -20,7 +20,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
-    self.navigationItem.title = NSLocalizedString(@"类型", @"类型");
+    self.navigationItem.title = NSInternationalString(@"类型", @"类型");
     [self.view addSubview:self.theTableView];
 }
 #pragma mark - UITableViewDelegate && UITableViewDataSource

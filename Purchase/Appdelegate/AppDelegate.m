@@ -21,9 +21,10 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launch.
     
+    // 设置语言
+    [self initUserLanguage];
     // 开启登录通知
     [self startObserveLoginNotification];
-    
     // 创建数据库
     [[MyStore sharedInstance] createTableWithName:kUserTable];
     
@@ -33,6 +34,15 @@
     [self.window setRootViewController:nav];
     [self.window makeKeyAndVisible];
     return YES;
+}
+-(void)initUserLanguage{
+    
+    NSString *userLanguage = [[NSUserDefaults standardUserDefaults] valueForKey:@"InternationalLanguage"];
+    if(userLanguage.length == 0){
+        //获取系统当前语言版本(中文zh-Hans,英文en)
+        [[NSUserDefaults standardUserDefaults] setValue:@"en" forKey:@"InternationalLanguage"];
+        [[NSUserDefaults standardUserDefaults] synchronize];//持久化，不加的话不会保存
+    }
 }
 - (void)changeRootVC
 {

@@ -1,0 +1,114 @@
+/* 
+  Localizable.strings
+  Purchase
+
+  Created by luoheng on 16/6/10.
+  Copyright © 2016年 luoheng. All rights reserved.
+*/
+
+"取消" = "cancel";
+"确定" = "OK";
+"请稍等···" = "Please wait a moment···";
+
+"拍照上传" = "Camera";
+"从相册上传" = "Photo album";
+
+"登录" = "Login";
+"记住密码" = "Remember the Password";
+
+"首页" = "Home";
+"采购列表" = "List";
+"记录" = "Record";
+"商品信息" = "Product";
+"商品发布" = "Publish";
+"设置" = "Setting";
+"退出登录" = "Logout";
+
+"今日重点" = "Today’s Note";
+"新增重点" = "New Note";
+"商品图片" = "Pictures";
+"新增商品图片" = "Add pictures";
+"商品内容" = "Content";
+"请添加商品内容及介绍" = "Please input content detail";
+"标题" = "Title";
+"类型" = "Type";
+"失效时间" = "Expire date";
+"品牌" = "Brand";
+"地址" = "Loc";
+"发布" = "Publish";
+"更新重点" = "Update Note";
+"正在删除···" = "Deleting···";
+
+"保存" = "Save";
+"请输入相关信息" = "Please input the information";
+"请输入商品标题" = "Please input the commodity title";
+"普通信息" = "General information";
+"折扣信息" = "Discount information";
+"请输入搜索的内容" = "Please input the keywords";
+
+"待采购数" = "Need";
+"价格" = "Price";
+"商品条码" = "Goods_No";
+"批量采购" = "Buy All";
+"批量订购" = "Order All";
+"批量缺货" = "Lack All";
+"请输入缺货地点" = "Please input the place";
+"搜索" = "Search";
+"关键字" = "Key words";
+"地点" = "Loc";
+"默认" = "Default all";
+"采购单" = "Daily Order";
+"收货单" = "Buyer Order";
+"实时发布商品" = "Real Time Order";
+"待采购总数" = "Need";
+"请选择批量操作的商品！" = "Please select the goods！";
+
+"采购" = "Buy Record";
+"订货" = "Order Record";
+"商品个数" = "Qty";
+"新个数" = "New Qty";
+"编辑" = "Edit";
+"全选" = "Select All";
+"删除" = "Delete";
+"更新" = "Update";
+"日期" = "Date";
+"采购记录" = "Buy Record";
+"订货记录" = "Order Record";
+"请输入更新的商品个数" = "Please input the new quantity";
+"全不选" = "Select NO";
+"您尚未选择任何商品！" = "You haven't choose any goods!";
+"请输入勾选商品的更新数量！" = "Please input quantity!";
+"更新的商品个数要大于0！" = "The number must be greater than zero!";
+
+"淘宝" = "TB";
+"系统" = "Stock";
+"实拍" = "Real Time";
+"淘宝商品" = "TB product";
+"系统商品" = "Stock product";
+"实拍商品" = "Real Time product";
+"最近购入价：--" = "Price：--";
+"最近购入价" = "Price";
+"销量" = "Sales";
+"库存" = "Stock";
+"待采购" = "Need";
+"收购量" = "PubQty";
+"请输入商品个数与价格" = "Please Input qty and price";
+"请输入商品个数" = "Please input quantity";
+"请输入商品价格" = "Please input price";
+
+"其他信息" = "Details";
+"收购个数" = "Publish Quantity";
+"条码" = "Goods_No";
+"手动输入" = "Handwriting input";
+"相机扫描" = "Camera scans";
+"请输入商品条码" = "Please input the commodity bar code";
+"扫一扫" = "Scans";
+"请将二维码或条码放入框内" = "Please put qr code or codes into the box";
+"条码信息" = "Barcode information";
+"知道了" = "I Know";
+"请在“设置-隐私-相机“选项中,允许访问你的相机" = "In the 'Settings-privacy-camera' option, allowing access to your camera";
+
+"语言" = "Language";
+"简体中文" = "Simplified Chinese";
+"英语" = "English";
+"正在设置语言~" = "Setting language~";

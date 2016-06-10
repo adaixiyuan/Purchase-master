@@ -13,10 +13,11 @@
 #import "RecordViewController.h"
 #import "GoodsInfoViewController.h"
 #import "GoodsPublishViewController.h"
+#import "SetViewController.h"
 #import "AppDelegate.h"
 #import "SearchInfoModel.h"
 
-static const float SectionHeadHeight = 180;
+static const float SectionHeadHeight = 150;
 static const float RowHeight = 44;
 
 @interface LeftViewController ()<UITableViewDelegate,UITableViewDataSource>
@@ -28,14 +29,19 @@ static const float RowHeight = 44;
 @end
 
 @implementation LeftViewController
-
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     self.view.backgroundColor = NAVBARCOLOR;
     [self.view addSubview:self.theTableView];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(changeLanguage:) name:kNotificationChangeLanguage object:nil];
 }
-
+- (void)changeLanguage:(NSNotification *)notification
+{
+    self.titles = nil;
+    [self.theTableView reloadData];
+}
 #pragma mark - UITableViewDelegate && UITableViewDataSource
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
 {
@@ -117,13 +123,9 @@ static const float RowHeight = 44;
             break;
         case 4:{
             if ([[UserInfoModel shareInstance].role isEqualToString:@"buyer"]) {
+                // 设置
+                [self.sideMenuViewController setContentViewController:[[NavigationController alloc] initWithRootViewController:[[SetViewController alloc]init]] animated:YES];
                 [self.sideMenuViewController hideMenuViewController];
-                [UIAlertView showWithTitle:NSLocalizedString(@"确认退出登录？", @"确认退出登录？") message:nil cancelButtonTitle:NSLocalizedString(@"取消", @"取消") otherButtonTitles:@[NSLocalizedString(@"确定", @"确定")] tapBlock:^(UIAlertView * _Nonnull alertView, NSInteger buttonIndex) {
-                    if (buttonIndex == 1) {
-                        AppDelegate *app = (AppDelegate *)[UIApplication sharedApplication].delegate;
-                        [app goToLoginVC];
-                    }
-                }];
             }else{
                 [self.sideMenuViewController setContentViewController:[[NavigationController alloc] initWithRootViewController:[[GoodsPublishViewController alloc]init]] animated:YES];
                 [self.sideMenuViewController hideMenuViewController];
@@ -131,8 +133,24 @@ static const float RowHeight = 44;
         }
             break;
         case 5:{
+            if ([[UserInfoModel shareInstance].role isEqualToString:@"buyer"]) {
+                [self.sideMenuViewController hideMenuViewController];
+                [UIAlertView showWithTitle:NSInternationalString(@"确认退出登录？", @"确认退出登录？") message:nil cancelButtonTitle:NSInternationalString(@"取消", @"取消") otherButtonTitles:@[NSInternationalString(@"确定", @"确定")] tapBlock:^(UIAlertView * _Nonnull alertView, NSInteger buttonIndex) {
+                    if (buttonIndex == 1) {
+                        AppDelegate *app = (AppDelegate *)[UIApplication sharedApplication].delegate;
+                        [app goToLoginVC];
+                    }
+                }];
+            }else{
+                // 设置
+                [self.sideMenuViewController setContentViewController:[[NavigationController alloc] initWithRootViewController:[[SetViewController alloc]init]] animated:YES];
+                [self.sideMenuViewController hideMenuViewController];
+            }
+        }
+            break;
+        case 6:{
             [self.sideMenuViewController hideMenuViewController];
-            [UIAlertView showWithTitle:NSLocalizedString(@"确认退出登录？", @"确认退出登录？") message:nil cancelButtonTitle:NSLocalizedString(@"取消", @"取消") otherButtonTitles:@[NSLocalizedString(@"确定", @"确定")] tapBlock:^(UIAlertView * _Nonnull alertView, NSInteger buttonIndex) {
+            [UIAlertView showWithTitle:NSInternationalString(@"确认退出登录？", @"确认退出登录？") message:nil cancelButtonTitle:NSInternationalString(@"取消", @"取消") otherButtonTitles:@[NSInternationalString(@"确定", @"确定")] tapBlock:^(UIAlertView * _Nonnull alertView, NSInteger buttonIndex) {
                 if (buttonIndex == 1) {
                     AppDelegate *app = (AppDelegate *)[UIApplication sharedApplication].delegate;
                     [app goToLoginVC];
@@ -163,9 +181,9 @@ static const float RowHeight = 44;
     if (_titles == nil) {
         [UserInfoModel shareInstance].role = @"buyer+";
         if([[UserInfoModel shareInstance].role isEqualToString:@"buyer"]){
-            _titles = @[NSLocalizedString(@"首页", @"首页"),NSLocalizedString(@"采购单", @"采购单"),NSLocalizedString(@"记录", @"记录"),NSLocalizedString(@"商品信息", @"商品信息"),NSLocalizedString(@"退出登录", @"退出登录")];
+            _titles = @[NSInternationalString(@"首页", @"首页"),NSInternationalString(@"采购列表", @"采购列表"),NSInternationalString(@"记录", @"记录"),NSInternationalString(@"商品信息", @"商品信息"),NSInternationalString(@"设置", @"设置"),NSInternationalString(@"退出登录", @"退出登录")];
         }else{
-           _titles = @[NSLocalizedString(@"首页", @"首页"),NSLocalizedString(@"采购单", @"采购单"),NSLocalizedString(@"记录", @"记录"),NSLocalizedString(@"商品信息", @"商品信息"),NSLocalizedString(@"商品发布", @"商品发布"),NSLocalizedString(@"退出登录", @"退出登录")];
+           _titles = @[NSInternationalString(@"首页", @"首页"),NSInternationalString(@"采购列表", @"采购列表"),NSInternationalString(@"记录", @"记录"),NSInternationalString(@"商品信息", @"商品信息"),NSInternationalString(@"商品发布", @"商品发布"),NSInternationalString(@"设置", @"设置"),NSInternationalString(@"退出登录", @"退出登录")];
         }
 
     }
@@ -176,12 +194,16 @@ static const float RowHeight = 44;
     if (_iconImages == nil) {
         [UserInfoModel shareInstance].role = @"buyer+";
         if([[UserInfoModel shareInstance].role isEqualToString:@"buyer"]){
-            _iconImages = @[@"home_page",@"order_icon",@"record_icon",@"goods_icon",@"exit_icon"];
+            _iconImages = @[@"home_page",@"order_icon",@"record_icon",@"goods_icon",@"set_icon",@"exit_icon"];
         }else{
-           _iconImages = @[@"home_page",@"order_icon",@"record_icon",@"goods_icon",@"publish_icon",@"exit_icon"];
+           _iconImages = @[@"home_page",@"order_icon",@"record_icon",@"goods_icon",@"publish_icon",@"set_icon",@"exit_icon"];
         }
     }
     return _iconImages;
+}
+- (void)dealloc
+{
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:kNotificationChangeLanguage object:nil];
 }
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];

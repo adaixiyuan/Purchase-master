@@ -25,7 +25,7 @@ static const float BarHeight = 44;
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
-    self.navigationItem.title = NSLocalizedString(@"品牌", @"品牌");
+    self.navigationItem.title = NSInternationalString(@"品牌", @"品牌");
     [self.view addSubview:self.theTableView];
     self.theTableView.tableHeaderView = self.searchBar;
     
@@ -35,7 +35,7 @@ static const float BarHeight = 44;
 }
 - (void)getBrandListRequest
 {
-    [MYMBProgressHUD showHudWithMessage:NSLocalizedString(@"请稍等···", @"请稍等···") InView:self.view];
+    [MYMBProgressHUD showHudWithMessage:NSInternationalString(@"请稍等···", @"请稍等···") InView:self.view];
     NSMutableDictionary *parametersDic = [[NSMutableDictionary alloc]init];
     [parametersDic setObject:@([UserInfoModel shareInstance].user_sid) forKey:@"user_sid"];
     [parametersDic setObject:SAFE_STRING([SearchInfoModel shareInstance].domain) forKey:@"domain"];
@@ -45,7 +45,7 @@ static const float BarHeight = 44;
         [MYMBProgressHUD hideHudFromView:self.view];
         NSArray *dataList = [[NSArray alloc]initWithArray:[responseObject objectForKey:@"data"]];
         self.brandList = [[NSMutableArray alloc]initWithArray:dataList];
-        NSDictionary *defultDic = [[NSDictionary alloc]initWithObjectsAndKeys:NSLocalizedString(@"默认", @"默认"),@"brand_name",nil];
+        NSDictionary *defultDic = [[NSDictionary alloc]initWithObjectsAndKeys:NSInternationalString(@"默认", @"默认"),@"brand_name",nil];
         [self.brandList insertObject:defultDic atIndex:0];
         self.searchList = [[NSMutableArray alloc]initWithArray:self.brandList];
         [self.theTableView reloadData];
@@ -147,7 +147,7 @@ static const float BarHeight = 44;
     if (_searchBar == nil) {
         _searchBar = [[UISearchBar alloc]initWithFrame:CGRectMake(0, 0, ScreenWidth, BarHeight)];
         _searchBar.showsCancelButton = YES;
-        _searchBar.placeholder = NSLocalizedString(@"请输入搜索的内容", @"请输入搜索的内容");
+        _searchBar.placeholder = NSInternationalString(@"请输入搜索的内容", @"请输入搜索的内容");
         _searchBar.delegate = self;
         _searchBar.backgroundColor = [UIColor whiteColor];
     }

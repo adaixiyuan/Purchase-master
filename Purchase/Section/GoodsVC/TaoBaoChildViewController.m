@@ -28,14 +28,14 @@ static const NSInteger CellTag = 1000;
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
-    self.navigationItem.title = NSLocalizedString(@"淘宝信息", @"淘宝信息");
+    self.navigationItem.title = NSInternationalString(@"淘宝信息", @"淘宝信息");
     [self.view addSubview:self.theTableView];
     
     self.goods_type = @"1";
     self.pageNum = 1;
     self.taobaoList = [[NSMutableArray alloc]init];
     // 获取记录列表
-    [MYMBProgressHUD showHudWithMessage:NSLocalizedString(@"请稍等···", @"请稍等···") InView:self.view];
+    [MYMBProgressHUD showHudWithMessage:NSInternationalString(@"请稍等···", @"请稍等···") InView:self.view];
     [self getTaoBaoGoodsListRequest];
     
     __weak typeof(self) weakSelf = self;
@@ -118,7 +118,7 @@ static const NSInteger CellTag = 1000;
 - (void)addCartToPurchase:(id)sender
 {
     if([[UserInfoModel shareInstance].role isEqualToString:@"buyer"]){
-        [MYMBProgressHUD showMessage:NSLocalizedString(@"采购员暂无此权限！", @"采购员暂无此权限！")];
+        [MYMBProgressHUD showMessage:NSInternationalString(@"采购员暂无此权限！", @"采购员暂无此权限！")];
         return;
     }
     TaoBaoChildCell *cell = (TaoBaoChildCell *)sender;
@@ -126,15 +126,15 @@ static const NSInteger CellTag = 1000;
     NSDictionary *goodsInfoDic = [[NSDictionary alloc]initWithDictionary:self.taobaoList[row]];
     __weak typeof(self) weakSelf = self;
     UIAlertView *alert = [[UIAlertView alloc]initWithTitle:nil
-                                                   message:NSLocalizedString(@"请输入商品个数与价格", @"请输入商品个数与价格")
+                                                   message:NSInternationalString(@"请输入商品个数与价格", @"请输入商品个数与价格")
                                                   delegate:self
-                                         cancelButtonTitle:NSLocalizedString(@"取消", @"取消")
-                                         otherButtonTitles:NSLocalizedString(@"确定", @"确定"), nil];
+                                         cancelButtonTitle:NSInternationalString(@"取消", @"取消")
+                                         otherButtonTitles:NSInternationalString(@"确定", @"确定"), nil];
     alert.alertViewStyle = UIAlertViewStyleLoginAndPasswordInput;
     alert.tapBlock = ^(UIAlertView *alertView, NSInteger buttonIndex) {
         [[[UIApplication sharedApplication] keyWindow] endEditing:YES];
         if (buttonIndex == 1) {
-            [MYMBProgressHUD showHudWithMessage:NSLocalizedString(@"请稍等···", @"请稍等···") InView:weakSelf.view];
+            [MYMBProgressHUD showHudWithMessage:NSInternationalString(@"请稍等···", @"请稍等···") InView:weakSelf.view];
             NSMutableDictionary *parametersDic = [[NSMutableDictionary alloc]init];
             [parametersDic setObject:@"publish" forKey:@"action"];
             [parametersDic setObject:@([UserInfoModel shareInstance].user_sid) forKey:@"user_sid"];
@@ -156,8 +156,8 @@ static const NSInteger CellTag = 1000;
         }
     };
     alert.shouldEnableFirstOtherButtonBlock = ^BOOL(UIAlertView *alertView) {
-        [alertView textFieldAtIndex:0].placeholder = NSLocalizedString(@"请输入商品个数", @"请输入商品个数");
-        [alertView textFieldAtIndex:1].placeholder = NSLocalizedString(@"请输入商品价格", @"请输入商品价格");
+        [alertView textFieldAtIndex:0].placeholder = NSInternationalString(@"请输入商品个数", @"请输入商品个数");
+        [alertView textFieldAtIndex:1].placeholder = NSInternationalString(@"请输入商品价格", @"请输入商品价格");
         [alertView textFieldAtIndex:1].secureTextEntry = NO;
         [alertView textFieldAtIndex:0].keyboardType = UIKeyboardTypeNumberPad;
         [alertView textFieldAtIndex:1].keyboardType = UIKeyboardTypeNumbersAndPunctuation;

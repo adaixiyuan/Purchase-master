@@ -40,7 +40,7 @@ static const NSInteger TitleTag = 100;
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
-    self.navigationItem.title = NSLocalizedString(@"新增重点", @"新增重点");
+    self.navigationItem.title = NSInternationalString(@"新增重点", @"新增重点");
     [self.view addSubview:self.theTableView];
     
     self.keyNoteModel = [[KeyNoteModel alloc]init];
@@ -62,7 +62,7 @@ static const NSInteger TitleTag = 100;
         }
     }
     
-    [MYMBProgressHUD showHudWithMessage:NSLocalizedString(@"请稍等···", @"请稍等···") InView:self.view];
+    [MYMBProgressHUD showHudWithMessage:NSInternationalString(@"请稍等···", @"请稍等···") InView:self.view];
     NSMutableDictionary *publishDic = [[NSMutableDictionary alloc]init];
     [publishDic setObject:@"add" forKey:@"action"];
     [publishDic setObject:@(self.keyNoteModel.type) forKey:@"type"];
@@ -125,7 +125,7 @@ static const NSInteger TitleTag = 100;
             make.left.equalTo(headView).with.offset(15);
         }];
     }
-    NSArray *titles = @[NSLocalizedString(@"商品图片", @"商品图片"),NSLocalizedString(@"商品内容", @"商品内容"),NSLocalizedString(@"商品信息", @"商品信息")];
+    NSArray *titles = @[NSInternationalString(@"商品图片", @"商品图片"),NSInternationalString(@"商品内容", @"商品内容"),NSInternationalString(@"商品信息", @"商品信息")];
     UILabel *titleLabel = (UILabel *)[headView viewWithTag:TitleTag];
     titleLabel.text = titles[section];
     return headView;
@@ -153,7 +153,7 @@ static const NSInteger TitleTag = 100;
             self.addBtn.backgroundColor = [UIColor clearColor];
             [self.addBtn setBackgroundImage:[UIImage imageNamed:@"button_inEffect"] forState:UIControlStateNormal];
             [self.addBtn setBackgroundImage:[UIImage imageNamed:@"button_invalid"] forState:UIControlStateDisabled];
-            [self.addBtn setTitle:NSLocalizedString(@"发布", @"发布") forState:UIControlStateNormal];
+            [self.addBtn setTitle:NSInternationalString(@"发布", @"发布") forState:UIControlStateNormal];
             [self.addBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
             self.addBtn.titleLabel.font = [UIFont customFontOfSize:15];
             [self.addBtn addTarget:self action:@selector(publishAction:) forControlEvents:UIControlEventTouchUpInside];
@@ -210,7 +210,7 @@ static const NSInteger TitleTag = 100;
     }else{
         cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
         
-        NSArray *titles = @[NSLocalizedString(@"标题", @"标题"),NSLocalizedString(@"类型", @"类型"),NSLocalizedString(@"失效时间", @"失效时间"),NSLocalizedString(@"品牌", @"品牌"),NSLocalizedString(@"地址", @"地址")];
+        NSArray *titles = @[NSInternationalString(@"标题", @"标题"),NSInternationalString(@"类型", @"类型"),NSInternationalString(@"失效时间", @"失效时间"),NSInternationalString(@"品牌", @"品牌"),NSInternationalString(@"地址", @"地址")];
         NSArray *details_list = @[SAFE_STRING(self.keyNoteModel.title),SAFE_STRING(self.keyNoteModel.typeStr),SAFE_STRING(self.keyNoteModel.expire_dt),SAFE_STRING(self.keyNoteModel.brands),SAFE_STRING(self.keyNoteModel.locations)];
         cell.textLabel.text = titles[indexPath.row];
         cell.detailTextLabel.text = details_list[indexPath.row];
@@ -225,7 +225,7 @@ static const NSInteger TitleTag = 100;
         switch (indexPath.row) {
             case 0:{
                 GoodsInfoEditViewController *goodsInfoVC = [[GoodsInfoEditViewController alloc]init];
-                goodsInfoVC.titleStr = NSLocalizedString(@"商品标题", @"商品标题");
+                goodsInfoVC.titleStr = NSInternationalString(@"标题", @"标题");
                 [self.navigationController pushViewController:goodsInfoVC animated:YES];
                 goodsInfoVC.updateTheGoodsInfo = ^(NSString *info){
                     weakSelf.keyNoteModel.title = SAFE_STRING(info);
@@ -234,7 +234,7 @@ static const NSInteger TitleTag = 100;
             }
                 break;
             case 1:{
-                NSArray *titles = @[NSLocalizedString(@"普通信息", @"普通信息"),NSLocalizedString(@"折扣信息", @"折扣信息")];
+                NSArray *titles = @[NSInternationalString(@"普通信息", @"普通信息"),NSInternationalString(@"折扣信息", @"折扣信息")];
                 [UIActionSheet showInView:self.view
                                 withTitle:nil
                         cancelButtonTitle:nil
@@ -378,7 +378,7 @@ static const NSInteger TitleTag = 100;
         _textView.backgroundColor = [UIColor clearColor];
         _textView.delegate = self;
         _textView.returnKeyType = UIReturnKeyDone;
-        _textView.placeholder = NSLocalizedString(@"请添加商品内容及介绍", @"请添加商品内容及介绍");
+        _textView.placeholder = NSInternationalString(@"请添加商品内容及介绍", @"请添加商品内容及介绍");
         _textView.placeholderColor = SHALLOWGRAY;
         _textView.textColor = SHALLOWBLACK;
         _textView.font = [UIFont customFontOfSize:14];

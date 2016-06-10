@@ -138,7 +138,7 @@ static const float CountHeight = 28;
         [_goods_noLabel mas_makeConstraints:^(MASConstraintMaker *make) {
             make.top.equalTo(_numLabel.mas_bottom).with.offset(0);
             make.left.equalTo(_goodsImageView.mas_right).with.offset(10);
-            make.right.equalTo(self.contentView).with.offset(-15);
+            make.right.equalTo(self.contentView).with.offset(-5);
         }];
         
         UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(tapAction)];
@@ -151,6 +151,10 @@ static const float CountHeight = 28;
     PurchaseInfoModel *purchaseModel = [PurchaseInfoModel mj_objectWithKeyValues:purchaseDic];
     self.numLimit = purchaseModel.wait_to_buy;  // 数量限制
     
+    NSString *need_buyStr = NSLocalizedString(@"待采购数", @"待采购数");
+    NSString *price_str = NSLocalizedString(@"价格", @"价格");
+    NSString *goods_No = NSLocalizedString(@"商品条码", @"商品条码");
+    
     NSString *detailStr;
     NSRange infoRange = NSMakeRange(0, purchaseModel.brand_name.length);
     if (purchaseModel.brand_name == nil || purchaseModel.brand_name.length == 0) {
@@ -158,8 +162,8 @@ static const float CountHeight = 28;
     }else{
         detailStr = [NSString stringWithFormat:@"%@  %@",SAFE_STRING(purchaseModel.brand_name),SAFE_STRING(purchaseModel.des)];
     }
-    NSString *numStr = [NSString stringWithFormat:@"待采购数：%d    价格:%.2f",(int)purchaseModel.wait_to_buy,purchaseModel.price];
-    NSString *goods_NoStr = [NSString stringWithFormat:@"商品条码：%@",purchaseModel.goods_no];
+    NSString *numStr = [NSString stringWithFormat:@"%@：%d    %@:%.2f",need_buyStr,(int)purchaseModel.wait_to_buy,price_str,purchaseModel.price];
+    NSString *goods_NoStr = [NSString stringWithFormat:@"%@：%@",goods_No,purchaseModel.goods_no];
     
     [_goodsImageView sd_setImageWithURL:[NSURL URLWithString:SAFE_STRING(purchaseModel.img_url)]];
     [_infoLabel setText:detailStr afterInheritingLabelAttributesAndConfiguringWithBlock:^NSMutableAttributedString *(NSMutableAttributedString *mutableAttributedString) {
@@ -177,9 +181,9 @@ static const float CountHeight = 28;
     }];
     [_numLabel setText:numStr];
     [_goods_noLabel setText:goods_NoStr afterInheritingLabelAttributesAndConfiguringWithBlock:^NSMutableAttributedString *(NSMutableAttributedString *mutableAttributedString) {
-        NSRange noRange = NSMakeRange(5, goods_NoStr.length-5);
+        NSRange noRange = NSMakeRange(goods_No.length+1, goods_NoStr.length-goods_No.length-1);
         //设定可点击文字的的大小
-        UIFont *systemFont = [UIFont customFontOfSize:13];
+        UIFont *systemFont = [UIFont customFontOfSize:11.5];
         CTFontRef font = CTFontCreateWithName((__bridge CFStringRef)systemFont.fontName, systemFont.pointSize, NULL);
         if (font) {
             //设置可点击文本的大小
@@ -219,7 +223,7 @@ static const float CountHeight = 28;
         textField.text = @"0";
     }
     if ([textField.text integerValue] > self.numLimit){
-        [MYMBProgressHUD showMessage:@"数目不能超过待采购数~"];
+        [MYMBProgressHUD showMessage:NSInternationalString(@"数目不能超过待采购数~", @"数目不能超过待采购数~")];
         textField.text = [NSString stringWithFormat:@"%d",(int)self.numLimit];
     }
     if ([textField.text integerValue] > 0) {

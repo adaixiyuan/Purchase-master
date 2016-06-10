@@ -23,6 +23,10 @@ NSString * const kRememberTable = @"kRememberTable";
 
 NSString * const kNotificationLogin = @"kNotificationLogin";
 
+NSString * const InternationalLanguage = @"InternationalLanguage";
+
+NSString * const kNotificationChangeLanguage = @"kNotificationChangeLanguage";
+
 
 NSString * const kLoginRequest  = @"Login.ashx";
 

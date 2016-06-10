@@ -58,9 +58,9 @@ static const NSInteger PhotoBtnTag = 100;
     __weak typeof(self) weakSelf = self;
     [UIActionSheet showInView:self.window
                     withTitle:nil
-            cancelButtonTitle:NSLocalizedString(@"取消", @"取消")
-       destructiveButtonTitle:NSLocalizedString(@"拍照上传", @"拍照上传")
-            otherButtonTitles:@[NSLocalizedString(@"从相册上传", @"从相册上传")]
+            cancelButtonTitle:NSInternationalString(@"取消", @"取消")
+       destructiveButtonTitle:NSInternationalString(@"拍照上传", @"拍照上传")
+            otherButtonTitles:@[NSInternationalString(@"从相册上传", @"从相册上传")]
                      tapBlock:^(UIActionSheet * _Nonnull actionSheet, NSInteger buttonIndex) {
                          switch (buttonIndex) {
                              case 0:
@@ -187,7 +187,7 @@ static const NSInteger PhotoBtnTag = 100;
 - (void)delete:(UIButton *)sender
 {
     _photoTag = sender.tag;
-    UIAlertView *alert = [[UIAlertView alloc]initWithTitle:NSLocalizedString(@"删除图片", @"删除图片") message:nil delegate:self cancelButtonTitle:NSLocalizedString(@"取消", @"取消") otherButtonTitles:NSLocalizedString(@"确定", @"确定"), nil];
+    UIAlertView *alert = [[UIAlertView alloc]initWithTitle:NSInternationalString(@"删除图片", @"删除图片") message:nil delegate:self cancelButtonTitle:NSInternationalString(@"取消", @"取消") otherButtonTitles:NSInternationalString(@"确定", @"确定"), nil];
     [alert show];
 }
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex

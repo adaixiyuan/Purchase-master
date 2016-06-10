@@ -26,12 +26,12 @@ static const float BarHeight = 44;
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
-    self.navigationItem.title = NSLocalizedString(@"地址", @"地址");
+    self.navigationItem.title = NSInternationalString(@"地址", @"地址");
     [self.view addSubview:self.theTableView];
     self.theTableView.tableHeaderView = self.searchBar;
     
     // 获取地点列表
-    [MYMBProgressHUD showHudWithMessage:NSLocalizedString(@"请稍等···", @"请稍等···") InView:self.view];
+    [MYMBProgressHUD showHudWithMessage:NSInternationalString(@"请稍等···", @"请稍等···") InView:self.view];
     [self getLocationRequest];
 }
 #pragma mark - Request
@@ -76,8 +76,11 @@ static const float BarHeight = 44;
         cell.detailTextLabel.textColor = SHALLOWBLACK;
     }
     NSDictionary *locationDic = [[NSDictionary alloc]initWithDictionary:self.searchList[indexPath.row]];
-    cell.textLabel.text = [NSString stringWithFormat:@"地点：%@",SAFE_STRING([locationDic objectForKey:@"loc_name"])];
-    cell.detailTextLabel.text = [NSString stringWithFormat:@"待采购总数:%@",SAFE_NUMBER([locationDic objectForKey:@"wait_to_buy"])];
+    
+    NSString *loc_str = NSInternationalString(@"地点", @"地点");
+    NSString *need_str = NSInternationalString(@"待采购总数", @"待采购总数");
+    cell.textLabel.text = [NSString stringWithFormat:@"%@：%@",loc_str,SAFE_STRING([locationDic objectForKey:@"loc_name"])];
+    cell.detailTextLabel.text = [NSString stringWithFormat:@"%@：%@",need_str,SAFE_NUMBER([locationDic objectForKey:@"wait_to_buy"])];
     
     if ([[SearchInfoModel shareInstance].locationStr isEqualToString:SAFE_STRING(cell.textLabel.text)]) {
         cell.textLabel.textColor = NAVBARCOLOR;
@@ -148,7 +151,7 @@ static const float BarHeight = 44;
     if (_searchBar == nil) {
         _searchBar = [[UISearchBar alloc]initWithFrame:CGRectMake(0, 0, ScreenWidth, BarHeight)];
         _searchBar.showsCancelButton = YES;
-        _searchBar.placeholder = NSLocalizedString(@"请输入搜索的内容", @"请输入搜索的内容");
+        _searchBar.placeholder = NSInternationalString(@"请输入搜索的内容", @"请输入搜索的内容");
         _searchBar.delegate = self;
         _searchBar.backgroundColor = [UIColor whiteColor];
     }

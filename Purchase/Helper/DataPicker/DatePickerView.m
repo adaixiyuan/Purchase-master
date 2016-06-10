@@ -30,16 +30,16 @@ static const float PickHeight = 200;
     [self addSubview:self.bgView];
     
     UIButton *pickerCancleBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    [pickerCancleBtn setTitle:@"取消" forState:UIControlStateNormal];
+    [pickerCancleBtn setTitle:NSInternationalString(@"取消", @"取消") forState:UIControlStateNormal];
     [pickerCancleBtn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
-    [pickerCancleBtn setFrame:CGRectMake(20, 5, 40, 30)];
+    [pickerCancleBtn setFrame:CGRectMake(20, 5, 60, 30)];
     [pickerCancleBtn addTarget:self action:@selector(cancleSelectTime:) forControlEvents:UIControlEventTouchUpInside];
     [self.bgView addSubview:pickerCancleBtn];
     
     UIButton *pickerSureBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    [pickerSureBtn setTitle:@"确定" forState:UIControlStateNormal];
+    [pickerSureBtn setTitle:NSInternationalString(@"确定", @"确定") forState:UIControlStateNormal];
     [pickerSureBtn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
-    [pickerSureBtn setFrame:CGRectMake(ScreenWidth - 60, 5, 40, 30)];
+    [pickerSureBtn setFrame:CGRectMake(ScreenWidth - 60, 5, 60, 30)];
     [pickerSureBtn addTarget:self action:@selector(surePickDelayTime:) forControlEvents:UIControlEventTouchUpInside];
     [self.bgView addSubview:pickerSureBtn];
     

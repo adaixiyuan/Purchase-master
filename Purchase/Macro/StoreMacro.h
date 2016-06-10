@@ -26,6 +26,8 @@
 #define SizeScaleHeight ((ScreenHeight>480)?ScreenHeight/568:1.0)
 #define HalfScale (1.0f/[UIScreen mainScreen].scale)
 
+#define NSInternationalString(key, comment) \
+[[NSBundle bundleWithPath:[[NSBundle mainBundle] pathForResource:[NSString stringWithFormat:@"%@",[[NSUserDefaults standardUserDefaults] objectForKey:@"InternationalLanguage"]] ofType:@"lproj"]] localizedStringForKey:(key) value:@"" table:nil]
 
 // 用于导航栏
 #define NAVBARCOLOR     [UIColor colorFromHexRGB:@"FF6699"]

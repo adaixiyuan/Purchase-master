@@ -42,7 +42,7 @@ static const NSInteger CellTag = 1000;
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
-    self.navigationItem.title = NSLocalizedString(@"商品信息", @"商品信息");
+    self.navigationItem.title = NSInternationalString(@"商品信息", @"商品信息");
     [self.view addSubview:self.topView];
     [self.view addSubview:self.theTableView];
     
@@ -57,7 +57,7 @@ static const NSInteger CellTag = 1000;
     self.systemList = [[NSMutableArray alloc]init];
     self.livePhotosList = [[NSMutableArray alloc]init];
     // 获取记录列表
-    [MYMBProgressHUD showHudWithMessage:NSLocalizedString(@"请稍等···", @"请稍等···") InView:self.view];
+    [MYMBProgressHUD showHudWithMessage:NSInternationalString(@"请稍等···", @"请稍等···") InView:self.view];
     [self getGoodsListRequest];
     
     __weak typeof(self) weakSelf = self;
@@ -89,7 +89,7 @@ static const NSInteger CellTag = 1000;
     
     [SearchInfoModel shareInstance].fromType = FromGoodsInfoVC;
     [SearchInfoModel shareInstance].typeID = self.goods_type;
-    [SearchInfoModel shareInstance].typeList = @[NSLocalizedString(@"淘宝商品", @"淘宝商品"),NSLocalizedString(@"系统商品", @"系统商品"),NSLocalizedString(@"实拍商品", @"实拍商品")];
+    [SearchInfoModel shareInstance].typeList = @[NSInternationalString(@"淘宝商品", @"淘宝商品"),NSInternationalString(@"系统商品", @"系统商品"),NSInternationalString(@"实拍商品", @"实拍商品")];
     [SearchInfoModel shareInstance].domain = @"Product";
     [SearchInfoModel shareInstance].typeName = [[SearchInfoModel shareInstance].typeList objectAtIndex:[self.goods_type integerValue]-1];
     
@@ -117,7 +117,7 @@ static const NSInteger CellTag = 1000;
     self.pageNum_two = 1;
     self.pageNum_three = 1;
     [self.theTableView reloadData];
-    [MYMBProgressHUD showHudWithMessage:NSLocalizedString(@"请稍等···", @"请稍等···") InView:self.view];
+    [MYMBProgressHUD showHudWithMessage:NSInternationalString(@"请稍等···", @"请稍等···") InView:self.view];
     [self getGoodsListRequest];
 }
 #pragma mark - Request
@@ -261,7 +261,7 @@ static const NSInteger CellTag = 1000;
 - (void)addCartToPurchase:(id)sender
 {
     if([[UserInfoModel shareInstance].role isEqualToString:@"buyer"]){
-        [MYMBProgressHUD showMessage:NSLocalizedString(@"采购员暂无此权限！", @"采购员暂无此权限！")];
+        [MYMBProgressHUD showMessage:NSInternationalString(@"采购员暂无此权限！", @"采购员暂无此权限！")];
         return;
     }
     GoodsInfoCell *cell = (GoodsInfoCell *)sender;
@@ -276,15 +276,15 @@ static const NSInteger CellTag = 1000;
     }
     __weak typeof(self) weakSelf = self;
     UIAlertView *alert = [[UIAlertView alloc]initWithTitle:nil
-                                                   message:NSLocalizedString(@"请输入商品个数与价格", @"请输入商品个数与价格")
+                                                   message:NSInternationalString(@"请输入商品个数与价格", @"请输入商品个数与价格")
                                                   delegate:self
-                                         cancelButtonTitle:NSLocalizedString(@"取消", @"取消")
-                                         otherButtonTitles:NSLocalizedString(@"确定", @"确定"), nil];
+                                         cancelButtonTitle:NSInternationalString(@"取消", @"取消")
+                                         otherButtonTitles:NSInternationalString(@"确定", @"确定"), nil];
     alert.alertViewStyle = UIAlertViewStyleLoginAndPasswordInput;
     alert.tapBlock = ^(UIAlertView *alertView, NSInteger buttonIndex) {
         [[[UIApplication sharedApplication] keyWindow] endEditing:YES];
         if (buttonIndex == 1) {
-            [MYMBProgressHUD showHudWithMessage:NSLocalizedString(@"请稍等···", @"请稍等···") InView:weakSelf.view];
+            [MYMBProgressHUD showHudWithMessage:NSInternationalString(@"请稍等···", @"请稍等···") InView:weakSelf.view];
             NSMutableDictionary *parametersDic = [[NSMutableDictionary alloc]init];
             [parametersDic setObject:@"publish" forKey:@"action"];
             [parametersDic setObject:@([UserInfoModel shareInstance].user_sid) forKey:@"user_sid"];
@@ -317,8 +317,8 @@ static const NSInteger CellTag = 1000;
         }
     };
     alert.shouldEnableFirstOtherButtonBlock = ^BOOL(UIAlertView *alertView) {
-        [alertView textFieldAtIndex:0].placeholder = NSLocalizedString(@"请输入商品个数", @"请输入商品个数");
-        [alertView textFieldAtIndex:1].placeholder = NSLocalizedString(@"请输入商品价格", @"请输入商品价格");
+        [alertView textFieldAtIndex:0].placeholder = NSInternationalString(@"请输入商品个数", @"请输入商品个数");
+        [alertView textFieldAtIndex:1].placeholder = NSInternationalString(@"请输入商品价格", @"请输入商品价格");
         [alertView textFieldAtIndex:1].secureTextEntry = NO;
         [alertView textFieldAtIndex:0].keyboardType = UIKeyboardTypeNumberPad;
         [alertView textFieldAtIndex:1].keyboardType = UIKeyboardTypeNumbersAndPunctuation;
@@ -352,7 +352,7 @@ static const NSInteger CellTag = 1000;
         _topView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, ScreenWidth, TopHeight*SizeScaleHeight-5)];
         _topView.backgroundColor = [UIColor whiteColor];
         
-        NSArray *titles = @[NSLocalizedString(@"淘宝", @"淘宝"),NSLocalizedString(@"系统", @"系统"),NSLocalizedString(@"实拍", @"实拍")];
+        NSArray *titles = @[NSInternationalString(@"淘宝", @"淘宝"),NSInternationalString(@"系统", @"系统"),NSInternationalString(@"实拍", @"实拍")];
         for (int i = 0; i < titles.count; i++) {
             UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
             button.frame = CGRectMake(ScreenWidth/titles.count*i, 0, ScreenWidth/titles.count, CGRectGetHeight(_topView.frame));
