@@ -33,7 +33,6 @@
 @property (nonatomic, assign) NSInteger          isEdit;
 @property (nonatomic, strong) id <CellDelegate> theDelegate;
 
-- (void)setCellContentConstraintsWithEditStatus:(BOOL)isEdit;
 - (void)setCellContentWithPurchaseInfo:(NSDictionary *)purchaseDic;
 
 @end

@@ -75,16 +75,18 @@
 {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     if ([SearchInfoModel shareInstance].fromType == FromPurchaseVC) {
-        NSMutableArray *typeIDs = [[NSMutableArray alloc]initWithArray:[[SearchInfoModel shareInstance].typeID componentsSeparatedByString:@","]];
+        NSMutableArray *typeIDs = [[NSMutableArray alloc]init];
+        if ([SearchInfoModel shareInstance].typeID != nil && [SearchInfoModel shareInstance].typeID.length > 0) {
+           typeIDs = [[NSMutableArray alloc]initWithArray:[[SearchInfoModel shareInstance].typeID componentsSeparatedByString:@","]];
+        }
         if ([typeIDs containsObject:[NSString stringWithFormat:@"%d",(int)indexPath.row+1]]) {
             [typeIDs removeObject:[NSString stringWithFormat:@"%d",(int)indexPath.row+1]];
         }else{
             [typeIDs addObject:[NSString stringWithFormat:@"%d",(int)indexPath.row+1]];
         }
-        
         NSMutableArray *typeNames = [[NSMutableArray alloc]init];
-        for (NSString *idStr in typeIDs) {
-            [typeNames addObject:[[SearchInfoModel shareInstance].typeList objectAtIndex:[idStr integerValue]-1]];
+        for (int i = 0; i < typeIDs.count; i++) {
+            [typeNames addObject:[[SearchInfoModel shareInstance].typeList objectAtIndex:i]];
         }
         NSString *typeName = [typeNames componentsJoinedByString:@","];
         if (self.selectTheType) {

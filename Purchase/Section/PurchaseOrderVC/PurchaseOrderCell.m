@@ -69,19 +69,6 @@ static const float CountHeight = 28;
         [_numAddBtn addTarget:self action:@selector(numAddBtnAction:) forControlEvents:UIControlEventTouchUpInside];
         [_countView addSubview:_numAddBtn];
         
-        [_selectBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.centerY.equalTo(self.contentView).with.offset(0);
-            make.left.equalTo(self.contentView).with.offset(10);
-            make.width.and.height.equalTo(@0);
-        }];
-        
-        [_goodsImageView mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.centerY.equalTo(self.contentView).with.offset(0);
-            make.left.equalTo(_selectBtn.mas_right).with.offset(5);
-            make.width.equalTo(@(ImageWidth*SizeScaleWidth));
-            make.height.equalTo(@(ImageHeight*SizeScaleWidth));
-        }];
-        
         [_countView mas_makeConstraints:^(MASConstraintMaker *make) {
             make.right.equalTo(self.contentView).with.offset(-15);
             make.bottom.equalTo(self.contentView).with.offset(-7.5);
@@ -126,6 +113,17 @@ static const float CountHeight = 28;
         _goods_noLabel.textColor = SHALLOWGRAY;
         [self.contentView addSubview:_goods_noLabel];
         
+        [_selectBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.centerY.equalTo(self.contentView).with.offset(0);
+            make.left.equalTo(self.contentView).with.offset(10);
+            make.width.and.height.equalTo(@25);
+        }];
+        [_goodsImageView mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.centerY.equalTo(self.contentView).with.offset(0);
+            make.left.equalTo(_selectBtn.mas_right).with.offset(10);
+            make.width.equalTo(@(ImageWidth*SizeScaleWidth));
+            make.height.equalTo(@(ImageHeight*SizeScaleWidth));
+        }];
         [_infoLabel mas_makeConstraints:^(MASConstraintMaker *make) {
             make.top.equalTo(_goodsImageView.mas_top).with.offset(-4);
             make.left.equalTo(_goodsImageView.mas_right).with.offset(10);
@@ -147,67 +145,6 @@ static const float CountHeight = 28;
         [_goodsImageView addGestureRecognizer:tap];
     }
     return self;
-}
-- (void)setCellContentConstraintsWithEditStatus:(BOOL)isEdit
-{
-    _isEdit = isEdit;
-    if (isEdit == NO) {
-        [_selectBtn mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.centerY.equalTo(self.contentView).with.offset(0);
-            make.left.equalTo(self.contentView).with.offset(10);
-            make.width.and.height.equalTo(@0);
-        }];
-        [_goodsImageView mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.centerY.equalTo(self.contentView).with.offset(0);
-            make.left.equalTo(_selectBtn.mas_right).with.offset(5);
-            make.width.equalTo(@(ImageWidth*SizeScaleWidth));
-            make.height.equalTo(@(ImageHeight*SizeScaleWidth));
-        }];
-        [_infoLabel mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.top.equalTo(_goodsImageView.mas_top).with.offset(-4);
-            make.left.equalTo(_goodsImageView.mas_right).with.offset(10);
-            make.right.equalTo(self.contentView).with.offset(-15);
-            make.height.equalTo(@(35*SizeScaleHeight));
-        }];
-        [_numLabel mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.top.equalTo(_infoLabel.mas_bottom).with.offset(5);
-            make.left.equalTo(_goodsImageView.mas_right).with.offset(10);
-            make.right.equalTo(self.contentView).with.offset(-15);
-        }];
-        [_goods_noLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.top.equalTo(_numLabel.mas_bottom).with.offset(0);
-            make.left.equalTo(_goodsImageView.mas_right).with.offset(10);
-            make.right.equalTo(self.contentView).with.offset(-15);
-        }];
-    }else{
-        [_selectBtn mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.centerY.equalTo(self.contentView).with.offset(0);
-            make.left.equalTo(self.contentView).with.offset(10);
-            make.width.and.height.equalTo(@25);
-        }];
-        [_goodsImageView mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.centerY.equalTo(self.contentView).with.offset(0);
-            make.left.equalTo(_selectBtn.mas_right).with.offset(10);
-            make.width.equalTo(@(ImageWidth*SizeScaleWidth));
-            make.height.equalTo(@(ImageHeight*SizeScaleWidth));
-        }];
-        [_infoLabel mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.top.equalTo(_goodsImageView.mas_top).with.offset(-4);
-            make.left.equalTo(_goodsImageView.mas_right).with.offset(10);
-            make.right.equalTo(self.contentView).with.offset(-15);
-            make.height.equalTo(@(35*SizeScaleHeight));
-        }];
-        [_numLabel mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.top.equalTo(_infoLabel.mas_bottom).with.offset(5);
-            make.left.equalTo(_goodsImageView.mas_right).with.offset(10);
-            make.right.equalTo(self.contentView).with.offset(-15);
-        }];
-        [_goods_noLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.top.equalTo(_numLabel.mas_bottom).with.offset(0);
-            make.left.equalTo(_goodsImageView.mas_right).with.offset(10);
-            make.right.equalTo(self.contentView).with.offset(-15);
-        }];
-    }
 }
 - (void)setCellContentWithPurchaseInfo:(NSDictionary *)purchaseDic
 {
