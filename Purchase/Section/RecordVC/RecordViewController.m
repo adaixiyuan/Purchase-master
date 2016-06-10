@@ -82,22 +82,23 @@ static const NSInteger CellTag = 1000;
 }
 - (void)creatRightNavView
 {
-    UIView *rightView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, 70, 30)];
+    UIView *rightView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, 85, 40)];
     rightView.backgroundColor = [UIColor clearColor];
     
     UIButton *searchButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    searchButton.frame = CGRectMake(0, 0, 30, 30);
+    searchButton.frame = CGRectMake(0, 0, 40, 40);
     searchButton.backgroundColor = [UIColor clearColor];
     [searchButton setImage:[UIImage imageNamed:@"nav_search"] forState:UIControlStateNormal];
     [searchButton addTarget:self action:@selector(navSearchAction:) forControlEvents:UIControlEventTouchUpInside];
     [rightView addSubview:searchButton];
     
     self.editButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    self.editButton.frame = CGRectMake(30, 0, 40, 30);
+    self.editButton.frame = CGRectMake(45, 0, 40, 40);
     self.editButton.backgroundColor = [UIColor clearColor];
     [self.editButton setTitle:NSLocalizedString(@"编辑", @"编辑") forState:UIControlStateNormal];
     [self.editButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     self.editButton.titleLabel.font = [UIFont customFontOfSize:14];
+    [self.editButton setContentHorizontalAlignment:UIControlContentHorizontalAlignmentRight];
     [self.editButton addTarget:self action:@selector(navEditAction:) forControlEvents:UIControlEventTouchUpInside];
     [rightView addSubview:self.editButton];
     
@@ -291,7 +292,7 @@ static const NSInteger CellTag = 1000;
     [[NetworkManager sharedInstance] startRequestWithURL:kBuyRecordRequest method:RequestPost parameters:parametersDic result:^(AFHTTPRequestOperation *operation, id responseObject) {
         
         [self.theTableView.mj_header endRefreshing];
-        [self.theTableView.mj_footer endRefreshingWithNoMoreData];
+        [self.theTableView.mj_footer endRefreshing];
         [MYMBProgressHUD hideHudFromView:self.view];
         NSArray *dataList = [[NSArray alloc]initWithArray:[responseObject objectForKey:@"data"]];
         if ([self.record_type integerValue] == 1) {
@@ -315,7 +316,7 @@ static const NSInteger CellTag = 1000;
             self.pageNum_two--;
         }
         [self.theTableView.mj_header endRefreshing];
-        [self.theTableView.mj_footer endRefreshingWithNoMoreData];
+        [self.theTableView.mj_footer endRefreshing];
         [MYMBProgressHUD hideHudFromView:self.view];
         [MYMBProgressHUD showMessage:error.userInfo[@"NSLocalizedDescription"]];
     }];
@@ -455,6 +456,7 @@ static const NSInteger CellTag = 1000;
             }
         };
         alert.shouldEnableFirstOtherButtonBlock = ^BOOL(UIAlertView *alertView) {
+            [alertView textFieldAtIndex:0].keyboardType = UIKeyboardTypeNumberPad;
             return ([[[alertView textFieldAtIndex:0] text] length] > 0 && [NSString isPureInt:[[alertView textFieldAtIndex:0] text]] && [[alertView textFieldAtIndex:0].text integerValue] > 0);
         };
         [alert show];

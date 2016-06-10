@@ -143,7 +143,7 @@ static const NSInteger CellTag = 1000;
     [[NetworkManager sharedInstance] startRequestWithURL:kProductRequest method:RequestPost parameters:parametersDic result:^(AFHTTPRequestOperation *operation, id responseObject) {
         
         [self.theTableView.mj_header endRefreshing];
-        [self.theTableView.mj_footer endRefreshingWithNoMoreData];
+        [self.theTableView.mj_footer endRefreshing];
         [MYMBProgressHUD hideHudFromView:self.view];
         NSArray *dataList = [[NSArray alloc]initWithArray:[responseObject objectForKey:@"data"]];
         switch ([self.goods_type integerValue]) {
@@ -184,7 +184,7 @@ static const NSInteger CellTag = 1000;
             self.pageNum_three--;
         }
         [self.theTableView.mj_header endRefreshing];
-        [self.theTableView.mj_footer endRefreshingWithNoMoreData];
+        [self.theTableView.mj_footer endRefreshing];
         [MYMBProgressHUD hideHudFromView:self.view];
         [MYMBProgressHUD showMessage:error.userInfo[@"NSLocalizedDescription"]];
     }];
