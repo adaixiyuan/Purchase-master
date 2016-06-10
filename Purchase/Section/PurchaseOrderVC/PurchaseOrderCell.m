@@ -9,7 +9,7 @@
 #import "PurchaseOrderCell.h"
 
 static const float ImageWidth = 100;
-static const float ImageHeight = 80;
+static const float ImageHeight = 85;
 static const float CountWidth = 120;
 static const float CountHeight = 28;
 
@@ -71,7 +71,7 @@ static const float CountHeight = 28;
         
         [_countView mas_makeConstraints:^(MASConstraintMaker *make) {
             make.right.equalTo(self.contentView).with.offset(-15);
-            make.bottom.equalTo(self.contentView).with.offset(-7.5);
+            make.bottom.equalTo(self.contentView).with.offset(-5);
             make.width.equalTo(@(CountWidth*SizeScaleWidth));
             make.height.equalTo(@(CountHeight*SizeScaleWidth));
         }];
@@ -107,6 +107,12 @@ static const float CountHeight = 28;
         _numLabel.textColor = SHALLOWGRAY;
         [self.contentView addSubview:_numLabel];
         
+        _priceLabel = [[TTTAttributedLabel alloc]initWithFrame:CGRectZero];
+        _priceLabel.backgroundColor = [UIColor clearColor];
+        _priceLabel.font = [UIFont customFontOfSize:13];
+        _priceLabel.textColor = SHALLOWGRAY;
+        [self.contentView addSubview:_priceLabel];
+        
         _goods_noLabel = [[TTTAttributedLabel alloc]initWithFrame:CGRectZero];
         _goods_noLabel.backgroundColor = [UIColor clearColor];
         _goods_noLabel.font = [UIFont customFontOfSize:13];
@@ -125,20 +131,25 @@ static const float CountHeight = 28;
             make.height.equalTo(@(ImageHeight*SizeScaleWidth));
         }];
         [_infoLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.top.equalTo(_goodsImageView.mas_top).with.offset(-4);
+            make.top.equalTo(_goodsImageView.mas_top).with.offset(-6);
             make.left.equalTo(_goodsImageView.mas_right).with.offset(10);
-            make.right.equalTo(self.contentView).with.offset(-15);
+            make.right.equalTo(self.contentView).with.offset(-5);
             make.height.equalTo(@(35*SizeScaleHeight));
         }];
         [_numLabel mas_makeConstraints:^(MASConstraintMaker *make) {
             make.top.equalTo(_infoLabel.mas_bottom).with.offset(5);
             make.left.equalTo(_goodsImageView.mas_right).with.offset(10);
-            make.right.equalTo(self.contentView).with.offset(-15);
+            make.right.equalTo(self.contentView).with.offset(0);
         }];
-        [_goods_noLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        [_priceLabel mas_makeConstraints:^(MASConstraintMaker *make) {
             make.top.equalTo(_numLabel.mas_bottom).with.offset(0);
             make.left.equalTo(_goodsImageView.mas_right).with.offset(10);
-            make.right.equalTo(self.contentView).with.offset(-5);
+            make.right.equalTo(self.contentView).with.offset(0);
+        }];
+        [_goods_noLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.top.equalTo(_priceLabel.mas_bottom).with.offset(0);
+            make.left.equalTo(_goodsImageView.mas_right).with.offset(10);
+            make.right.equalTo(self.contentView).with.offset(0);
         }];
         
         UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(tapAction)];
@@ -146,15 +157,69 @@ static const float CountHeight = 28;
     }
     return self;
 }
+- (void)setCellContentConstraintsWithStatus:(BOOL)isEdit
+{
+    float space = 0.0;
+    if (isEdit == NO) {
+        space = 0;
+    }else{
+        space = 10;
+    }
+    [self updateTheConstraintsWithSpace:space];
+}
+- (void)updateTheConstraintsWithSpace:(float)space
+{
+    [_selectBtn mas_updateConstraints:^(MASConstraintMaker *make) {
+        make.centerY.equalTo(self.contentView).with.offset(0);
+        make.left.equalTo(self.contentView).with.offset(10);
+        make.width.and.height.equalTo(@(2.5*space));
+    }];
+    [_goodsImageView mas_updateConstraints:^(MASConstraintMaker *make) {
+        make.centerY.equalTo(self.contentView).with.offset(0);
+        make.left.equalTo(_selectBtn.mas_right).with.offset(space);
+        make.width.equalTo(@(ImageWidth*SizeScaleWidth));
+        make.height.equalTo(@(ImageHeight*SizeScaleWidth));
+    }];
+    [_infoLabel mas_updateConstraints:^(MASConstraintMaker *make) {
+        make.top.equalTo(_goodsImageView.mas_top).with.offset(-6);
+        make.left.equalTo(_goodsImageView.mas_right).with.offset(10);
+        make.right.equalTo(self.contentView).with.offset(-5);
+        make.height.equalTo(@(35*SizeScaleHeight));
+    }];
+    [_numLabel mas_updateConstraints:^(MASConstraintMaker *make) {
+        make.top.equalTo(_infoLabel.mas_bottom).with.offset(5);
+        make.left.equalTo(_goodsImageView.mas_right).with.offset(10);
+        make.right.equalTo(self.contentView).with.offset(0);
+    }];
+    [_priceLabel mas_updateConstraints:^(MASConstraintMaker *make) {
+        make.top.equalTo(_numLabel.mas_bottom).with.offset(0);
+        make.left.equalTo(_goodsImageView.mas_right).with.offset(10);
+        make.right.equalTo(self.contentView).with.offset(0);
+    }];
+    [_goods_noLabel mas_updateConstraints:^(MASConstraintMaker *make) {
+        make.top.equalTo(_priceLabel.mas_bottom).with.offset(0);
+        make.left.equalTo(_goodsImageView.mas_right).with.offset(10);
+        make.right.equalTo(self.contentView).with.offset(0);
+    }];
+}
 - (void)setCellContentWithPurchaseInfo:(NSDictionary *)purchaseDic
 {
+    // 如果sid为0, 表示该商品为聚合商品, 不可以直接操作采购, 订货,或者缺货
     PurchaseInfoModel *purchaseModel = [PurchaseInfoModel mj_objectWithKeyValues:purchaseDic];
+    if (purchaseModel.sid == 0) {
+        self.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+        self.countView.hidden = YES;
+        [self setCellContentConstraintsWithStatus:NO];
+    }else{
+        self.accessoryType = UITableViewCellAccessoryNone;
+        self.countView.hidden = NO;
+        [self setCellContentConstraintsWithStatus:YES];
+    }
     self.numLimit = purchaseModel.wait_to_buy;  // 数量限制
     
-    NSString *need_buyStr = NSLocalizedString(@"待采购数", @"待采购数");
-    NSString *price_str = NSLocalizedString(@"价格", @"价格");
-    NSString *goods_No = NSLocalizedString(@"商品条码", @"商品条码");
-    
+    NSString *need_buyStr = NSInternationalString(@"待采购数", @"待采购数");
+    NSString *price_str = NSInternationalString(@"价格", @"价格");
+    NSString *goods_No = NSInternationalString(@"商品条码", @"商品条码");
     NSString *detailStr;
     NSRange infoRange = NSMakeRange(0, purchaseModel.brand_name.length);
     if (purchaseModel.brand_name == nil || purchaseModel.brand_name.length == 0) {
@@ -162,8 +227,14 @@ static const float CountHeight = 28;
     }else{
         detailStr = [NSString stringWithFormat:@"%@  %@",SAFE_STRING(purchaseModel.brand_name),SAFE_STRING(purchaseModel.des)];
     }
-    NSString *numStr = [NSString stringWithFormat:@"%@：%d    %@:%.2f",need_buyStr,(int)purchaseModel.wait_to_buy,price_str,purchaseModel.price];
-    NSString *goods_NoStr = [NSString stringWithFormat:@"%@：%@",goods_No,purchaseModel.goods_no];
+    NSString *numStr = [NSString stringWithFormat:@"%@：%d",need_buyStr,(int)purchaseModel.wait_to_buy];
+    NSString *priceStr = [NSString stringWithFormat:@"%@：%.2f",price_str,purchaseModel.price];
+    NSString *goods_NoStr;
+    if (purchaseModel.goods_no.length == 0) {
+        goods_NoStr = [NSString stringWithFormat:@"%@：--",goods_No];
+    }else{
+        goods_NoStr = [NSString stringWithFormat:@"%@：%@",goods_No,purchaseModel.goods_no];
+    }
     
     [_goodsImageView sd_setImageWithURL:[NSURL URLWithString:SAFE_STRING(purchaseModel.img_url)]];
     [_infoLabel setText:detailStr afterInheritingLabelAttributesAndConfiguringWithBlock:^NSMutableAttributedString *(NSMutableAttributedString *mutableAttributedString) {
@@ -180,6 +251,7 @@ static const float CountHeight = 28;
         return mutableAttributedString;
     }];
     [_numLabel setText:numStr];
+    [_priceLabel setText:priceStr];
     [_goods_noLabel setText:goods_NoStr afterInheritingLabelAttributesAndConfiguringWithBlock:^NSMutableAttributedString *(NSMutableAttributedString *mutableAttributedString) {
         NSRange noRange = NSMakeRange(goods_No.length+1, goods_NoStr.length-goods_No.length-1);
         //设定可点击文字的的大小
@@ -244,10 +316,8 @@ static const float CountHeight = 28;
 }
 - (void)tapAction
 {
-    if (_isEdit == NO) {
-        if (self.theDelegate && [self.theDelegate respondsToSelector:@selector(imageTapAction:)]) {
-            [self.theDelegate imageTapAction:self];
-        }
+    if (self.theDelegate && [self.theDelegate respondsToSelector:@selector(imageTapAction:)]) {
+        [self.theDelegate imageTapAction:self];
     }
 }
 - (void)numCutBtnAction:(UIButton *)btn

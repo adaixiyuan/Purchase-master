@@ -61,6 +61,7 @@
 		E9F5CCD01CECA7F90000206F /* KeyNoteModel.m in Sources */ = {isa = PBXBuildFile; fileRef = E9F5CCCF1CECA7F90000206F /* KeyNoteModel.m */; };
 		E9F665071D0A6F190068A4A3 /* SetViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E9F665061D0A6F190068A4A3 /* SetViewController.m */; };
 		E9F6650A1D0A74250068A4A3 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = E9F6650C1D0A74250068A4A3 /* Localizable.strings */; };
+		E9F665111D0AB6020068A4A3 /* PurchaseChildViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E9F665101D0AB6020068A4A3 /* PurchaseChildViewController.m */; };
 		E9F7070B1CDDC52B009DD292 /* HomePageCell.m in Sources */ = {isa = PBXBuildFile; fileRef = E9F7070A1CDDC52B009DD292 /* HomePageCell.m */; };
 		E9F7070E1CDDC9D4009DD292 /* GoodsInfoCell.m in Sources */ = {isa = PBXBuildFile; fileRef = E9F7070D1CDDC9D4009DD292 /* GoodsInfoCell.m */; };
 		E9F707121CDDD0C8009DD292 /* SearchViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E9F707111CDDD0C8009DD292 /* SearchViewController.m */; };
@@ -179,6 +180,8 @@
 		E9F6650B1D0A74250068A4A3 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		E9F6650D1D0A74280068A4A3 /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Base; path = Base.lproj/Localizable.strings; sourceTree = "<group>"; };
 		E9F6650E1D0A74C20068A4A3 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		E9F6650F1D0AB6020068A4A3 /* PurchaseChildViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PurchaseChildViewController.h; sourceTree = "<group>"; };
+		E9F665101D0AB6020068A4A3 /* PurchaseChildViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PurchaseChildViewController.m; sourceTree = "<group>"; };
 		E9F707091CDDC52B009DD292 /* HomePageCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HomePageCell.h; sourceTree = "<group>"; };
 		E9F7070A1CDDC52B009DD292 /* HomePageCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HomePageCell.m; sourceTree = "<group>"; };
 		E9F7070C1CDDC9D4009DD292 /* GoodsInfoCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GoodsInfoCell.h; sourceTree = "<group>"; };
@@ -353,6 +356,8 @@
 				E9429A841CEB43D5007E6893 /* PurchaseOrderViewController.m */,
 				E9429A871CEB43D5007E6893 /* PurchaseOrderCell.h */,
 				E9429A861CEB43D5007E6893 /* PurchaseOrderCell.m */,
+				E9F6650F1D0AB6020068A4A3 /* PurchaseChildViewController.h */,
+				E9F665101D0AB6020068A4A3 /* PurchaseChildViewController.m */,
 			);
 			path = PurchaseOrderVC;
 			sourceTree = "<group>";
@@ -694,6 +699,7 @@
 				E9F707121CDDD0C8009DD292 /* SearchViewController.m in Sources */,
 				E9F7070B1CDDC52B009DD292 /* HomePageCell.m in Sources */,
 				E92AEF751CDE1E1700ABBCAF /* NetworkManager.m in Sources */,
+				E9F665111D0AB6020068A4A3 /* PurchaseChildViewController.m in Sources */,
 				E9E8198B1CF7412F00780217 /* TaoBaoChildViewController.m in Sources */,
 				E98EAB3E1CDA40FD000E5244 /* GoodsInfoViewController.m in Sources */,
 				E9D8E6AA1CE81E1700FDC3AB /* BrandListViewController.m in Sources */,
