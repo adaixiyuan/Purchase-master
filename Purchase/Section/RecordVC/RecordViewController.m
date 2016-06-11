@@ -120,7 +120,6 @@ static const NSInteger CellTag = 1000;
     [self.navigationController pushViewController:searchVC animated:YES];
     __weak typeof(self) weakSelf = self;
     searchVC.beginSearchWithTheKey = ^(NSString *des,NSString *brand,NSString *type, NSString *date, NSString *location){
-        
         UIButton *button = (UIButton *)[weakSelf.topView viewWithTag:[type integerValue]+TopTag-1];
         [weakSelf typeSwitch:button];
     };
@@ -287,6 +286,7 @@ static const NSInteger CellTag = 1000;
     [parametersDic setObject:SAFE_STRING([SearchInfoModel shareInstance].keyStr) forKey:@"des"];
     [parametersDic setObject:SAFE_STRING([SearchInfoModel shareInstance].dateStr) forKey:@"date"];
     [parametersDic setObject:SAFE_STRING([SearchInfoModel shareInstance].brandName) forKey:@"brand_name"];
+    [parametersDic setObject:SAFE_STRING([SearchInfoModel shareInstance].goods_no) forKey:@"goods_no"];
     
     [[NetworkManager sharedInstance] startRequestWithURL:kBuyRecordRequest method:RequestPost parameters:parametersDic result:^(AFHTTPRequestOperation *operation, id responseObject) {
         

@@ -14,7 +14,7 @@
             buildForArchiving = "YES">
             <BuildableReference
                BuildableIdentifier = 'primary'
-               BlueprintIdentifier = 'FD2F1522A5977DEE2BE1437E'
+               BlueprintIdentifier = '2678BB0084166EC7C1555F83'
                BlueprintName = 'UIActionSheet+Blocks'
                ReferencedContainer = 'container:Pods.xcodeproj'
                BuildableName = 'libUIActionSheet+Blocks.a'>

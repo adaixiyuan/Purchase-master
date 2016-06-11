@@ -11,7 +11,6 @@
 #import "GoodsInfoEditViewController.h"
 #import "BrandsViewController.h"
 #import "DatePickerView.h"
-#import "LocationListViewController.h"
 #import "KeyNoteModel.h"
 
 static const float HeadHeight = 42;
@@ -51,17 +50,6 @@ static const NSInteger TitleTag = 100;
 #pragma mark - Event
 - (void)publishAction:(UIButton *)btn
 {
-    if (self.keyNoteModel.brands.length > 0) {
-        self.keyNoteModel.tag = self.keyNoteModel.brands;
-        if (self.keyNoteModel.locations.length > 0) {
-            self.keyNoteModel.tag = [NSString stringWithFormat:@"%@,%@",self.keyNoteModel.brands,self.keyNoteModel.locations];
-        }
-    }else{
-        if (self.keyNoteModel.locations.length > 0) {
-            self.keyNoteModel.tag = [NSString stringWithFormat:@"%@,%@",self.keyNoteModel.brands,self.keyNoteModel.locations];
-        }
-    }
-    
     [MYMBProgressHUD showHudWithMessage:NSInternationalString(@"请稍等···", @"请稍等···") InView:self.view];
     NSMutableDictionary *publishDic = [[NSMutableDictionary alloc]init];
     [publishDic setObject:@"add" forKey:@"action"];
@@ -187,7 +175,7 @@ static const NSInteger TitleTag = 100;
     if (section == 0 || section == 1) {
         return 1;
     }else{
-        return 5;
+        return 4;
     }
 }
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -210,8 +198,8 @@ static const NSInteger TitleTag = 100;
     }else{
         cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
         
-        NSArray *titles = @[NSInternationalString(@"标题", @"标题"),NSInternationalString(@"类型", @"类型"),NSInternationalString(@"失效时间", @"失效时间"),NSInternationalString(@"品牌", @"品牌"),NSInternationalString(@"地址", @"地址")];
-        NSArray *details_list = @[SAFE_STRING(self.keyNoteModel.title),SAFE_STRING(self.keyNoteModel.typeStr),SAFE_STRING(self.keyNoteModel.expire_dt),SAFE_STRING(self.keyNoteModel.brands),SAFE_STRING(self.keyNoteModel.locations)];
+        NSArray *titles = @[NSInternationalString(@"标题", @"标题"),NSInternationalString(@"类型", @"类型"),NSInternationalString(@"失效时间", @"失效时间"),NSInternationalString(@"标签", @"标签")];
+        NSArray *details_list = @[SAFE_STRING(self.keyNoteModel.title),SAFE_STRING(self.keyNoteModel.typeStr),SAFE_STRING(self.keyNoteModel.expire_dt),SAFE_STRING(self.keyNoteModel.tag)];
         cell.textLabel.text = titles[indexPath.row];
         cell.detailTextLabel.text = details_list[indexPath.row];
     }
@@ -237,14 +225,16 @@ static const NSInteger TitleTag = 100;
                 NSArray *titles = @[NSInternationalString(@"普通信息", @"普通信息"),NSInternationalString(@"折扣信息", @"折扣信息")];
                 [UIActionSheet showInView:self.view
                                 withTitle:nil
-                        cancelButtonTitle:nil
+                        cancelButtonTitle:NSInternationalString(@"取消", @"取消")
                    destructiveButtonTitle:nil
                         otherButtonTitles:titles
                                  tapBlock:^(UIActionSheet * _Nonnull actionSheet, NSInteger buttonIndex) {
-                                     weakSelf.keyNoteModel.type = buttonIndex+1;
-                                     weakSelf.keyNoteModel.typeStr = titles[buttonIndex];
-                                     [weakSelf.theTableView reloadData];
-                }];
+                                     if(buttonIndex < 2){
+                                         weakSelf.keyNoteModel.type = buttonIndex+1;
+                                         weakSelf.keyNoteModel.typeStr = titles[buttonIndex];
+                                         [weakSelf.theTableView reloadData];
+                                     }
+                                 }];
             }
                 break;
             case 2:{
@@ -258,21 +248,11 @@ static const NSInteger TitleTag = 100;
             }
                 break;
             case 3:{
-                BrandsViewController *brandListVC = [[BrandsViewController alloc]init];
-                brandListVC.brandStr = SAFE_STRING(self.keyNoteModel.brands);
-                brandListVC.domain = @"Product";
-                [self.navigationController pushViewController:brandListVC animated:YES];
-                brandListVC.selectTheBrand = ^(NSString *brandStr){
-                    weakSelf.keyNoteModel.brands = SAFE_STRING(brandStr);
-                    [weakSelf.theTableView reloadData];
-                };
-            }
-                break;
-            case 4:{
-                LocationListViewController *locationVC = [[LocationListViewController alloc]init];
-                [self.navigationController pushViewController:locationVC animated:YES];
-                locationVC.saveTheAddress = ^(NSString *locationStr){
-                    self.keyNoteModel.locations = SAFE_STRING(locationStr);
+                GoodsInfoEditViewController *goodsInfoVC = [[GoodsInfoEditViewController alloc]init];
+                goodsInfoVC.titleStr = NSInternationalString(@"标签", @"标签");
+                [self.navigationController pushViewController:goodsInfoVC animated:YES];
+                goodsInfoVC.updateTheGoodsInfo = ^(NSString *info){
+                    weakSelf.keyNoteModel.tag = SAFE_STRING(info);
                     [weakSelf.theTableView reloadData];
                 };
             }

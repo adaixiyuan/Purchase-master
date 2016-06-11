@@ -176,11 +176,14 @@ static const NSInteger CellTag = 1000;
     NSMutableDictionary *parametersDic = [[NSMutableDictionary alloc]init];
     [parametersDic setObject:@"get" forKey:@"action"];
     [parametersDic setObject:@(self.pageNum) forKey:@"page_no"];
-    [parametersDic setObject:@"true" forKey:@"group_tb"];
     [parametersDic setObject:SAFE_STRING([SearchInfoModel shareInstance].keyStr) forKey:@"des"];
     [parametersDic setObject:SAFE_STRING([SearchInfoModel shareInstance].typeID) forKey:@"types"];
     [parametersDic setObject:SAFE_STRING([SearchInfoModel shareInstance].locationStr) forKey:@"locs"];
     [parametersDic setObject:SAFE_STRING([SearchInfoModel shareInstance].brandName) forKey:@"brand_name"];
+    [parametersDic setObject:SAFE_STRING([SearchInfoModel shareInstance].goods_no) forKey:@"goods_no"];
+    if ([SearchInfoModel shareInstance].keyStr.length == 0 && [SearchInfoModel shareInstance].typeID.length == 0 && [SearchInfoModel shareInstance].locationStr.length == 0 && [SearchInfoModel shareInstance].brandName.length == 0 && [SearchInfoModel shareInstance].goods_no.length == 0) {
+        [parametersDic setObject:@"true" forKey:@"group_tb"];
+    }
     
     [[NetworkManager sharedInstance] startRequestWithURL:kOrderRequest method:RequestPost parameters:parametersDic result:^(AFHTTPRequestOperation *operation, id responseObject) {
         [self.theTableView.mj_header endRefreshing];

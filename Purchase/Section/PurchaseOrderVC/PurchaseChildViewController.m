@@ -7,7 +7,7 @@
 //
 
 #import "PurchaseChildViewController.h"
-#import "PurchaseOrderCell.h"
+#import "PurchaseChildCell.h"
 #import "SearchInfoModel.h"
 #import "GoodsShowViewController.h"
 
@@ -69,7 +69,7 @@ static const NSInteger CellTag = 1000;
         NSDictionary *purchaseDic = [[NSDictionary alloc]initWithDictionary:[self.purchaseList objectAtIndex:[self.selectList[i] integerValue]]];
         [sid_list addObject:[NSString stringWithFormat:@"%d",[[purchaseDic objectForKey:@"sid"] intValue]]];
         NSIndexPath *indexPath =  [NSIndexPath indexPathForRow:0 inSection:[self.selectList[i] integerValue]];
-        PurchaseOrderCell *cell = (PurchaseOrderCell *)[self.theTableView cellForRowAtIndexPath:indexPath];
+        PurchaseChildCell *cell = (PurchaseChildCell *)[self.theTableView cellForRowAtIndexPath:indexPath];
         [qty_list addObject:SAFE_STRING(cell.numText.text)];
     }
     NSString *sidStr = [sid_list componentsJoinedByString:@","];
@@ -185,9 +185,9 @@ static const NSInteger CellTag = 1000;
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     NSString *identifier = [NSString stringWithFormat:@"cell%d%d",(int)indexPath.section,(int)indexPath.row];
-    PurchaseOrderCell *cell = [tableView dequeueReusableCellWithIdentifier:identifier];
+    PurchaseChildCell *cell = [tableView dequeueReusableCellWithIdentifier:identifier];
     if (!cell) {
-        cell = [[PurchaseOrderCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:identifier];
+        cell = [[PurchaseChildCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:identifier];
     }
     if(self.setNumTextOriginal == YES){
         cell.numText.text = @"0";
@@ -208,7 +208,7 @@ static const NSInteger CellTag = 1000;
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
-    PurchaseOrderCell *cell = (PurchaseOrderCell *)[tableView cellForRowAtIndexPath:indexPath];
+    PurchaseChildCell *cell = (PurchaseChildCell *)[tableView cellForRowAtIndexPath:indexPath];
     cell.selectBtn.selected = !cell.selectBtn.selected;
     if (cell.selectBtn.selected == YES) {
         if (![self.selectList containsObject:@(cell.tag-CellTag)]) {
@@ -225,7 +225,7 @@ static const NSInteger CellTag = 1000;
 #pragma mark - CellDelegate
 - (void)imageTapAction:(id)sender
 {
-    PurchaseOrderCell *cell = (PurchaseOrderCell *)sender;
+    PurchaseChildCell *cell = (PurchaseChildCell *)sender;
     GoodsShowViewController *goodsShowVC = [[GoodsShowViewController alloc]initWithDelegate:self];
     [goodsShowVC setCurrentPhotoIndex:cell.tag - CellTag];
     [self.navigationController pushViewController:goodsShowVC animated:YES];
@@ -238,7 +238,7 @@ static const NSInteger CellTag = 1000;
 }
 - (void)updateCellSelectStatus:(id)sender
 {
-    PurchaseOrderCell *cell = (PurchaseOrderCell *)sender;
+    PurchaseChildCell *cell = (PurchaseChildCell *)sender;
     if (cell.selectBtn.selected == YES) {
         if (![self.selectList containsObject:@(cell.tag-CellTag)]) {
             [self.selectList addObject:@(cell.tag-CellTag)];

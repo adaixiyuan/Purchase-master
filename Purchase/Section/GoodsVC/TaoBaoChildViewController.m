@@ -10,7 +10,7 @@
 #import "TaoBaoChildCell.h"
 #import "GoodsShowViewController.h"
 
-static const float RowHeight = 125;
+static const float RowHeight = 130;
 static const NSInteger CellTag = 1000;
 
 @interface TaoBaoChildViewController ()<UITableViewDelegate,UITableViewDataSource,CellDelegate,MWPhotoBrowserDelegate>
@@ -55,7 +55,7 @@ static const NSInteger CellTag = 1000;
     [parametersDic setObject:@"get" forKey:@"action"];
     [parametersDic setObject:SAFE_STRING(self.goods_type) forKey:@"type"];
     [parametersDic setObject:@(self.pageNum) forKey:@"page_no"];
-    [parametersDic setObject:@(self.num_iid) forKey:@"num_iid"];
+    [parametersDic setObject:self.num_iid forKey:@"num_iid"];
     
     [[NetworkManager sharedInstance] startRequestWithURL:kProductRequest method:RequestPost parameters:parametersDic result:^(AFHTTPRequestOperation *operation, id responseObject) {
         

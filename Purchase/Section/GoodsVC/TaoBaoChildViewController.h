@@ -10,6 +10,6 @@
 
 @interface TaoBaoChildViewController : BaseViewController
 
-@property (nonatomic, assign) NSInteger num_iid;
+@property (nonatomic, strong) NSString *num_iid;
 
 @end

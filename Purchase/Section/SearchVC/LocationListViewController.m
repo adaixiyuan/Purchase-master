@@ -37,7 +37,9 @@ static const float BarHeight = 44;
 #pragma mark - Request
 - (void)getLocationRequest
 {
-    [[NetworkManager sharedInstance] startRequestWithURL:kLocactionRequest method:RequestPost parameters:nil result:^(AFHTTPRequestOperation *operation, id responseObject) {
+    NSMutableDictionary *parametersDic = [[NSMutableDictionary alloc]init];
+    [parametersDic setObject:SAFE_STRING(self.searchBar.text) forKey:@"loc_name"];
+    [[NetworkManager sharedInstance] startRequestWithURL:kLocactionRequest method:RequestPost parameters:parametersDic result:^(AFHTTPRequestOperation *operation, id responseObject) {
         [MYMBProgressHUD hideHudFromView:self.view];
         self.locationList = [[NSArray alloc]initWithArray:[responseObject objectForKey:@"data"]];
         self.searchList = [[NSMutableArray alloc]initWithArray:self.locationList];
@@ -76,11 +78,13 @@ static const float BarHeight = 44;
         cell.detailTextLabel.textColor = SHALLOWBLACK;
     }
     NSDictionary *locationDic = [[NSDictionary alloc]initWithDictionary:self.searchList[indexPath.row]];
-    
-    NSString *loc_str = NSInternationalString(@"地点", @"地点");
-    NSString *need_str = NSInternationalString(@"待采购总数", @"待采购总数");
-    cell.textLabel.text = [NSString stringWithFormat:@"%@：%@",loc_str,SAFE_STRING([locationDic objectForKey:@"loc_name"])];
-    cell.detailTextLabel.text = [NSString stringWithFormat:@"%@：%@",need_str,SAFE_NUMBER([locationDic objectForKey:@"wait_to_buy"])];
+    NSString *loc_name = SAFE_STRING([locationDic objectForKey:@"loc_name"]);
+    if (loc_name.length > 0) {
+        cell.textLabel.text = [NSString stringWithFormat:@"%@",SAFE_STRING([locationDic objectForKey:@"loc_name"])];
+    }else{
+        cell.textLabel.text = @"--";
+    }
+    cell.detailTextLabel.text = [NSString stringWithFormat:@"%@",SAFE_NUMBER([locationDic objectForKey:@"wait_to_buy"])];
     
     if ([[SearchInfoModel shareInstance].locationStr isEqualToString:SAFE_STRING(cell.textLabel.text)]) {
         cell.textLabel.textColor = NAVBARCOLOR;
@@ -113,13 +117,13 @@ static const float BarHeight = 44;
 {
     [self searchBar:self.searchBar textDidChange:self.searchBar.text];
     [self.searchBar resignFirstResponder];
+    [self getLocationRequest];
 }
 - (void)searchBar:(UISearchBar *)searchBar textDidChange:(NSString *)searchText
 {
     if (self.searchList != nil) {
         [self.searchList removeAllObjects];
     }
-    
     for (NSDictionary *locationDic in self.locationList) {
         if ([[locationDic objectForKey:@"loc_name"] rangeOfString:searchText].location != NSNotFound) {
             [self.searchList addObject:locationDic];

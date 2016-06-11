@@ -179,7 +179,6 @@ static const float RowHeight = 44;
 - (NSArray *)titles
 {
     if (_titles == nil) {
-        [UserInfoModel shareInstance].role = @"buyer+";
         if([[UserInfoModel shareInstance].role isEqualToString:@"buyer"]){
             _titles = @[NSInternationalString(@"首页", @"首页"),NSInternationalString(@"采购列表", @"采购列表"),NSInternationalString(@"记录", @"记录"),NSInternationalString(@"商品信息", @"商品信息"),NSInternationalString(@"设置", @"设置"),NSInternationalString(@"退出登录", @"退出登录")];
         }else{
@@ -192,7 +191,6 @@ static const float RowHeight = 44;
 - (NSArray *)iconImages
 {
     if (_iconImages == nil) {
-        [UserInfoModel shareInstance].role = @"buyer+";
         if([[UserInfoModel shareInstance].role isEqualToString:@"buyer"]){
             _iconImages = @[@"home_page",@"order_icon",@"record_icon",@"goods_icon",@"set_icon",@"exit_icon"];
         }else{

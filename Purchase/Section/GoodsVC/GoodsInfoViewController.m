@@ -13,7 +13,7 @@
 #import "SearchInfoModel.h"
 #import "TaoBaoChildViewController.h"
 
-static const float RowHeight = 125;
+static const float RowHeight = 130;
 static const float TopHeight = 40;
 static const NSInteger TopTag = 100;
 static const NSInteger CellTag = 1000;
@@ -139,6 +139,7 @@ static const NSInteger CellTag = 1000;
     [parametersDic setObject:SAFE_STRING([SearchInfoModel shareInstance].keyStr) forKey:@"des"];
     [parametersDic setObject:SAFE_STRING([SearchInfoModel shareInstance].dateStr) forKey:@"date"];
     [parametersDic setObject:SAFE_STRING([SearchInfoModel shareInstance].brandName) forKey:@"brand_name"];
+    [parametersDic setObject:SAFE_STRING([SearchInfoModel shareInstance].goods_no) forKey:@"goods_no"];
     
     [[NetworkManager sharedInstance] startRequestWithURL:kProductRequest method:RequestPost parameters:parametersDic result:^(AFHTTPRequestOperation *operation, id responseObject) {
         
@@ -232,7 +233,7 @@ static const NSInteger CellTag = 1000;
         NSDictionary *goodsInfoDic = [[NSDictionary alloc]initWithDictionary:self.taobaoList[indexPath.row]];
         if ([SAFE_NUMBER([goodsInfoDic objectForKey:@"has_child"]) integerValue] == 1) {
             TaoBaoChildViewController *taobaoChildVC = [[TaoBaoChildViewController alloc]init];
-            taobaoChildVC.num_iid = [[goodsInfoDic objectForKey:@"num_iid"] integerValue];
+            taobaoChildVC.num_iid = SAFE_STRING([goodsInfoDic objectForKey:@"num_iid"]);
             [self.navigationController pushViewController:taobaoChildVC animated:YES];
         }
     }

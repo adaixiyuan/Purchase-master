@@ -20,6 +20,7 @@
 @property (nonatomic, strong) UIImageView        *goodsImageView;
 @property (nonatomic, strong) TTTAttributedLabel *goodsDesLabel;
 @property (nonatomic, strong) TTTAttributedLabel *priceLabel;
+@property (nonatomic, strong) TTTAttributedLabel *goods_noLabel;
 @property (nonatomic, strong) TTTAttributedLabel *sellLabel;
 @property (nonatomic, strong) TTTAttributedLabel *storeLabel;
 @property (nonatomic, strong) TTTAttributedLabel *waitToBuyLabel;

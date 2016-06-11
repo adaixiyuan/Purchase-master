@@ -11,7 +11,12 @@
 #import "GoodsShowViewController.h"
 #import "AddKeyNoteViewController.h"
 #import "UpdateKeyNoteViewController.h"
+#import "DXPopover.h"
+#import "SearchKeyNoteViewController.h"
+#import "SearchInfoModel.h"
 
+static const float DataViewWight = 100;
+static const float DataViewRowHight = 35;
 static const float RowHeight = 100;
 static const NSInteger CellTag = 1000;
 static const float BootomHeight = 45;
@@ -21,6 +26,7 @@ static const NSInteger BottomTag = 100;
 
 @property (nonatomic, strong) UITableView    *theTableView;
 @property (nonatomic, strong) UIButton       *editButton;
+@property (nonatomic, strong) DXPopover      *popoverView;
 @property (nonatomic, strong) UIView         *bottomView;
 @property (nonatomic, strong) NSMutableArray *keyNoteList;
 @property (nonatomic, assign) NSInteger      pageNum;
@@ -35,6 +41,7 @@ static const NSInteger BottomTag = 100;
     [super viewWillDisappear:animated];
     self.isEdit = YES;
     [self navEditAction:nil];
+    [self.popoverView dismiss];
 }
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -64,35 +71,82 @@ static const NSInteger BottomTag = 100;
 }
 - (void)creatRightNavView
 {
-    UIView *rightView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, 95, 40)];
+    UIView *rightView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, 90, 40)];
     rightView.backgroundColor = [UIColor clearColor];
-    
-    UIButton *addButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    addButton.frame = CGRectMake(0, 0, 40, 40);
-    addButton.backgroundColor = [UIColor clearColor];
-    [addButton setImage:[UIImage imageNamed:@"add_icon"] forState:UIControlStateNormal];
-    [addButton addTarget:self action:@selector(addkeyNoteAction:) forControlEvents:UIControlEventTouchUpInside];
-    [rightView addSubview:addButton];
-    
+
     self.editButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    self.editButton.frame = CGRectMake(45, 0, 50, 40);
+    self.editButton.frame = CGRectMake(0, 0, 45, 40);
     self.editButton.backgroundColor = [UIColor clearColor];
     [self.editButton setTitle:NSInternationalString(@"编辑", @"编辑") forState:UIControlStateNormal];
     [self.editButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     self.editButton.titleLabel.font = [UIFont customFontOfSize:13];
-    [self.editButton setContentHorizontalAlignment:UIControlContentHorizontalAlignmentRight];
     [self.editButton addTarget:self action:@selector(navEditAction:) forControlEvents:UIControlEventTouchUpInside];
     [rightView addSubview:self.editButton];
+    
+    UIButton *moreButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    moreButton.frame = CGRectMake(45, 0, 45, 40);
+    moreButton.backgroundColor = [UIColor clearColor];
+    [moreButton setTitle:NSInternationalString(@"更多", @"更多") forState:UIControlStateNormal];
+    [moreButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    moreButton.titleLabel.font = [UIFont customFontOfSize:13];
+    [moreButton addTarget:self action:@selector(moreButtonAction:) forControlEvents:UIControlEventTouchUpInside];
+    [rightView addSubview:moreButton];
     
     [self.navigationItem setRightBarButtonItem:[[UIBarButtonItem alloc] initWithCustomView:rightView] animated:YES];
 }
 #pragma mark - Event
-- (void)addkeyNoteAction:(UIButton *)btn
+- (void)moreButtonAction:(UIButton *)btn
+{
+    UIView *bgView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, DataViewWight*SizeScaleWidth, DataViewRowHight*SizeScaleHeight*2)];
+    bgView.backgroundColor = [UIColor whiteColor];
+    
+    UIButton *addButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    addButton.frame = CGRectMake(0, 0, DataViewWight*SizeScaleWidth, DataViewRowHight*SizeScaleHeight);
+    addButton.backgroundColor = [UIColor clearColor];
+    [addButton setTitle:NSInternationalString(@"新增重点", @"新增重点") forState:UIControlStateNormal];
+    [addButton setTitleColor:SHALLOWBLACK forState:UIControlStateNormal];
+    addButton.titleLabel.font = [UIFont customFontOfSize:13];
+    [addButton addTarget:self action:@selector(addkeyNoteAction:) forControlEvents:UIControlEventTouchUpInside];
+    [bgView addSubview:addButton];
+    UIButton *searchButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    searchButton.frame = CGRectMake(0, DataViewRowHight*SizeScaleHeight, DataViewWight*SizeScaleWidth, DataViewRowHight*SizeScaleHeight);
+    searchButton.backgroundColor = [UIColor clearColor];
+    [searchButton setTitle:NSInternationalString(@"搜索", @"搜索") forState:UIControlStateNormal];
+    [searchButton setTitleColor:SHALLOWBLACK forState:UIControlStateNormal];
+    searchButton.titleLabel.font = [UIFont customFontOfSize:13];
+    [searchButton addTarget:self action:@selector(searchkeyNoteAction:) forControlEvents:UIControlEventTouchUpInside];
+    [bgView addSubview:searchButton];
+
+    UIView *line = [[UIView alloc]initWithFrame:CGRectMake(0, DataViewRowHight*SizeScaleHeight-HalfScale, bgView.frame.size.width, HalfScale)];
+    line.backgroundColor = [UIColor colorFromHexRGB:@"DFDFDF"];
+    [bgView addSubview:line];
+    
+    CGPoint startPoint = CGPointMake(ScreenWidth-40, 60);
+    self.popoverView = [DXPopover popover];
+    [self.popoverView showAtPoint:startPoint
+          popoverPostion:DXPopoverPositionDown
+         withContentView:bgView
+                  inView:self.navigationController.view];
+}
+- (void)addkeyNoteAction:(id *)sender
 {
     AddKeyNoteViewController *addKeyNoteVC = [[AddKeyNoteViewController alloc]init];
     [self.navigationController pushViewController:addKeyNoteVC animated:YES];
     __weak typeof(self) weakSelf = self;
     addKeyNoteVC.updataKeyNote = ^(){
+        [weakSelf getTheKeyNoteRequest];
+    };
+}
+- (void)searchkeyNoteAction:(id *)sender
+{
+    SearchKeyNoteViewController *searchVC = [[SearchKeyNoteViewController alloc]init];
+    [SearchInfoModel shareInstance].fromType = FromHomePageVC;
+    [SearchInfoModel shareInstance].typeList = @[NSInternationalString(@"普通信息", @"普通信息"),NSInternationalString(@"折扣信息", @"折扣信息")];
+    [self.navigationController pushViewController:searchVC animated:YES];
+    __weak typeof(self) weakSelf = self;
+    searchVC.beginSearchWithTheKey = ^(){
+        weakSelf.pageNum = 1;
+        [MYMBProgressHUD showHudWithMessage:NSInternationalString(@"请稍等···", @"请稍等···") InView:weakSelf.view];
         [weakSelf getTheKeyNoteRequest];
     };
 }
@@ -173,6 +227,11 @@ static const NSInteger BottomTag = 100;
     [parametersDic setObject:@([UserInfoModel shareInstance].user_sid) forKey:@"user_sid"];
     [parametersDic setObject:SAFE_STRING([NSDate getCurrentStrDate]) forKey:@"date"];
     [parametersDic setObject:@(self.pageNum) forKey:@"page_no"];
+    
+    [parametersDic setObject:SAFE_STRING([SearchInfoModel shareInstance].typeID) forKey:@"type"];
+    [parametersDic setObject:SAFE_STRING([SearchInfoModel shareInstance].tag) forKey:@"tag"];
+    [parametersDic setObject:SAFE_STRING([SearchInfoModel shareInstance].title) forKey:@"title"];
+    [parametersDic setObject:SAFE_STRING([SearchInfoModel shareInstance].content) forKey:@"content"];
     
     [[NetworkManager sharedInstance] startRequestWithURL:kKeyNoteRequest method:RequestPost parameters:parametersDic result:^(AFHTTPRequestOperation *operation, id responseObject) {
         

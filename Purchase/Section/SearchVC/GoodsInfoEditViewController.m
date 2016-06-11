@@ -67,7 +67,6 @@ static const float TextHeight = 45;
         _theTextField.backgroundColor = [UIColor clearColor];
         _theTextField.font = [UIFont customFontOfSize:14];
         _theTextField.textColor = SHALLOWBLACK;
-        _theTextField.placeholder = NSInternationalString(@"请输入相关信息", @"请输入相关信息");
         _theTextField.clearButtonMode = UITextFieldViewModeWhileEditing;
         _theTextField.returnKeyType = UIReturnKeyDone;
         if ([_titleStr isEqualToString:NSInternationalString(@"收购个数", @"收购个数")]) {
@@ -75,6 +74,8 @@ static const float TextHeight = 45;
         }else if ([_titleStr isEqualToString:NSInternationalString(@"价格", @"价格")]){
             _theTextField.keyboardType = UIKeyboardTypeNumbersAndPunctuation;
         }
+        _theTextField.placeholder = NSInternationalString(@"请输入相关信息", @"请输入相关信息");
+        _theTextField.text = _contentStr;
         [_bgView addSubview:_theTextField];
         [_theTextField mas_makeConstraints:^(MASConstraintMaker *make) {
             make.center.equalTo(_bgView).with.offset(0);

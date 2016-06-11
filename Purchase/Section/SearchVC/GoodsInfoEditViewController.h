@@ -11,6 +11,7 @@
 @interface GoodsInfoEditViewController : BaseViewController
 
 @property (nonatomic, strong) NSString *titleStr;
+@property (nonatomic, strong) NSString *contentStr;
 @property (nonatomic, copy) void (^updateTheGoodsInfo)(NSString *infoStr);
 
 @end

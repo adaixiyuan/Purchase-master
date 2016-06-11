@@ -60,11 +60,13 @@ install_resource()
 if [[ "$CONFIGURATION" == "Debug" ]]; then
   install_resource "MJRefresh/MJRefresh/MJRefresh.bundle"
   install_resource "RSKImageCropper/RSKImageCropper/RSKImageCropperStrings.bundle"
+  install_resource "${BUILT_PRODUCTS_DIR}/DXPopover.bundle"
   install_resource "${BUILT_PRODUCTS_DIR}/MWPhotoBrowser.bundle"
 fi
 if [[ "$CONFIGURATION" == "Release" ]]; then
   install_resource "MJRefresh/MJRefresh/MJRefresh.bundle"
   install_resource "RSKImageCropper/RSKImageCropper/RSKImageCropperStrings.bundle"
+  install_resource "${BUILT_PRODUCTS_DIR}/DXPopover.bundle"
   install_resource "${BUILT_PRODUCTS_DIR}/MWPhotoBrowser.bundle"
 fi
 

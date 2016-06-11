@@ -13,6 +13,7 @@
 #import "TypeListViewController.h"
 #import "LocationListViewController.h"
 #import "DatePickerView.h"
+#import "CodeScanViewController.h"
 
 static const float RowHeight = 42;
 static const float FootHeight = 80;
@@ -114,9 +115,9 @@ static const float FootHeight = 80;
     
     NSArray *detailsStrs;
     if([SearchInfoModel shareInstance].fromType != FromPurchaseVC){
-        detailsStrs = @[SAFE_STRING([SearchInfoModel shareInstance].keyStr),SAFE_STRING([SearchInfoModel shareInstance].brandName),SAFE_STRING([SearchInfoModel shareInstance].typeName),SAFE_STRING([SearchInfoModel shareInstance].dateStr)];
+        detailsStrs = @[SAFE_STRING([SearchInfoModel shareInstance].keyStr),SAFE_STRING([SearchInfoModel shareInstance].brandName),SAFE_STRING([SearchInfoModel shareInstance].typeName),SAFE_STRING([SearchInfoModel shareInstance].goods_no),SAFE_STRING([SearchInfoModel shareInstance].dateStr)];
     }else{
-        detailsStrs = @[SAFE_STRING([SearchInfoModel shareInstance].keyStr),SAFE_STRING([SearchInfoModel shareInstance].brandName),SAFE_STRING([SearchInfoModel shareInstance].typeName),SAFE_STRING([SearchInfoModel shareInstance].locationStr)];
+        detailsStrs = @[SAFE_STRING([SearchInfoModel shareInstance].keyStr),SAFE_STRING([SearchInfoModel shareInstance].brandName),SAFE_STRING([SearchInfoModel shareInstance].typeName),SAFE_STRING([SearchInfoModel shareInstance].goods_no),SAFE_STRING([SearchInfoModel shareInstance].locationStr)];
     }
     cell.detailTextLabel.text = detailsStrs[indexPath.row];
     
@@ -161,6 +162,40 @@ static const float FootHeight = 80;
         }
             break;
         case 3:{
+            __weak typeof(self) weakSelf = self;
+            [UIActionSheet showInView:self.view
+                            withTitle:nil
+                    cancelButtonTitle:NSInternationalString(@"取消", @"取消")
+               destructiveButtonTitle:nil
+                    otherButtonTitles:@[NSInternationalString(@"手动输入", @"手动输入"),NSInternationalString(@"相机扫描", @"相机扫描")]
+                             tapBlock:^(UIActionSheet * _Nonnull actionSheet, NSInteger buttonIndex) {
+                                 if (buttonIndex == 0) {
+                                     UIAlertView *alert = [[UIAlertView alloc]initWithTitle:nil
+                                                                                    message:NSInternationalString(@"请输入商品条码", @"请输入商品条码")
+                                                                                   delegate:self
+                                                                          cancelButtonTitle:NSInternationalString(@"取消", @"取消")
+                                                                          otherButtonTitles:NSInternationalString(@"确定", @"确定"), nil];
+                                     alert.alertViewStyle = UIAlertViewStylePlainTextInput;
+                                     alert.tapBlock = ^(UIAlertView *alertView, NSInteger buttonIndex) {
+                                         [[[UIApplication sharedApplication] keyWindow] endEditing:YES];
+                                         if (buttonIndex == 1) {
+                                             [SearchInfoModel shareInstance].goods_no = SAFE_STRING([[alertView textFieldAtIndex:0] text]);
+                                             [weakSelf.theTableView reloadData];
+                                         }
+                                     };
+                                     [alert show];
+                                 }else if (buttonIndex == 1){
+                                     CodeScanViewController *codeScanVC = [[CodeScanViewController alloc]init];
+                                     [weakSelf.navigationController pushViewController:codeScanVC animated:YES];
+                                     codeScanVC.sendTheCode = ^(NSString *goods_no){
+                                         [SearchInfoModel shareInstance].goods_no = SAFE_STRING(goods_no);
+                                         [weakSelf.theTableView reloadData];
+                                     };
+                                 }
+                             }];
+        }
+            break;
+        case 4:{
             if([SearchInfoModel shareInstance].fromType != FromPurchaseVC){
                 DatePickerView *dateView = [[DatePickerView alloc]init];
                 [dateView showInView:self.view];
@@ -205,9 +240,9 @@ static const float FootHeight = 80;
 {
     if (_baseArray == nil) {
         if([SearchInfoModel shareInstance].fromType != FromPurchaseVC){
-            _baseArray = @[NSInternationalString(@"关键字", @"关键字"),NSInternationalString(@"品牌", @"品牌"),NSInternationalString(@"类型", @"类型"),NSInternationalString(@"日期", @"日期")];
+            _baseArray = @[NSInternationalString(@"关键字", @"关键字"),NSInternationalString(@"品牌", @"品牌"),NSInternationalString(@"类型", @"类型"),NSInternationalString(@"条码", @"条码"),NSInternationalString(@"日期", @"日期")];
         }else{
-            _baseArray = @[NSInternationalString(@"关键字", @"关键字"),NSInternationalString(@"品牌", @"品牌"),NSInternationalString(@"类型", @"类型"),NSInternationalString(@"地点", @"地点")];
+            _baseArray = @[NSInternationalString(@"关键字", @"关键字"),NSInternationalString(@"品牌", @"品牌"),NSInternationalString(@"类型", @"类型"),NSInternationalString(@"条码", @"条码"),NSInternationalString(@"地点", @"地点")];
         }
     }
     return _baseArray;

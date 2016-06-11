@@ -38,6 +38,8 @@
 "发布" = "Publish";
 "更新重点" = "Update Note";
 "正在删除···" = "Deleting···";
+"标签" = "Tag";
+"更多" = "More";
 
 "保存" = "Save";
 "请输入相关信息" = "Please input the information";
@@ -87,6 +89,7 @@
 "系统商品" = "Stock product";
 "实拍商品" = "Real Time product";
 "最近购入价：--" = "Price：--";
+"商品条码：--" = "Goods_No：--";
 "最近购入价" = "Price";
 "销量" = "Sales";
 "库存" = "Stock";
