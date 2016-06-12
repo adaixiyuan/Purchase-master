@@ -16,6 +16,16 @@
 			<key>orderHint</key>
 			<integer>16</integer>
 		</dict>
+		<key>DXPopover-DXPopover.xcscheme</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>22</integer>
+		</dict>
+		<key>DXPopover.xcscheme</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>21</integer>
+		</dict>
 		<key>FMDB.xcscheme</key>
 		<dict>
 			<key>orderHint</key>
@@ -147,7 +157,22 @@
 			<key>primary</key>
 			<true/>
 		</dict>
+		<key>13D4A6218794EE591D43A104C75E45B6</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>15E71DC389AF81EB7D768EBA0F13A0C2</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
 		<key>2C24838B9AC46C2831D6D82DA888C93E</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>2D3D303A7B2566A03D5D19995DB79DF7</key>
 		<dict>
 			<key>primary</key>
 			<true/>
@@ -177,6 +202,11 @@
 			<key>primary</key>
 			<true/>
 		</dict>
+		<key>4FB082B5B040F5CE065AAB6E41708DA2</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
 		<key>523064333D49CF2729A5EE238B1CC9C1</key>
 		<dict>
 			<key>primary</key>
@@ -192,6 +222,16 @@
 			<key>primary</key>
 			<true/>
 		</dict>
+		<key>73BD472700D32CC5ED8D34965C749DD0</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>7A0E0F2CBDD9D03F8FB398D5CBDFD167</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
 		<key>7A1770B0BA643D6FF47C2E56CC700B3F</key>
 		<dict>
 			<key>primary</key>
@@ -202,7 +242,17 @@
 			<key>primary</key>
 			<true/>
 		</dict>
+		<key>7E0FF13636DECD774D31C5D8AD293121</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
 		<key>810DDE09C703A3C0B5690CA799E318E9</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>88350F3AEC9A0D00D77048E766330F3F</key>
 		<dict>
 			<key>primary</key>
 			<true/>
@@ -237,12 +287,27 @@
 			<key>primary</key>
 			<true/>
 		</dict>
+		<key>A2176B898A6DFC0114822798517FB8D7</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>A58ED53C59BB03ADEE5F6C0DE4AEC6AA</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
 		<key>AC2C24A7A4F078D2B51837C5DC765B22</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
 		<key>AEC1DBA6801D52C7EA61CB6FED2D8073</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>BD25B2157D8BCA944D6FF3EC2B073ECB</key>
 		<dict>
 			<key>primary</key>
 			<true/>

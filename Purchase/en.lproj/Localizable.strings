@@ -55,6 +55,7 @@
 "批量订购" = "Order All";
 "批量缺货" = "Lack All";
 "请输入缺货地点" = "Please input the place";
+"请输入订货地点" = "Please input the place";
 "搜索" = "Search";
 "关键字" = "Key words";
 "地点" = "Loc";
@@ -64,6 +65,9 @@
 "实时发布商品" = "Real Time Order";
 "待采购总数" = "Need";
 "请选择批量操作的商品！" = "Please select the goods！";
+"是" = "YES";
+"否" = "NO";
+"聚合" = "IsGroup";
 
 "采购" = "Buy Record";
 "订货" = "Order Record";

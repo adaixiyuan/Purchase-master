@@ -11,7 +11,7 @@
 #import "SearchInfoModel.h"
 #import "GoodsShowViewController.h"
 
-static const float RowHeight = 145;
+static const float RowHeight = 140;
 static const float BottomHeight = 40;
 static const NSInteger CellTag = 1000;
 

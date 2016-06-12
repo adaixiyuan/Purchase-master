@@ -13,7 +13,7 @@
 #import "GoodsShowViewController.h"
 #import "PurchaseChildViewController.h"
 
-static const float RowHeight = 145;
+static const float RowHeight = 140;
 static const float BottomHeight = 40;
 static const NSInteger CellTag = 1000;
 
@@ -47,6 +47,7 @@ static const NSInteger CellTag = 1000;
     [self.view addSubview:self.theTableView];
     [self.view addSubview:self.bottomView];
     
+    [SearchInfoModel shareInstance].groupStatus = YES;
     self.pageNum = 1;
     self.purchaseList = [[NSMutableArray alloc]init];
     // 获取采购单列表
@@ -66,7 +67,7 @@ static const NSInteger CellTag = 1000;
 - (void)creatRightNavView
 {
     UIButton *searchButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    searchButton.frame = CGRectMake(0, 0, 30, 30);
+    searchButton.frame = CGRectMake(0, 0, 45, 40);
     searchButton.backgroundColor = [UIColor clearColor];
     [searchButton setImage:[UIImage imageNamed:@"nav_search"] forState:UIControlStateNormal];
     [searchButton addTarget:self action:@selector(navSearchAction:) forControlEvents:UIControlEventTouchUpInside];
@@ -124,7 +125,23 @@ static const NSInteger CellTag = 1000;
     if ([btn.titleLabel.text isEqualToString:NSInternationalString(@"批量采购", @"批量采购")]) {
         [self purchaseOrderWithSid:sidStr withQty:qtyStr withLoc:nil withAction:@"purchase"];
     }else if ([btn.titleLabel.text isEqualToString:NSInternationalString(@"批量订购", @"批量订购")]){
-        [self purchaseOrderWithSid:sidStr withQty:qtyStr withLoc:nil withAction:@"reserve"];
+        __weak typeof(self) weakSelf = self;
+        UIAlertView *alert = [[UIAlertView alloc]initWithTitle:nil
+                                                       message:NSInternationalString(@"请输入订货地点", @"请输入订货地点")
+                                                      delegate:self
+                                             cancelButtonTitle:NSInternationalString(@"取消", @"取消")
+                                             otherButtonTitles:NSInternationalString(@"确定", @"确定"), nil];
+        alert.alertViewStyle = UIAlertViewStylePlainTextInput;
+        alert.tapBlock = ^(UIAlertView *alertView, NSInteger buttonIndex) {
+            [[[UIApplication sharedApplication] keyWindow] endEditing:YES];
+            if (buttonIndex == 1) {
+                [weakSelf purchaseOrderWithSid:sidStr withQty:qtyStr withLoc:SAFE_STRING([alertView textFieldAtIndex:0].text) withAction:@"reserve"];
+            }
+        };
+        alert.shouldEnableFirstOtherButtonBlock = ^BOOL(UIAlertView *alertView) {
+            return ([[[alertView textFieldAtIndex:0] text] length] > 0);
+        };
+        [alert show];
     }else{
         __weak typeof(self) weakSelf = self;
         UIAlertView *alert = [[UIAlertView alloc]initWithTitle:nil
@@ -154,6 +171,11 @@ static const NSInteger CellTag = 1000;
     [parametersDic setObject:@([UserInfoModel shareInstance].user_sid) forKey:@"user_sid"];
     [parametersDic setObject:SAFE_STRING(sid) forKey:@"sid"];
     [parametersDic setObject:SAFE_STRING(qty) forKey:@"qty"];
+    if([action isEqualToString:@"out_of_stock"]){
+        [parametersDic setObject:SAFE_STRING(loc) forKey:@"lack_loc"];
+    }else if([action isEqualToString:@"reserve"]){
+        [parametersDic setObject:SAFE_STRING(loc) forKey:@"reserve_loc"];
+    }
     
     [[NetworkManager sharedInstance] startRequestWithURL:kOrderRequest method:RequestPost parameters:parametersDic result:^(AFHTTPRequestOperation *operation, id responseObject) {
         
@@ -181,7 +203,7 @@ static const NSInteger CellTag = 1000;
     [parametersDic setObject:SAFE_STRING([SearchInfoModel shareInstance].locationStr) forKey:@"locs"];
     [parametersDic setObject:SAFE_STRING([SearchInfoModel shareInstance].brandName) forKey:@"brand_name"];
     [parametersDic setObject:SAFE_STRING([SearchInfoModel shareInstance].goods_no) forKey:@"goods_no"];
-    if ([SearchInfoModel shareInstance].keyStr.length == 0 && [SearchInfoModel shareInstance].typeID.length == 0 && [SearchInfoModel shareInstance].locationStr.length == 0 && [SearchInfoModel shareInstance].brandName.length == 0 && [SearchInfoModel shareInstance].goods_no.length == 0) {
+    if ([SearchInfoModel shareInstance].groupStatus == YES) {
         [parametersDic setObject:@"true" forKey:@"group_tb"];
     }
     
@@ -233,7 +255,7 @@ static const NSInteger CellTag = 1000;
     NSDictionary *purchaseDic = [[NSDictionary alloc]initWithDictionary:[self.purchaseList objectAtIndex:indexPath.section]];
     PurchaseInfoModel *purchaseModel = [PurchaseInfoModel mj_objectWithKeyValues:purchaseDic];
     if (purchaseModel.sid == 0){
-        return RowHeight*SizeScaleHeight-15;
+        return RowHeight*SizeScaleHeight-35;
     }else{
         return RowHeight*SizeScaleHeight;
     }

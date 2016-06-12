@@ -125,7 +125,7 @@ static const float CountHeight = 28;
             make.width.and.height.equalTo(@25);
         }];
         [_goodsImageView mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.centerY.equalTo(self.contentView).with.offset(0);
+            make.centerY.equalTo(self.contentView).with.offset(-5);
             make.left.equalTo(_selectBtn.mas_right).with.offset(10);
             make.width.equalTo(@(ImageWidth*SizeScaleWidth));
             make.height.equalTo(@(ImageHeight*SizeScaleWidth));
@@ -175,7 +175,7 @@ static const float CountHeight = 28;
         make.width.and.height.equalTo(@(2.5*space));
     }];
     [_goodsImageView mas_updateConstraints:^(MASConstraintMaker *make) {
-        make.centerY.equalTo(self.contentView).with.offset(0);
+        make.centerY.equalTo(self.contentView).with.offset(-5);
         make.left.equalTo(_selectBtn.mas_right).with.offset(space);
         make.width.equalTo(@(ImageWidth*SizeScaleWidth));
         make.height.equalTo(@(ImageHeight*SizeScaleWidth));

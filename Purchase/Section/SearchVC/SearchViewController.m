@@ -117,7 +117,13 @@ static const float FootHeight = 80;
     if([SearchInfoModel shareInstance].fromType != FromPurchaseVC){
         detailsStrs = @[SAFE_STRING([SearchInfoModel shareInstance].keyStr),SAFE_STRING([SearchInfoModel shareInstance].brandName),SAFE_STRING([SearchInfoModel shareInstance].typeName),SAFE_STRING([SearchInfoModel shareInstance].goods_no),SAFE_STRING([SearchInfoModel shareInstance].dateStr)];
     }else{
-        detailsStrs = @[SAFE_STRING([SearchInfoModel shareInstance].keyStr),SAFE_STRING([SearchInfoModel shareInstance].brandName),SAFE_STRING([SearchInfoModel shareInstance].typeName),SAFE_STRING([SearchInfoModel shareInstance].goods_no),SAFE_STRING([SearchInfoModel shareInstance].locationStr)];
+        NSString *groupStatusStr;
+        if ([SearchInfoModel shareInstance].groupStatus == YES) {
+            groupStatusStr = NSInternationalString(@"是", @"是");
+        }else{
+            groupStatusStr = NSInternationalString(@"否", @"否");
+        }
+        detailsStrs = @[SAFE_STRING([SearchInfoModel shareInstance].keyStr),SAFE_STRING([SearchInfoModel shareInstance].brandName),SAFE_STRING([SearchInfoModel shareInstance].typeName),SAFE_STRING([SearchInfoModel shareInstance].goods_no),SAFE_STRING([SearchInfoModel shareInstance].locationStr),groupStatusStr];
     }
     cell.detailTextLabel.text = detailsStrs[indexPath.row];
     
@@ -213,6 +219,22 @@ static const float FootHeight = 80;
             }
         }
             break;
+        case 5:{
+            [UIActionSheet showInView:self.view
+                            withTitle:nil
+                    cancelButtonTitle:NSInternationalString(@"取消", @"取消")
+               destructiveButtonTitle:nil
+                    otherButtonTitles:@[NSInternationalString(@"是", "是"),NSInternationalString(@"否", @"否")]
+                             tapBlock:^(UIActionSheet * _Nonnull actionSheet, NSInteger buttonIndex) {
+                                 if(buttonIndex == 0){
+                                     [SearchInfoModel shareInstance].groupStatus = YES;
+                                 }else if (buttonIndex == 1){
+                                     [SearchInfoModel shareInstance].groupStatus = NO;
+                                 }
+                                 [tableView reloadData];
+                             }];
+        }
+            break;
         default:
             break;
     }
@@ -242,7 +264,7 @@ static const float FootHeight = 80;
         if([SearchInfoModel shareInstance].fromType != FromPurchaseVC){
             _baseArray = @[NSInternationalString(@"关键字", @"关键字"),NSInternationalString(@"品牌", @"品牌"),NSInternationalString(@"类型", @"类型"),NSInternationalString(@"条码", @"条码"),NSInternationalString(@"日期", @"日期")];
         }else{
-            _baseArray = @[NSInternationalString(@"关键字", @"关键字"),NSInternationalString(@"品牌", @"品牌"),NSInternationalString(@"类型", @"类型"),NSInternationalString(@"条码", @"条码"),NSInternationalString(@"地点", @"地点")];
+            _baseArray = @[NSInternationalString(@"关键字", @"关键字"),NSInternationalString(@"品牌", @"品牌"),NSInternationalString(@"类型", @"类型"),NSInternationalString(@"条码", @"条码"),NSInternationalString(@"地点", @"地点"),NSInternationalString(@"聚合", @"聚合")];
         }
     }
     return _baseArray;

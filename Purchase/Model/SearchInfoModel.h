@@ -34,6 +34,8 @@ typedef NS_ENUM(NSInteger , FromVCType) {
 @property (nonatomic, strong) NSString   *dateStr;
 @property (nonatomic, strong) NSString   *locationStr;
 
+@property (nonatomic, assign) BOOL       groupStatus; // 采购单是否聚合
+
 /**
  *  重点内容
  */
