@@ -86,7 +86,7 @@
         }
         NSMutableArray *typeNames = [[NSMutableArray alloc]init];
         for (int i = 0; i < typeIDs.count; i++) {
-            [typeNames addObject:[[SearchInfoModel shareInstance].typeList objectAtIndex:i]];
+            [typeNames addObject:[[SearchInfoModel shareInstance].typeList objectAtIndex:[[typeIDs objectAtIndex:i] integerValue]-1]];
         }
         NSString *typeName = [typeNames componentsJoinedByString:@","];
         if (self.selectTheType) {
