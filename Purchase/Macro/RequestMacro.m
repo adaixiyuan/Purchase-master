@@ -11,7 +11,7 @@
 /**
  *  服务器地址
  */
-NSString * const kHostName = @"http://wmstest.xunleiex.com/Admin/Api/";
+NSString * const kHostName = @"http://wms.xunleiex.com/Admin/Api/";
 /**
  *  key
  */
