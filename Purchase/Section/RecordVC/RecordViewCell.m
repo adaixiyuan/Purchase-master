@@ -75,6 +75,7 @@ static const float ImageHeight = 80;
         _numText.keyboardType = UIKeyboardTypeNumberPad;
         _numText.returnKeyType = UIReturnKeyDone;
         _numText.delegate = self;
+        _numText.text = @"0";
         [self.contentView addSubview:_numText];
         
         _timeLabel = [[UILabel alloc]init];
@@ -140,7 +141,6 @@ static const float ImageHeight = 80;
 }
 - (void)setCellContentConstraintsWithStatus:(BOOL)isEdit
 {
-    _numText.text = nil;
     self.isEdit = isEdit;
     float space = 0.0;
     if (isEdit == NO) {
@@ -262,6 +262,17 @@ static const float ImageHeight = 80;
 {
     [textField resignFirstResponder];
     return YES;
+}
+- (void)textFieldDidBeginEditing:(UITextField *)textField
+{
+    textField.text = @"";
+}
+- (void)textFieldDidEndEditing:(UITextField *)textField
+{
+    [textField resignFirstResponder];
+    if (textField.text.length == 0) {
+        textField.text = @"0";
+    }
 }
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string
 {

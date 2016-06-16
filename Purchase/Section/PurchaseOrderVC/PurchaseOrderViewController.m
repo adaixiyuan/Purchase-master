@@ -25,7 +25,7 @@ static const NSInteger CellTag = 1000;
 @property (nonatomic, assign) NSInteger      pageNum;
 @property (nonatomic, strong) NSMutableArray *purchaseList;
 @property (nonatomic, strong) NSMutableArray *selectList;
-@property (nonatomic, strong) NSMutableArray *qty_list; // 数量
+@property (nonatomic, strong) NSMutableArray *qty_list;
 
 @property (nonatomic, strong) NSString       *searchDesStr;// 搜索关键字
 @property (nonatomic, strong) NSString       *searchBrandStr;// 搜索品牌
@@ -212,6 +212,7 @@ static const NSInteger CellTag = 1000;
         NSArray *dataList = [[NSArray alloc]initWithArray:[responseObject objectForKey:@"data"]];
         if (self.pageNum == 1){
             self.purchaseList = [[NSMutableArray alloc]initWithArray:dataList];
+            self.selectList = [[NSMutableArray alloc]init];
         }else{
             [self.purchaseList addObjectsFromArray:dataList];
         }
@@ -265,12 +266,12 @@ static const NSInteger CellTag = 1000;
     if (!cell) {
         cell = [[PurchaseOrderCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:identifier];
     }
+    cell.tag = CellTag+indexPath.section;
+    cell.theDelegate = self;
+    
     if(self.setNumTextOriginal == YES){
         cell.numText.text = @"0";
     }
-    cell.tag = CellTag+indexPath.section;
-    cell.theDelegate = self;
-   
     NSDictionary *purchaseDic = [[NSDictionary alloc]initWithDictionary:[self.purchaseList objectAtIndex:indexPath.section]];
     [cell setCellContentWithPurchaseInfo:purchaseDic];
     
@@ -303,7 +304,6 @@ static const NSInteger CellTag = 1000;
     GoodsShowViewController *goodsShowVC = [[GoodsShowViewController alloc]initWithDelegate:self];
     [goodsShowVC setCurrentPhotoIndex:cell.tag - CellTag];
     [self.navigationController pushViewController:goodsShowVC animated:YES];
-    
     __weak typeof(self) weakSelf = self;
     goodsShowVC.selectGoodsIndex = ^(NSInteger index){
         NSIndexPath *indexPath = [NSIndexPath indexPathForRow:0 inSection:index];
@@ -318,13 +318,15 @@ static const NSInteger CellTag = 1000;
         if (![self.selectList containsObject:purchaseDic]) {
             [self.selectList addObject:purchaseDic];
             [self.qty_list addObject:SAFE_STRING(cell.numText.text)];
-            [self.theTableView reloadData];
+        }else{
+            NSInteger index = (NSInteger)[self.selectList indexOfObject:purchaseDic];
+            [self.qty_list replaceObjectAtIndex:index withObject:SAFE_STRING(cell.numText.text)];
         }
     }else{
         if ([self.selectList containsObject:purchaseDic]) {
+            NSInteger index = (NSInteger)[self.selectList indexOfObject:purchaseDic];
+            [self.qty_list removeObjectAtIndex:index];
             [self.selectList removeObject:purchaseDic];
-            [self.qty_list removeObjectAtIndex:cell.tag-CellTag];
-            [self.theTableView reloadData];
         }
     }
     [self purchaseEditAction];
@@ -349,7 +351,7 @@ static const NSInteger CellTag = 1000;
     return SAFE_STRING([infoDic objectForKey:@"brand_name"]);
 }
 #pragma mark - Set && Get
-- (UITableView *)theTableView
+- (AutoTableView *)theTableView
 {
     if (_theTableView == nil) {
         _theTableView = [[AutoTableView alloc]initWithFrame:CGRectMake(0, 0, ScreenWidth, ScreenHeight-64) style:UITableViewStyleGrouped];

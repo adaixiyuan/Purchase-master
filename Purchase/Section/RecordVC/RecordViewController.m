@@ -21,7 +21,7 @@ static const NSInteger CellTag = 1000;
 
 @interface RecordViewController ()<UITableViewDelegate,UITableViewDataSource,MGSwipeTableCellDelegate,CellDelegate,MWPhotoBrowserDelegate>
 
-@property (nonatomic, strong) AutoTableView       *theTableView;
+@property (nonatomic, strong) UITableView       *theTableView;
 @property (nonatomic, strong) UIButton            *editButton;
 @property (nonatomic, strong) UIView              *topView;
 @property (nonatomic, strong) UIView              *animateView;
@@ -34,7 +34,10 @@ static const NSInteger CellTag = 1000;
 @property (nonatomic, strong) NSMutableArray      *bookList;    // 订货
 
 @property (nonatomic, strong) NSMutableArray      *seleceGoodsList; // 编辑时的勾选项
+@property (nonatomic, strong) NSMutableArray      *quantity_list; // 新个数
 @property (nonatomic, strong) NSArray             *goodsList;   // 照片浏览器
+
+@property (nonatomic, assign) BOOL                setNumTextOriginal; // numtext 还原
 
 @end
 
@@ -46,7 +49,9 @@ static const NSInteger CellTag = 1000;
     self.navigationItem.title = NSInternationalString(@"记录", @"记录");
     
     self.seleceGoodsList = [[NSMutableArray alloc]init];
+    self.quantity_list = [[NSMutableArray alloc]init];
     self.isEdit = NO;
+    self.setNumTextOriginal = NO;
     self.record_type = @"1";
     // 创建导航栏右边按钮
     [self creatRightNavView];
@@ -129,6 +134,7 @@ static const NSInteger CellTag = 1000;
     btn.selected = !btn.selected;
     self.isEdit = !self.isEdit;
     self.seleceGoodsList = [[NSMutableArray alloc]init];
+    self.quantity_list = [[NSMutableArray alloc]init];
     
     __weak typeof(self) weakSelf = self;
     if (self.isEdit == YES) {
@@ -159,6 +165,7 @@ static const NSInteger CellTag = 1000;
     }];
     
     self.seleceGoodsList = [[NSMutableArray alloc]init];
+    self.quantity_list = [[NSMutableArray alloc]init];
     self.record_type = [NSString stringWithFormat:@"%d",(int)(btn.tag-TopTag+1)];
     self.pageNum_one = 1;
     self.pageNum_two = 1;
@@ -176,10 +183,17 @@ static const NSInteger CellTag = 1000;
                 [btn setTitle:NSInternationalString(@"全选", @"全选") forState:UIControlStateNormal];
             }
             self.seleceGoodsList = [[NSMutableArray alloc]init];
+            self.quantity_list = [[NSMutableArray alloc]init];
             if ([self.record_type integerValue] == 1 && btn.selected == YES) {
                 [self.seleceGoodsList addObjectsFromArray:self.purchaseList];
+                for (int i = 0; i < self.seleceGoodsList.count; i++) {
+                    [self.quantity_list addObject:@"0"];
+                }
             }else if ([self.record_type integerValue] == 2 && btn.selected == YES){
                 [self.seleceGoodsList addObjectsFromArray:self.bookList];
+                for (int i = 0; i < self.seleceGoodsList.count; i++) {
+                    [self.quantity_list addObject:@"0"];
+                }
             }
             [self.theTableView reloadData];
         }
@@ -205,7 +219,6 @@ static const NSInteger CellTag = 1000;
             [parametersDic setObject:SAFE_STRING(sid_str) forKey:@"sid"];
             [parametersDic setObject:SAFE_STRING(new_quantity_str) forKey:@"new_quantity"];
             [[NetworkManager sharedInstance] startRequestWithURL:kBuyRecordRequest method:RequestPost parameters:parametersDic result:^(AFHTTPRequestOperation *operation, id responseObject) {
-                [MYMBProgressHUD hideHudFromView:self.view];
                 self.seleceGoodsList = [[NSMutableArray alloc]init];
                 [self getBuyRecordListRequest];
             } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
@@ -229,22 +242,16 @@ static const NSInteger CellTag = 1000;
                     [rows addObject:@(row)];
                 }
             }
-            NSMutableArray *new_quantity_list = [[NSMutableArray alloc]init];
-            for (int i = 0;i < rows.count ; i++) {
-                NSIndexPath *row = [NSIndexPath indexPathForRow:[rows[i] integerValue] inSection:0];
-                RecordViewCell *cell = (RecordViewCell *)[self.theTableView cellForRowAtIndexPath:row];
-                [new_quantity_list addObject:SAFE_STRING(cell.numText.text)];
-            }
             NSMutableArray *sid_list = [[NSMutableArray alloc]init];
             for (NSDictionary *recordDic in self.seleceGoodsList) {
                 [sid_list addObject:@([[recordDic objectForKey:@"sid"] integerValue])];
             }
-            if ([new_quantity_list containsObject:@""]) {
+            if ([self.quantity_list containsObject:@""]) {
                 [MYMBProgressHUD showMessage:NSInternationalString(@"请输入勾选商品的更新数量！", @"请输入勾选商品的更新数量！")];
-            }else if([new_quantity_list containsObject:@"0"]){
+            }else if([self.quantity_list containsObject:@"0"]){
                 [MYMBProgressHUD showMessage:NSInternationalString(@"更新的商品个数要大于0！", @"更新的商品个数要大于0！")];
             }else{
-                NSString *new_quantity_str = [new_quantity_list componentsJoinedByString:@","];
+                NSString *new_quantity_str = [self.quantity_list componentsJoinedByString:@","];
                 NSString *sid_str = [sid_list componentsJoinedByString:@","];
                 [MYMBProgressHUD showHudWithMessage:NSInternationalString(@"请稍等···", @"请稍等···") InView:self.view];
                 NSMutableDictionary *parametersDic = [[NSMutableDictionary alloc]init];
@@ -253,11 +260,14 @@ static const NSInteger CellTag = 1000;
                 [parametersDic setObject:SAFE_STRING(self.record_type) forKey:@"type"];
                 [parametersDic setObject:SAFE_STRING(sid_str) forKey:@"sid"];
                 [parametersDic setObject:SAFE_STRING(new_quantity_str) forKey:@"new_quantity"];
-                
                 [[NetworkManager sharedInstance] startRequestWithURL:kBuyRecordRequest method:RequestPost parameters:parametersDic result:^(AFHTTPRequestOperation *operation, id responseObject) {
                     [MYMBProgressHUD hideHudFromView:self.view];
                     self.seleceGoodsList = [[NSMutableArray alloc]init];
+                    self.quantity_list = [[NSMutableArray alloc]init];
+                    self.setNumTextOriginal = YES; // 还原输入框
+                    [self.theTableView reloadData];
                     [self getBuyRecordListRequest];
+                    
                 } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
                     [MYMBProgressHUD hideHudFromView:self.view];
                     [MYMBProgressHUD showMessage:error.userInfo[@"NSLocalizedDescription"]];
@@ -307,6 +317,7 @@ static const NSInteger CellTag = 1000;
                 [self.bookList addObjectsFromArray:dataList];
             }
         }
+        self.setNumTextOriginal = NO; // 不还原输入框
         [self.theTableView reloadData];
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
         if ([self.record_type integerValue] == 1 && self.pageNum_one > 1) {
@@ -314,6 +325,8 @@ static const NSInteger CellTag = 1000;
         }else if([self.record_type integerValue] == 2 && self.pageNum_two > 1){
             self.pageNum_two--;
         }
+        self.setNumTextOriginal = NO; // 不还原输入框
+        [self.theTableView reloadData];
         [self.theTableView.mj_header endRefreshing];
         [self.theTableView.mj_footer endRefreshing];
         [MYMBProgressHUD hideHudFromView:self.view];
@@ -343,6 +356,9 @@ static const NSInteger CellTag = 1000;
     cell.delegate = self;
     cell.theDelegate = self;
     cell.tag = CellTag+indexPath.row;
+    if(self.setNumTextOriginal == YES){
+        cell.numText.text = @"0";
+    }
     [cell setCellContentConstraintsWithStatus:self.isEdit];
     
     NSDictionary *recordDic = [[NSDictionary alloc]init];
@@ -371,14 +387,54 @@ static const NSInteger CellTag = 1000;
         }else{
             recordDic = [[NSDictionary alloc]initWithDictionary:self.bookList[indexPath.row]];
         }
-        if ([self.seleceGoodsList containsObject:recordDic]) {
-            [self.seleceGoodsList removeObject:recordDic];
-            cell.selectButton.selected = NO;
-        }else{
+        cell.selectButton.selected = !cell.selectButton.selected;
+        [self btnSelectActionWithBtnStatus:cell.selectButton.selected withTarget:cell];
+    }
+}
+#pragma mark - CellDelegate
+- (void)btnSelectActionWithBtnStatus:(BOOL)isSelect withTarget:(id)sender
+{
+    RecordViewCell *cell = (RecordViewCell *)sender;
+    NSInteger row = cell.tag - CellTag;
+    NSMutableDictionary *recordDic = [[NSMutableDictionary alloc]init];
+    if ([self.record_type integerValue] == 1) {
+        recordDic = [[NSMutableDictionary alloc]initWithDictionary:self.purchaseList[row]];
+    }else{
+        recordDic = [[NSMutableDictionary alloc]initWithDictionary:self.bookList[row]];
+    }
+    if (isSelect == YES) {
+        if (![self.seleceGoodsList containsObject:recordDic]) {
             [self.seleceGoodsList addObject:recordDic];
-            cell.selectButton.selected = YES;
+            [self.quantity_list addObject:SAFE_STRING(cell.numText.text)];
+        }else{
+            NSInteger index = (NSInteger)[self.seleceGoodsList indexOfObject:recordDic];
+            [self.quantity_list replaceObjectAtIndex:index withObject:SAFE_STRING(cell.numText.text)];
+        }
+    }else{
+        if ([self.seleceGoodsList containsObject:recordDic]) {
+            NSInteger index = (NSInteger)[self.seleceGoodsList indexOfObject:recordDic];
+            [self.quantity_list removeObjectAtIndex:index];
+            [self.seleceGoodsList removeObject:recordDic];
         }
     }
+}
+- (void)imageTapAction:(id)sender
+{
+    RecordViewCell *cell = (RecordViewCell *)sender;
+    self.goodsList = [[NSArray alloc]init];
+    if ([self.record_type integerValue] == 1) {
+        self.goodsList = [[NSArray alloc]initWithArray:self.purchaseList];
+    }else{
+        self.goodsList = [[NSArray alloc]initWithArray:self.bookList];
+    }
+    GoodsShowViewController *goodsShowVC = [[GoodsShowViewController alloc]initWithDelegate:self];
+    [goodsShowVC setCurrentPhotoIndex:cell.tag - CellTag];
+    [self.navigationController pushViewController:goodsShowVC animated:YES];
+    __weak typeof(self) weakSelf = self;
+    goodsShowVC.selectGoodsIndex = ^(NSInteger index){
+        NSIndexPath *indexPath = [NSIndexPath indexPathForRow:index inSection:0];
+        [weakSelf.theTableView scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionMiddle animated:YES];
+    };
 }
 #pragma mark - MGSwipeTableCellDelegate
 - (BOOL)swipeTableCell:(RecordViewCell *)cell canSwipe:(MGSwipeDirection)direction
@@ -462,46 +518,6 @@ static const NSInteger CellTag = 1000;
     }
     return YES;
 }
-#pragma mark - CellDelegate
-- (void)btnSelectActionWithBtnStatus:(BOOL)isSelect withTarget:(id)sender
-{
-    RecordViewCell *cell = (RecordViewCell *)sender;
-    NSInteger row = cell.tag - CellTag;
-    NSMutableDictionary *recordDic = [[NSMutableDictionary alloc]init];
-    if ([self.record_type integerValue] == 1) {
-        recordDic = [[NSMutableDictionary alloc]initWithDictionary:self.purchaseList[row]];
-    }else{
-        recordDic = [[NSMutableDictionary alloc]initWithDictionary:self.bookList[row]];
-    }
-    if (isSelect == YES) {
-        if (![self.seleceGoodsList containsObject:recordDic]) {
-            [self.seleceGoodsList addObject:recordDic];
-        }
-    }else{
-        if ([self.seleceGoodsList containsObject:recordDic]) {
-            [self.seleceGoodsList removeObject:recordDic];
-        }
-    }
-}
-- (void)imageTapAction:(id)sender
-{
-    RecordViewCell *cell = (RecordViewCell *)sender;
-    self.goodsList = [[NSArray alloc]init];
-    if ([self.record_type integerValue] == 1) {
-        self.goodsList = [[NSArray alloc]initWithArray:self.purchaseList];
-    }else{
-        self.goodsList = [[NSArray alloc]initWithArray:self.bookList];
-    }
-    GoodsShowViewController *goodsShowVC = [[GoodsShowViewController alloc]initWithDelegate:self];
-    [goodsShowVC setCurrentPhotoIndex:cell.tag - CellTag];
-    [self.navigationController pushViewController:goodsShowVC animated:YES];
-    
-    __weak typeof(self) weakSelf = self;
-    goodsShowVC.selectGoodsIndex = ^(NSInteger index){
-        NSIndexPath *indexPath = [NSIndexPath indexPathForRow:index inSection:0];
-        [weakSelf.theTableView scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionMiddle animated:YES];
-    };
-}
 #pragma mark - MWPhotoBrowserDelegate
 - (NSUInteger)numberOfPhotosInPhotoBrowser:(MWPhotoBrowser *)photoBrowser
 {
@@ -567,10 +583,10 @@ static const NSInteger CellTag = 1000;
     }
     return _topView;
 }
-- (AutoTableView *)theTableView
+- (UITableView *)theTableView
 {
     if (_theTableView == nil) {
-        _theTableView = [[AutoTableView alloc]initWithFrame:CGRectMake(0, TopHeight*SizeScaleHeight, ScreenWidth, ScreenHeight-64-TopHeight*SizeScaleHeight) style:UITableViewStylePlain];
+        _theTableView = [[UITableView alloc]initWithFrame:CGRectMake(0, TopHeight*SizeScaleHeight, ScreenWidth, ScreenHeight-64-TopHeight*SizeScaleHeight) style:UITableViewStylePlain];
         _theTableView.backgroundColor = [UIColor clearColor];
         _theTableView.delegate = self;
         _theTableView.dataSource = self;

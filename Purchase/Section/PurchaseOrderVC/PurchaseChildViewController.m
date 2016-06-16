@@ -161,6 +161,7 @@ static const NSInteger CellTag = 1000;
         NSArray *dataList = [[NSArray alloc]initWithArray:[responseObject objectForKey:@"data"]];
         if (self.pageNum == 1){
             self.purchaseList = [[NSMutableArray alloc]initWithArray:dataList];
+            self.selectList = [[NSMutableArray alloc]init];
         }else{
             [self.purchaseList addObjectsFromArray:dataList];
         }
@@ -207,15 +208,15 @@ static const NSInteger CellTag = 1000;
     if (!cell) {
         cell = [[PurchaseChildCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:identifier];
     }
-    if(self.setNumTextOriginal == YES){
-        cell.numText.text = @"0";
-    }
     cell.tag = CellTag+indexPath.section;
     cell.theDelegate = self;
     
+    if(self.setNumTextOriginal == YES){
+        cell.numText.text = @"0";
+    }
+    
     NSDictionary *purchaseDic = [[NSDictionary alloc]initWithDictionary:[self.purchaseList objectAtIndex:indexPath.section]];
     [cell setCellContentWithPurchaseInfo:purchaseDic];
-    
     if ([self.selectList containsObject:purchaseDic]) {
         cell.selectBtn.selected = YES;
     }else{
@@ -252,13 +253,15 @@ static const NSInteger CellTag = 1000;
         if (![self.selectList containsObject:purchaseDic]) {
             [self.selectList addObject:purchaseDic];
             [self.qty_list addObject:SAFE_STRING(cell.numText.text)];
-            [self.theTableView reloadData];
+        }else{
+            NSInteger index = (NSInteger)[self.selectList indexOfObject:purchaseDic];
+            [self.qty_list replaceObjectAtIndex:index withObject:SAFE_STRING(cell.numText.text)];
         }
     }else{
         if ([self.selectList containsObject:purchaseDic]) {
+            NSInteger index = (NSInteger)[self.selectList indexOfObject:purchaseDic];
+            [self.qty_list removeObjectAtIndex:index];
             [self.selectList removeObject:purchaseDic];
-            [self.qty_list removeObjectAtIndex:cell.tag-CellTag];
-            [self.theTableView reloadData];
         }
     }
 }
@@ -282,7 +285,7 @@ static const NSInteger CellTag = 1000;
     return SAFE_STRING([infoDic objectForKey:@"brand_name"]);
 }
 #pragma mark - Set && Get
-- (UITableView *)theTableView
+- (AutoTableView *)theTableView
 {
     if (_theTableView == nil) {
         _theTableView = [[AutoTableView alloc]initWithFrame:CGRectMake(0, 0, ScreenWidth, ScreenHeight-64-BottomHeight*SizeScaleHeight) style:UITableViewStyleGrouped];
