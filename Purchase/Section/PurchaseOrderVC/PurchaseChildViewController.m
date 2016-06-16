@@ -23,6 +23,7 @@ static const NSInteger CellTag = 1000;
 @property (nonatomic, assign) NSInteger      pageNum;
 @property (nonatomic, strong) NSMutableArray *purchaseList;
 @property (nonatomic, strong) NSMutableArray *selectList;
+@property (nonatomic, strong) NSMutableArray *qty_list;
 
 @property (nonatomic, assign) BOOL           setNumTextOriginal; // numtext 还原
 
@@ -36,7 +37,7 @@ static const NSInteger CellTag = 1000;
     self.navigationItem.title = NSInternationalString(@"采购列表", @"采购列表");
     self.setNumTextOriginal = NO;
     self.selectList = [[NSMutableArray alloc]init];
-    
+    self.qty_list = [[NSMutableArray alloc]init];
     [self.view addSubview:self.theTableView];
     [self.view addSubview:self.bottomView];
     
@@ -64,16 +65,12 @@ static const NSInteger CellTag = 1000;
         return;
     }
     NSMutableArray *sid_list = [[NSMutableArray alloc]init];
-    NSMutableArray *qty_list = [[NSMutableArray alloc]init];
     for (int i = 0; i < self.selectList.count; i++) {
-        NSDictionary *purchaseDic = [[NSDictionary alloc]initWithDictionary:[self.purchaseList objectAtIndex:[self.selectList[i] integerValue]]];
+        NSDictionary *purchaseDic = [[NSDictionary alloc]initWithDictionary:self.selectList[i]];
         [sid_list addObject:[NSString stringWithFormat:@"%d",[[purchaseDic objectForKey:@"sid"] intValue]]];
-        NSIndexPath *indexPath =  [NSIndexPath indexPathForRow:0 inSection:[self.selectList[i] integerValue]];
-        PurchaseChildCell *cell = (PurchaseChildCell *)[self.theTableView cellForRowAtIndexPath:indexPath];
-        [qty_list addObject:SAFE_STRING(cell.numText.text)];
     }
     NSString *sidStr = [sid_list componentsJoinedByString:@","];
-    NSString *qtyStr = [qty_list componentsJoinedByString:@","];
+    NSString *qtyStr = [self.qty_list componentsJoinedByString:@","];
     if ([btn.titleLabel.text isEqualToString:NSInternationalString(@"批量采购", @"批量采购")]) {
         [self purchaseOrderWithSid:sidStr withQty:qtyStr withLoc:nil withAction:@"purchase"];
     }else if ([btn.titleLabel.text isEqualToString:NSInternationalString(@"批量订购", @"批量订购")]){
@@ -219,7 +216,7 @@ static const NSInteger CellTag = 1000;
     NSDictionary *purchaseDic = [[NSDictionary alloc]initWithDictionary:[self.purchaseList objectAtIndex:indexPath.section]];
     [cell setCellContentWithPurchaseInfo:purchaseDic];
     
-    if ([self.selectList containsObject:@(indexPath.section)]) {
+    if ([self.selectList containsObject:purchaseDic]) {
         cell.selectBtn.selected = YES;
     }else{
         cell.selectBtn.selected = NO;
@@ -231,17 +228,7 @@ static const NSInteger CellTag = 1000;
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     PurchaseChildCell *cell = (PurchaseChildCell *)[tableView cellForRowAtIndexPath:indexPath];
     cell.selectBtn.selected = !cell.selectBtn.selected;
-    if (cell.selectBtn.selected == YES) {
-        if (![self.selectList containsObject:@(cell.tag-CellTag)]) {
-            [self.selectList addObject:@(cell.tag-CellTag)];
-            [self.theTableView reloadData];
-        }
-    }else{
-        if ([self.selectList containsObject:@(cell.tag-CellTag)]) {
-            [self.selectList removeObject:@(cell.tag-CellTag)];
-            [self.theTableView reloadData];
-        }
-    }
+    [self updateCellSelectStatus:cell];
 }
 #pragma mark - CellDelegate
 - (void)imageTapAction:(id)sender
@@ -260,14 +247,17 @@ static const NSInteger CellTag = 1000;
 - (void)updateCellSelectStatus:(id)sender
 {
     PurchaseChildCell *cell = (PurchaseChildCell *)sender;
+    NSDictionary *purchaseDic = [[NSDictionary alloc]initWithDictionary:[self.purchaseList objectAtIndex:cell.tag-CellTag]];
     if (cell.selectBtn.selected == YES) {
-        if (![self.selectList containsObject:@(cell.tag-CellTag)]) {
-            [self.selectList addObject:@(cell.tag-CellTag)];
+        if (![self.selectList containsObject:purchaseDic]) {
+            [self.selectList addObject:purchaseDic];
+            [self.qty_list addObject:SAFE_STRING(cell.numText.text)];
             [self.theTableView reloadData];
         }
     }else{
-        if ([self.selectList containsObject:@(cell.tag-CellTag)]) {
-            [self.selectList removeObject:@(cell.tag-CellTag)];
+        if ([self.selectList containsObject:purchaseDic]) {
+            [self.selectList removeObject:purchaseDic];
+            [self.qty_list removeObjectAtIndex:cell.tag-CellTag];
             [self.theTableView reloadData];
         }
     }

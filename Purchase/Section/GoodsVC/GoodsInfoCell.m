@@ -39,7 +39,7 @@ static const float ImageHeight = 90;
         
         _goodsDesLabel = [[TTTAttributedLabel alloc]initWithFrame:CGRectZero];
         _goodsDesLabel.backgroundColor = [UIColor clearColor];
-        _goodsDesLabel.font = [UIFont customFontOfSize:14];
+        _goodsDesLabel.font = [UIFont customFontOfSize:13];
         _goodsDesLabel.textColor = SHALLOWBLACK;
         _goodsDesLabel.numberOfLines = 2;
         [self.contentView addSubview:_goodsDesLabel];
@@ -164,7 +164,7 @@ static const float ImageHeight = 90;
     [_goodsImageView sd_setImageWithURL:[NSURL URLWithString:SAFE_STRING(goodsModel.img_url)]];
     [_goodsDesLabel setText:detailStr afterInheritingLabelAttributesAndConfiguringWithBlock:^NSMutableAttributedString *(NSMutableAttributedString *mutableAttributedString) {
         //设定可点击文字的的大小
-        UIFont *systemFont = [UIFont customFontOfSize:14];
+        UIFont *systemFont = [UIFont customFontOfSize:13];
         CTFontRef font = CTFontCreateWithName((__bridge CFStringRef)systemFont.fontName, systemFont.pointSize, NULL);
         if (font) {
             //设置可点击文本的颜色

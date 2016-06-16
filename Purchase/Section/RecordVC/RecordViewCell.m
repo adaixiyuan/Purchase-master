@@ -49,7 +49,7 @@ static const float ImageHeight = 80;
         
         _goodsDetailsLabel = [[TTTAttributedLabel alloc]initWithFrame:CGRectZero];
         _goodsDetailsLabel.backgroundColor = [UIColor clearColor];
-        _goodsDetailsLabel.font = [UIFont customFontOfSize:14];
+        _goodsDetailsLabel.font = [UIFont customFontOfSize:13];
         _goodsDetailsLabel.textColor = SHALLOWBLACK;
         _goodsDetailsLabel.numberOfLines = 2;
         [self.contentView addSubview:_goodsDetailsLabel];
@@ -224,7 +224,7 @@ static const float ImageHeight = 80;
     [_goodsImageView sd_setImageWithURL:[NSURL URLWithString:SAFE_STRING(recordModel.img_url)]];
     [_goodsDetailsLabel setText:detailStr afterInheritingLabelAttributesAndConfiguringWithBlock:^NSMutableAttributedString *(NSMutableAttributedString *mutableAttributedString) {
         //设定可点击文字的的大小
-        UIFont *systemFont = [UIFont customFontOfSize:14];
+        UIFont *systemFont = [UIFont customFontOfSize:13];
         CTFontRef font = CTFontCreateWithName((__bridge CFStringRef)systemFont.fontName, systemFont.pointSize, NULL);
         if (font) {
             //设置可点击文本的大小

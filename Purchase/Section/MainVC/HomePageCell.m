@@ -55,13 +55,13 @@ static const float ImageHeight = 80;
         
         _titleLabel = [[UILabel alloc]init];
         _titleLabel.backgroundColor = [UIColor clearColor];
-        _titleLabel.font = [UIFont customFontOfSize:14];
+        _titleLabel.font = [UIFont customFontOfSize:13];
         _titleLabel.textColor = SHALLOWBLACK;
         [self.contentView addSubview:_titleLabel];
         
         _contentLabel = [[UILabel alloc]init];
         _contentLabel.backgroundColor = [UIColor clearColor];
-        _contentLabel.font = [UIFont customFontOfSize:14];
+        _contentLabel.font = [UIFont customFontOfSize:13];
         _contentLabel.numberOfLines = 2;
         _contentLabel.textColor = SHALLOWBLACK;
         [self.contentView addSubview:_contentLabel];

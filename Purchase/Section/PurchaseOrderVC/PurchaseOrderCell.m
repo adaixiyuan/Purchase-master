@@ -59,7 +59,7 @@ static const float CountHeight = 28;
         _numText.textAlignment = NSTextAlignmentCenter;
         _numText.keyboardType = UIKeyboardTypeNumberPad;
         _numText.returnKeyType = UIReturnKeyDone;
-        _numText.font = [UIFont customFontOfSize:14];
+        _numText.font = [UIFont customFontOfSize:13];
         _numText.textColor = SHALLOWBLACK;
         _numText.text = @"0";
         [_countView addSubview:_numText];
@@ -96,7 +96,7 @@ static const float CountHeight = 28;
         
         _infoLabel = [[TTTAttributedLabel alloc]initWithFrame:CGRectZero];
         _infoLabel.backgroundColor = [UIColor clearColor];
-        _infoLabel.font = [UIFont customFontOfSize:14];
+        _infoLabel.font = [UIFont customFontOfSize:13];
         _infoLabel.numberOfLines = 2;
         _infoLabel.textColor = SHALLOWBLACK;
         [self.contentView addSubview:_infoLabel];
@@ -131,7 +131,7 @@ static const float CountHeight = 28;
             make.height.equalTo(@(ImageHeight*SizeScaleWidth));
         }];
         [_infoLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.top.equalTo(_goodsImageView.mas_top).with.offset(-6);
+            make.top.equalTo(_goodsImageView.mas_top).with.offset(-5);
             make.left.equalTo(_goodsImageView.mas_right).with.offset(10);
             make.right.equalTo(self.contentView).with.offset(-5);
             make.height.equalTo(@(35*SizeScaleHeight));
@@ -181,7 +181,7 @@ static const float CountHeight = 28;
         make.height.equalTo(@(ImageHeight*SizeScaleWidth));
     }];
     [_infoLabel mas_updateConstraints:^(MASConstraintMaker *make) {
-        make.top.equalTo(_goodsImageView.mas_top).with.offset(-6);
+        make.top.equalTo(_goodsImageView.mas_top).with.offset(-5);
         make.left.equalTo(_goodsImageView.mas_right).with.offset(10);
         make.right.equalTo(self.contentView).with.offset(-5);
         make.height.equalTo(@(35*SizeScaleHeight));
@@ -239,7 +239,7 @@ static const float CountHeight = 28;
     [_goodsImageView sd_setImageWithURL:[NSURL URLWithString:SAFE_STRING(purchaseModel.img_url)]];
     [_infoLabel setText:detailStr afterInheritingLabelAttributesAndConfiguringWithBlock:^NSMutableAttributedString *(NSMutableAttributedString *mutableAttributedString) {
         //设定可点击文字的的大小
-        UIFont *systemFont = [UIFont customFontOfSize:14];
+        UIFont *systemFont = [UIFont customFontOfSize:13];
         CTFontRef font = CTFontCreateWithName((__bridge CFStringRef)systemFont.fontName, systemFont.pointSize, NULL);
         if (font) {
             //设置可点击文本的大小
